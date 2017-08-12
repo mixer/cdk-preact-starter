@@ -21,6 +21,9 @@ module.exports = {
             }
         ]
     },
+    externals: {
+        mixer: 'mixer',
+    },
     plugins: [
         new CheckerPlugin()
     ]
