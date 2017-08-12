@@ -1,13 +1,22 @@
 {
   "compilerOptions": {
     "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "noImplicitAny": true,
     "module": "commonjs",
     "jsx": "react",
     "jsxFactory": "h",
-    "target": "es5"
+    "target": "es5",
+    "lib": [
+        "es5",
+        "dom",
+        "es2015"
+    ]
   },
   "include": [
     "src/*.ts",
-    "src/*.tsx"
+    "src/*.tsx",
+    "mixer.d.ts"
   ]
 }

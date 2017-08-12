@@ -1,19 +1,24 @@
-import { Component, h, render } from 'preact';
+import { Control, Input, PreactControl, PreactScene, PreactStage, Scene } from './alchemy';
+import { h, render } from 'preact';
 
-interface HelloWorldProps {
-    name: string
-}
+@Control({ kind: 'button' })
+export class Button extends PreactControl<{ pressed: boolean }> {
+    @Input()
+    public text: string;
 
-class HelloWorld extends Component<any, any> {
-    private canvas: Element;
-
-    render (props) {
-        return <canvas ref={c => this.canvas = c}></canvas>
+    public render() {
+        return <button onMouseDown={this.mousedown} onMouseUp={this.mouseup}>{this.text}</button>
     }
 
-    public componentDidMount() {
-        debugger;
+    protected mousedown() {
+        this.control.giveInput({ event: 'mousedown' })
+    }
+
+    protected mouseup() {
+        this.control.giveInput({ event: 'mousedown' })
     }
 }
 
-render(<HelloWorld name="World" />, document.querySelector('#app'));
+render(<PreactStage/>, document.querySelector('#app'));
+
+

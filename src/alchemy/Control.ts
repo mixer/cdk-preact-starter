@@ -5,9 +5,57 @@ import { Component } from 'preact';
  * the control is rendered.
  */
 export interface IControlOptions {
-
+    /**
+     * The kind of the control that this class should render. The default
+     * kinds are "button" and "joystick".
+     */
+    kind: string;
 }
 
+/**
+ * ISceneOptions can be passed into the @Scene decorator.
+ */
+export interface ISceneOptions {
+    /**
+     * Whether to use this scene as the handler for all scenes.
+     *
+     * You can override scenes by their `id` to use a different scene for a
+     * certain sceneID. In cases where there isn't a specific class for a
+     * sceneID, the default will be used.
+     *
+     * ```
+     * @Scene({ default: true })
+     * class MyAwesomeScene {
+     *   // ...
+     * }
+     * ```
+     */
+    default?: true;
+
+    /**
+     * When specified, registers this class to handle a specific scene ID.
+     * For instance, if you wanted the scenes `lobby` and `arena` to have
+     * two different scenes, you could do that with something like the
+     * following:
+     *
+     * ```
+     * @Scene({ id: 'lobby' })
+     * class Lobbby {
+     *   // ...
+     * }
+     *
+     * @Scene({ id: 'arena' })
+     * class Arena {
+     *   // ...
+     * }
+     * ```
+     */
+    id?: string;
+}
+
+/**
+ * IInputOptions are passed into the @Input decorator.
+ */
 export interface IInputOptions {
     /**
      * Alias of the property as sent to the Interactive game client and sent
@@ -16,93 +64,123 @@ export interface IInputOptions {
     alias?: string;
 }
 
-/**
- * OnDestroy is an interface that controls who want to be notified before being
- * destroyed may implement.
- *
- * Note: this is primarily for use in non-Preact based controls. Preact controls
- * can use the built-in `componentWillUnmount` lifecycle hook instead.
- */
-export interface OnDestroy {
-    mxOnDestroy();
+export interface ISceneDescriptor extends ISceneOptions {
+    ctor: Function;
 }
 
-/**
- * OnChanges is an interface that controls who want to be notified when their
- * inputs update may implement.
- *
- * Note: this is primarily for use in non-Preact based controls. Preact controls
- * can use the built-in `componentWillReceiveProps` lifecycle hook instead.
- */
-export interface OnChanges {
-    mxOnChanges(changes: Changes);
-}
 
-/**
- * Changes is the interface passed into the OnChanges lifecycle hook.
- */
-export interface Changes {
-    [key: string]: {
-        previousValue: any;
-        nextValue: any;
-    };
-}
-
-/**
- * @private
- */
-interface InputDescriptor {
-    /**
-     * Property name on the class
-     */
+export interface IInputDescriptor extends IInputOptions {
     propertyName: string;
-
-    /**
-     * Name of the property on the protocol.
-     */
-    remoteName: string;
 }
+
+
+export interface IControlDescriptor extends IControlOptions {
+    ctor: Function;
+    inputs: IInputDescriptor[];
+}
+
+export const sceneRegistry: ISceneDescriptor[] = [];
 
 /**
- * @private
+ * Scene is a decorator you can use to designate a class as a Scene. See
+ * documentation on {@link ISceneOptions} for more info.
  */
-interface ControlDescriptor {
-    /**
-     * The component class of the control.
-     */
-    readonly component: new (options: any) => any;
-
-    /**
-     * A list of inputs the control takes.
-     */
-    readonly inputs: InputDescriptor[];
-}
-
-/**
- * registry is the global control registry populated by the @Control decorator
- * whenever it decorates a class.
- */
-export const registry: ControlDescriptor[] = {};
-
-export function Control(options: IControlOptions) {
-    return (constructor: Function) => {
-
-    };
-}
-
-export function Input(options?: IInputOptions) {
-    return function (target: Function, property: string) {
-        const control = registry.find(d => d.component === target);
-        if (!control) {
+export function Scene(options: ISceneOptions = { default: true }) {
+    return (ctor: Function) => {
+        const existingId = options.id && sceneRegistry.find(s => s.id === options.id);
+        if (existingId) {
             throw new Error(
-                `@Input ${target.name}.${property} was registered, but ${target.name} ` +
-                `does not have a @Control decorator!`
+                `Duplicate scene IDs registered! Both ${existingId.ctor.name} and ` +
+                `${ctor.name} registered themselves for scene ID ${options.id}`
             );
         }
 
-        control.inputs.push({
-            propertyName: property,
-            remoteName: options.alias || property,
-        });
+        const existingDefault = options.default && sceneRegistry.findIndex(s => s.default);
+        const descriptor: ISceneDescriptor = { ...options, ctor };
+        if (existingDefault !== -1) {
+            sceneRegistry[existingDefault] = descriptor;
+        } else {
+            sceneRegistry.push(descriptor);
+        }
+    };
+}
+
+export const controlRegistry: IControlDescriptor[] = [];
+
+/**
+ * Scene is a decorator you can use to designate a class as a Scene. See
+ * documentation on {@link IControlOptions} for more info.
+ */
+export function Control(options: IControlOptions) {
+    return (ctor: Function) => {
+        const existing = controlRegistry.find(c => c.kind === options.kind);
+        if (existing) {
+            throw new Error(
+                `Duplicate controls registered! Both ${existing.ctor.name} and ` +
+                `${ctor.name} registered themselves for control kind ${options.kind}`
+            );
+        }
+
+        controlRegistry.push({ ...options, ctor, inputs: [] });
+    };
+}
+
+function registerInput(options: IInputOptions, target: object, propertyName: string) {
+    const control = controlRegistry.find(c => target instanceof c.ctor);
+    if (!control) {
+        throw new Error(
+            `Tried to register input ${target.constructor.name}.${propertyName}` +
+            `but ${target.constructor.name} isn't a control! Did you forget ` +
+            `a @Control() decorator?`
+        );
     }
+
+    control.inputs.push({
+        alias: propertyName,
+        ...options,
+        propertyName,
+    });
+}
+
+/**
+ * Creates setters for the property on the target so that the target's
+ * state is updated whenever the property is set. This is used so that
+ * @Input() can work automagically in a Preact environment.
+ */
+function createPreactSetters<T>(target: IMaybePreact, propertyName: string) {
+    let value: T = (<any> target)[propertyName];
+    Object.defineProperty(target, propertyName, {
+        enumerable: true,
+        get() {
+            return value;
+        },
+        set(next: T) {
+            value = next;
+            target.setState({ ...target.state, propertyName: next });
+        }
+    })
+}
+
+interface IMaybePreact {
+    setState(obj: any): void;
+    state: any;
+}
+
+/**
+ * @Input decorates a property on a control. It makes it configurable in the
+ * Interactive studio and settable for Preact components.
+ */
+export function Input(options: IInputOptions = {}) {
+    let registered = false;
+
+    return (target: object, propertyName: string) => {
+        if (!registered) { // only register the first time the class is instantiated
+            registerInput(options, target, propertyName);
+            registered = true;
+        }
+
+        if (typeof (<IMaybePreact> target).setState === 'function') {
+            createPreactSetters<any>(<IMaybePreact> target, propertyName);
+        }
+    };
 }
