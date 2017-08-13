@@ -9,13 +9,27 @@ import * as mixer from 'mixer';
 @Scene({ default: true })
 export class PreactScene<T> extends Component<{ scene: MScene }, T & mixer.IScene> {
     protected readonly scene: MScene;
+    private sceneUpdateListener = (ev: mixer.IScene) => {
+        this.setState(Object.assign({}, this.state, ev));
+    };
 
     constructor(props: { scene: MScene }, attributes: T) {
         super(props, attributes);
         this.scene = props.scene;
-        this.scene.on('update', ev => {
-            this.setState(Object.assign({}, this.state, ev));
-        });
+    }
+
+    /**
+     * @override
+     */
+    public componentWillMount() {
+        this.scene.on('update', this.sceneUpdateListener);
+    }
+
+    /**
+     * @override
+     */
+    public componentWillUnmount() {
+        this.scene.removeListener('update', this.sceneUpdateListener);
     }
 
     public render() {
@@ -79,14 +93,37 @@ export class PreactStage extends Component<any, { scene: MScene }> {
  */
 export abstract class PreactControl<T> extends Component<{ control: MControl }, T & mixer.IControl> {
     protected readonly control: MControl;
+    private controlUpdateListener = (ev: mixer.IScene) => {
+        this.setState(Object.assign({}, this.state, ev));
+    };
 
     constructor(props: { control: MControl }, attributes: T) {
-        super(props, attributes);
+        super();
         this.control = props.control;
-        this.control.on('update', ev => {
-            this.setState(Object.assign({}, this.state, ev));
-        });
-
-        Object.defineProperty
     }
+
+    /**
+     * @override
+     */
+    public componentWillMount() {
+        this.control.on('update', this.controlUpdateListener);
+    }
+
+    /**
+     * @override
+     */
+    public componentWillUnmount() {
+        this.control.removeListener('update', this.controlUpdateListener);
+    }
+}
+
+/**
+ * Helper to conditionally join classes together. For example, passing in
+ * `{ pressed: true, disabled: false focused: true }`
+ * would yield `pressed focused`.
+ */
+export function classes(cls: { [key: string]: boolean }): string {
+    return Object.keys(cls)
+        .filter(key => cls[key])
+        .join(' ');
 }

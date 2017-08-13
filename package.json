@@ -7,9 +7,15 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --content-base build/"
   },
+  "interactive": {
+    "display": {
+      "mode": "legacy-grid"
+    }
+  },
   "author": "Connor Peet <connor@peet.io>",
   "license": "MIT",
   "dependencies": {
+    "decko": "^1.2.0",
     "eventemitter3": "^2.0.3",
     "preact": "^8.2.1"
   },

@@ -137,7 +137,7 @@ declare module 'mixer' {
     /**
      * Attaches a handler function that will be triggered when the call comes in.
      */
-    export class Socket extends EventEmitter {
+    export interface Socket extends EventEmitter {
         on(event: 'onParticipantJoin', handler: (ev: IParticipantUpdate) => void): this;
         on(event: 'onParticipantUpdate', handler: (ev: IParticipantUpdate) => void): this;
         on(event: 'onGroupCreate', handler: (ev: IGroupCreate) => void): this;
@@ -201,7 +201,7 @@ declare module 'mixer' {
     /**
      * Display modified the display of interactive controls.
      */
-    export class Display {
+    export interface Display {
         /**
          * Hides the controls and displays a loading spinner, optionally
          * with a custom message. This is useful for transitioning. If called
@@ -218,6 +218,21 @@ declare module 'mixer' {
          * Moves the position of the video on the screen.
          */
         moveVideo(options: IVideoPositionOptions): void;
+    }
+
+    /**
+     * Returns the fully qualified URL to a static project asset, from the
+     * `src/static` folder.
+     */
+    export function asset(...path: string[]): string;
+
+    /**
+     * IPackageConfig describes the configuration you write in the "interactive"
+     * section of your package.json. It's injected automatically when your
+     * controls boot.
+     */
+    export interface IPackageConfig {
+
     }
 
     export const socket: Socket;

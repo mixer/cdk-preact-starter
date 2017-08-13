@@ -1,6 +1,31 @@
 import { Component } from 'preact';
 
 /**
+ * Dimensions exist on every Interactive control and define its display.
+ */
+export interface IDimensions {
+    /**
+     * x position (percent from 0 to 100)
+     */
+    x: number;
+
+    /**
+     * y position (percent from 0 to 100)
+     */
+    y: number;
+
+    /**
+     * control width (percent from 0 to 100)
+     */
+    width: number;
+
+    /**
+     * control height (percent from 0 to 100)
+     */
+    height: number;
+}
+
+/**
  * IControlOptions are passed to the @Control decorator to describe how
  * the control is rendered.
  */
@@ -34,9 +59,9 @@ export interface ISceneOptions {
 
     /**
      * When specified, registers this class to handle a specific scene ID.
-     * For instance, if you wanted the scenes `lobby` and `arena` to have
-     * two different scenes, you could do that with something like the
-     * following:
+     * For instance, if you wanted the scene IOD `lobby` and `arena` to be
+     * implemented with two different classes, you could do that with
+     * something like the following:
      *
      * ```
      * @Scene({ id: 'lobby' })
