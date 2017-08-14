@@ -87,6 +87,19 @@ export interface IInputOptions {
      * on the wire. Defaults to the property's name.
      */
     alias?: string;
+
+    /**
+     * `lock` can be passed into inputs for the control dimensions (IDimensions)
+     * to define bounds for how it can be manipulated in the Interactive editor.
+     *  - `aspectRatio` locks a control's aspect ratio (width / height)
+     *  - `width` locks with width percentage
+     *  - `height` locks the height percentage
+     */
+    lock?: (
+        { property: 'aspectRatio', minimum: number, maximum: number } |
+        { property: 'width', minimum?: number, maximum?: number } |
+        { property: 'height',  minimum?: number, maximum?: number }
+    )[];
 }
 
 export interface ISceneDescriptor extends ISceneOptions {

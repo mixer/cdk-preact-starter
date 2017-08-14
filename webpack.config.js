@@ -8,7 +8,7 @@ module.exports = {
     entry: ['./src/index'],
     output: {
         path: path.resolve(__dirname, 'build'),
-        publicPath: '/assets/',
+        publicPath: '',
         filename: 'index.js'
     },
     resolve: {
@@ -28,6 +28,10 @@ module.exports = {
     },
     plugins: [
         new CheckerPlugin(),
-        new MixerPlugin({ homepage: 'src/index.html' }),
-    ]
+        new MixerPlugin({ homepage: 'src/index.tmpl' }),
+    ],
+    devServer: {
+        historyApiFallback: true,
+        disableHostCheck: true,
+    },
 };
