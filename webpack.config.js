@@ -1,5 +1,7 @@
 const path = require('path');
+
 const { CheckerPlugin } = require('awesome-typescript-loader');
+const { MixerPlugin } = require('miix');
 
 module.exports = {
     devtool: 'source-map',
@@ -21,7 +23,11 @@ module.exports = {
             }
         ]
     },
+    externals: {
+        mixer: 'mixer',
+    },
     plugins: [
-        new CheckerPlugin()
+        new CheckerPlugin(),
+        new MixerPlugin({ homepage: 'src/index.html' }),
     ]
 };
