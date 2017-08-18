@@ -1,7 +1,7 @@
 const path = require('path');
 
 const { CheckerPlugin } = require('awesome-typescript-loader');
-const { MixerPlugin } = require('miix');
+const { MixerPlugin } = require('miix/webpack');
 
 module.exports = {
     devtool: 'source-map',
@@ -20,15 +20,19 @@ module.exports = {
                 test: /\.tsx?$/,
                 exclude: /node_modules/,
                 loaders: ['awesome-typescript-loader']
-            }
+            },
+            {
+                test: /\.scss$/,
+                loaders: ['style-loader', 'css-loader', 'sass-loader'],
+            },
         ]
     },
     externals: {
-        mixer: 'mixer',
+        'miix/std': 'mixer',
     },
     plugins: [
         new CheckerPlugin(),
-        new MixerPlugin({ homepage: 'src/index.tmpl' }),
+        new MixerPlugin({ homepage: 'src/index.html' }),
     ],
     devServer: {
         historyApiFallback: true,
