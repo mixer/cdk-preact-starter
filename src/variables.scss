@@ -1,0 +1,66 @@
+/**
+ * This file contains SCSS variables we use for styling our controls.
+ * An easy way to start playing around with custom controls is tweaking these!
+ */
+
+$base-color-default: #151c33 !default;
+$base-color-primary: #0078d7 !default;
+$base-color-border: #1f263f !default;
+$base-color-bolt: #ffcc31 !default;
+$base-border-width: 2px !default;
+
+$button-bolt-color: $base-color-bolt !default;
+$button-background-color: $base-color-default !default;
+$button-border-color: $base-color-border !default;
+$button-active-border-color: $base-color-primary !default;
+$button-progress-height: 5px !default;
+$button-border-radius: 3px !default;
+$button-progress-foreground: $base-color-primary !default;
+$button-progress-background: #232b47 !default;
+// todo(connor4312): ripples
+$button-text-color: #f3f5fd !default;
+$button-cost-default-color: #a2a5b0 !default;
+$button-cost-unaffordable-color: #fe5353 !default;
+$button-cost-background-color: $base-color-default !default;
+$button-cost-border-color: $base-color-border !default;
+$button-cost-bolt-color: $base-color-bolt !default;
+$button-cost-bolt-size: 13px !default;
+$button-tooltip-background: #2e354b !default;
+$button-font-size: 15px !default;
+$button-font-weight: bold !default;
+$button-font-shadow: 0 1px 2px rgba(#000, 0.2) !default;
+$button-cooldown-spinner-size: 12px !default;
+
+$button-z-base: 0 !default;
+$button-z-progress: $button-z-base + 1;
+$button-z-cooldown: $button-z-progress + 1;
+$button-z-cost: $button-z-cooldown + 1;
+
+$joystick-color-handle: #465A94 !default;
+$joystick-color-background: #222D4D !default;
+$joystick-color-halo: #0071BC !default;
+$joystick-handle-size: 32px !default;
+$joystick-arrow-size: 6px !default;
+
+$easing-default-duration: 300ms !default;
+$easing-default-fast-duration: 130 !default;
+$easing-default-slow-duration: 600ms !default;
+$easing-default-curve: cubic-bezier(0.455, 0.03, 0.515, 0.955) !default; // quad in-out
+$easing-scene-ease-to-scale: -1.1 !default;
+
+$font-family-sans-serif: 'Titillium', sans-serif !default;
+
+
+@mixin layout-center-contents() {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin absolute-cover() {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}

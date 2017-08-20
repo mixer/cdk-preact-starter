@@ -1,0 +1,175 @@
+@import './variables';
+
+// Mixin (used by the spark pill and the button itself) to define base
+// background and border colors/styles.
+@mixin button-like() {
+    border-radius: $button-border-radius;
+    background: $button-background-color;
+    border: $base-border-width solid $base-color-border;
+    transition: border-color $easing-default-duration $easing-default-curve;
+}
+
+@keyframes loader-spin {
+    0%   { transform: translate(-50%, -50%) rotate(0deg) }
+    50%  { transform: translate(-50%, -50%) rotate(180deg) }
+    100% { transform: translate(-50%, -50%) rotate(360deg) }
+}
+
+// Styling for the default button control.
+.mixer-button {
+    @include layout-center-contents();
+    @include button-like();
+
+    position: relative;
+    cursor: pointer;
+    font-weight: $button-font-weight;
+    text-shadow: $button-font-shadow;
+    outline: 0 !important;
+    z-index: $button-z-base;
+
+    &:hover {
+        border-color: $button-active-border-color;
+
+        .mixer-spark-pill:not(.unaffordable) {
+            color: $base-color-bolt;
+        }
+    }
+
+    // The disabled class is applied when the input gets disabled.
+    &[disabled] {
+        opacity: 0.7;
+        cursor: default;
+
+        &:hover {
+            border-color: $base-color-border;
+        }
+    }
+}
+
+// A content element is nested in the button and contains the text
+// to display in the control.
+.mixer-content {
+    overflow: hidden;
+    text-align: center;
+    color: $button-text-color;
+    font-size: $button-font-size;
+    text-overflow: ellipsis;
+    padding: 0 5px;
+}
+
+// Styling for the cooldown that overlays custom controls.
+.mixer-cooldown {
+    @include layout-center-contents();
+    @include absolute-cover();
+
+    min-height: $button-cooldown-spinner-size;
+    border-radius: $button-border-radius;
+    background: linear-gradient(
+        rgba($button-background-color, 0.8),
+        rgba(darken($button-background-color, 3%), 1)
+    );
+    opacity: 0;
+    transition: opacity $easing-default-duration $easing-default-curve;
+    pointer-events: none;
+    z-index: $button-z-cooldown;
+
+    > div {
+        text-align: center;
+        min-height: $button-cooldown-spinner-size;
+        padding-left: $button-cooldown-spinner-size + $base-border-width * 2 + 6px;
+        position: relative;
+        color: #fff;
+
+        &::before,
+        &::after {
+            content: '';
+            position: absolute;
+            left: $button-cooldown-spinner-size / 2;
+            top: 50%;
+            width: $button-cooldown-spinner-size;
+            height: $button-cooldown-spinner-size;
+            border-radius: 50%;
+            border: $base-border-width solid transparent;
+            transform: translate(-50%, -50%);
+        }
+
+        &::before {
+            border-left-color: $base-color-primary;
+            z-index: 0;
+            animation: 3s loader-spin infinite linear;
+        }
+
+        &::after {
+            border-color: rgba(#fff, 0.2);
+            z-index: 1;
+        }
+    }
+
+    &.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+// Styling for the button's cost that pops up.
+.mixer-spark-pill {
+    @include layout-center-contents();
+    @include button-like();
+
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, -50%);
+    font-weight: $button-font-weight;
+    color: $button-cost-default-color;
+    font-size: 0.8em;
+    padding: 0 8px 0 5px;
+    transition: color $easing-default-duration $easing-default-curve;
+    z-index: $button-z-cost;
+
+    &:before {
+        content: '';
+        width: $button-cost-bolt-size;
+        height: $button-cost-bolt-size;
+        background: url('./static/spark.svg') center center no-repeat;
+        background-size: contain;
+        display: inline-block;
+    }
+
+    &.unaffordable {
+        color: $button-cost-unaffordable-color;
+    }
+}
+
+// Styling for the progress bar that appares under the button when
+// the buttons progress is > 0
+.mixer-progress-bar {
+    @include absolute-cover();
+    height: $button-progress-height;
+    overflow: hidden;
+    top: auto;
+    z-index: $button-z-progress;
+    border-bottom-left-radius: $button-border-radius - 1;
+    border-bottom-right-radius: $button-border-radius - 1;
+
+    &::before,
+    > div {
+        @include absolute-cover();
+    }
+
+    &::before {
+        content: '';
+        background: $button-progress-background;
+        transform: translateY(100%);
+        transition: transform $easing-default-duration
+    }
+
+    &.enabled::before {
+        transform: translateY(0%);
+    }
+
+    > div {
+        background: $button-progress-foreground;
+        transition: transform $easing-default-duration;
+    }
+}

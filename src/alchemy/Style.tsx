@@ -1,4 +1,11 @@
-import { Layout } from 'miix/std';
+import { IDimensions, Layout } from 'miix/std';
+
+/**
+ * Returns the name translated from camelCase to kebab-case.
+ */
+function toKebabCase(str: string): string { // yum!
+    return str.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`);
+}
 
 /**
  * RuleSet is a set of CSS rules.
@@ -8,6 +15,22 @@ export class RuleSet {
     private lastRules: { [key: string]: Layout.Style };
 
     constructor(private readonly rules: Layout.StyleRules) {}
+
+    /**
+     * Returns a new set of CSS rules based on the given dimensions.
+     */
+    public static fromDimensions(dimensions: IDimensions): RuleSet {
+        if (!dimensions) {
+            return new RuleSet({});
+        }
+
+        return new RuleSet({
+            width: dimensions.width,
+            height: dimensions.height,
+            x: dimensions.x,
+            y: dimensions.y,
+        });
+    }
 
     /**
      * Compiles the set of CSS rules into an inline style. Breakpoints will
@@ -45,11 +68,15 @@ export class RuleSet {
      * Returns a new rule set by joining this one to another. The others'
      * rules will override this set's rules if they conflict.
      */
-    public concat(other: RuleSet): RuleSet {
-        return new RuleSet({
-            ...this.rules,
-            ...other.rules,
-        });
+    public concat(...others: RuleSet[]): RuleSet {
+        const composed = { ...this.rules };
+        for (let i = 0; i < others.length; i++) {
+            if (others[i]) {
+                Object.assign(composed, others[i].rules);
+            }
+        }
+
+        return new RuleSet(composed);
     }
 
     /**
@@ -95,7 +122,7 @@ export class RuleSet {
      * Compiles a single property:value pair, and adds it to the working ruleset.
      */
     private compileAndAddRule(name: string, value: Layout.Style) {
-        const parsedName = name.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`);
+        const parsedName = toKebabCase(name);
         const parsedValue = typeof value === 'number' ? `${value}px` : value;
         this.lastRules[name] = value;
 
@@ -115,4 +142,16 @@ export class RuleSet {
  */
 export function css(styles: Layout.StyleRules): string {
     return new RuleSet(styles).compile();
+}
+
+/**
+ * classes is called with a map of class names to true/false whether those
+ * classes are enabled. It returns a concatenated list of classes. Class
+ * names that were in camelCase will be automatically converted to kebab-case.
+ */
+export function classes(map: { [cls: string]: boolean }): string {
+    return Object.keys(map)
+        .filter(key => map[key])
+        .map(toKebabCase)
+        .join(' ');
 }

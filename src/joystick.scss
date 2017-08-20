@@ -1,0 +1,89 @@
+.mixer-joystick {
+    position: absolute;
+    border-radius: 50%;
+    background: $joystick-color-background;
+
+    &[disabled] {
+        opacity: 0.7;
+    }
+
+    .handle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        border-radius: 50%;
+        background: $joystick-color-handle;
+        width: $joystick-handle-size;
+        height: $joystick-handle-size;
+        margin-top: $joystick-handle-size / -2;
+        margin-left: $joystick-handle-size / -2;
+    }
+
+    .arrows {
+        position: absolute;
+        left: $joystick-arrow-size * 3 / 2;
+        right: $joystick-arrow-size * 3 / 2;
+        top: $joystick-arrow-size * 3 / 2;
+        bottom: $joystick-arrow-size * 3 / 2;
+        z-index: 1;
+        pointer-events: none;
+
+        &::before,
+        &::after {
+            content: '';
+            position: absolute;
+            width: $joystick-arrow-size;
+            height: $joystick-arrow-size;
+
+            border: $base-border-width solid transparent;
+            border-top-color: $joystick-color-handle;
+            border-left-color: $joystick-color-handle;
+            border-radius: 2px;
+        }
+
+        &.top {
+            // Top arrow
+            &::before {
+                top: 1px;
+                left: 50%;
+                transform: rotate(45deg);
+                margin-left: $joystick-arrow-size / -2;
+            }
+            // Right arrow
+            &::after {
+                top: 50%;
+                right: 1px;
+                transform: rotate(135deg);
+                margin-top: $joystick-arrow-size / -2;
+            }
+        }
+
+        &.left {
+            // Bottom Arrow
+            &::before {
+                bottom: 1px;
+                left: 50%;
+                transform: rotate(-135deg);
+                margin-left: $joystick-arrow-size / -2;
+            }
+            // Left Arrow
+            &::after {
+                top: 50%;
+                left: 1px;
+                transform: rotate(-45deg);
+                margin-top: $joystick-arrow-size / -2;
+            }
+        }
+    }
+}
+
+.mixer-joystick-rings {
+    @include absolute-cover();
+
+    .ring {
+        @include absolute-cover();
+        border-radius: 50%;
+        border: $base-border-width solid transparent;
+        border-right-color: $joystick-color-halo;
+    }
+}
