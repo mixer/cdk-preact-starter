@@ -1,6 +1,8 @@
 import { EventEmitter } from 'eventemitter3';
 import * as Mixer from 'miix/std';
 
+import { assert, guard, remap } from './Log';
+
 /**
  * The Registery is the system that manages the lifecycle of interactive
  * controls and scenes.
@@ -31,49 +33,74 @@ export class State extends EventEmitter {
         super();
 
         // scenes -------------------------------
-        Mixer.socket.on('onSceneCreate', ({ scenes }) => {
+        Mixer.socket.on('onSceneCreate', guard(({ scenes }) => {
             scenes.forEach(s => {
+                assert(!this.scenes[s.sceneID], `Tried to create scene in "${s.sceneID}", but it already exists`);
                 const scene = (this.scenes[s.sceneID] = new MScene(this, s));
                 this.emit('sceneCreate', scene);
             });
-        });
-        Mixer.socket.on('onSceneUpdate', ({ scenes }) => {
-            scenes.forEach(s => (<any>this.scenes[s.sceneID]).update(s));
-        });
-        Mixer.socket.on('onSceneDelete', packet => {
+        }));
+        Mixer.socket.on('onSceneUpdate', guard(({ scenes }) => {
+            scenes.forEach(s => {
+                assert(this.scenes[s.sceneID], `Tried to update scene "${s.sceneID}", but it didn't exist`);
+                (<any>this.scenes[s.sceneID]).update(s);
+            });
+        }));
+        Mixer.socket.on('onSceneDelete', guard(packet => {
+            assert(this.scenes[packet.sceneID], `Tried to update scene "${packet.sceneID}", but it didn't exist`);
             this.emit('sceneDelete', this.scenes[packet.sceneID], packet);
             this.scenes[packet.sceneID].emit('delete', packet);
             delete this.scenes[packet.sceneID];
-        });
+        }));
+
+        // controls -----------------------------
+        Mixer.socket.on('onControlCreate', guard(data => {
+            assert(this.scenes[data.sceneID], `Tried to create controls in "${data.sceneID}", but it didn't exist`);
+            (<any> this.scenes[data.sceneID]).createControls(data.controls);
+        }));
+        Mixer.socket.on('onControlUpdate', guard(data => {
+            assert(this.scenes[data.sceneID], `Tried to update controls in "${data.sceneID}", but it didn't exist`);
+            (<any> this.scenes[data.sceneID]).updateControls(data.controls);
+        }));
+        Mixer.socket.on('onControlDelete', guard(data => {
+            assert(this.scenes[data.sceneID], `Tried to delete controls in "${data.sceneID}", but it didn't exist`);
+            (<any> this.scenes[data.sceneID]).deleteControls(data.controls);
+        }));
 
         // groups -------------------------------
-        Mixer.socket.on('onGroupCreate', ({ groups }) => {
+        Mixer.socket.on('onGroupCreate', guard(({ groups }) => {
             groups.forEach(g => {
+                assert(!this.groups[g.groupID], `Tried create group "${g.groupID}", but it already exists`);
+                assert(this.scenes[g.sceneID], `Tried to assign group to "${g.sceneID}", but it didn't exist`);
                 const group = (this.groups[g.groupID] = new Group(this.scenes[g.sceneID], g));
                 this.emit('groupCreate', group);
             });
-        });
-        Mixer.socket.on('onGroupUpdate', ({ groups }) => {
-            groups.forEach(s => {
-                (<any>this.groups[s.groupID]).update(s);
-                if (this.participant.props.groupID === s.groupID) {
-                    this.participant.emit('groupUpdate', s);
+        }));
+        Mixer.socket.on('onGroupUpdate', guard(({ groups }) => {
+            groups.forEach(g => {
+                assert(!this.groups[g.groupID], `Tried update group "${g.groupID}", but it already exists`);
+                assert(!this.scenes[g.sceneID], `Tried to assign group to "${g.sceneID}", but it didn't exist`);
+
+                (<any>this.groups[g.groupID]).update(g);
+                if (this.participant.props.groupID === g.groupID) {
+                    this.participant.emit('groupUpdate', g);
                 }
             });
-        });
-        Mixer.socket.on('onGroupDelete', packet => {
+        }));
+        Mixer.socket.on('onGroupDelete', guard(packet => {
+            assert(this.groups[packet.groupID], `Tried delete group "${packet.groupID}", but it doesn't exist`);
             this.emit('groupDelete', this.groups[packet.groupID], packet);
             this.groups[packet.groupID].emit('delete', packet);
             delete this.groups[packet.groupID];
-        });
+        }));
 
         // global state -------------------------
-        Mixer.socket.on('onParticipantUpdate', ev => {
+        Mixer.socket.on('onParticipantUpdate', guard(ev => {
             (<any>this.participant).update(ev.participants[0]);
-        });
-        Mixer.socket.on('onParticipantJoin', ev => {
+        }));
+        Mixer.socket.on('onParticipantJoin', guard(ev => {
             (<any>this.participant).update(ev.participants[0]);
-        });
+        }));
         Mixer.socket.on('onReady', ev => {
             (<any>this).isReady = ev.isReady;
             this.emit('ready', ev.isReady);
@@ -207,6 +234,11 @@ export class Participant<T extends Mixer.IParticipant = Mixer.IParticipant> exte
     }
 
     protected update(props: T) {
+        assert(
+            this.state.groups[props.groupID],
+            `Tried to move participant to group "${props.groupID}", but it didn't exist`,
+        );
+
         (<any>this).group = this.state.groups[props.groupID];
         super.update(props);
     }
@@ -255,6 +287,50 @@ export class MScene<T extends Mixer.IScene = Mixer.IScene> extends Resource<T> {
     public on(event: string, handler: (...args: any[]) => void): this {
         return super.on(event, handler);
     }
+
+    /**
+     * @override
+     */
+    protected update(value: T) {
+        remap(() => this.state.registry.getScene(value.sceneID));
+        super.update(value);
+    }
+
+    protected createControls(controls: Mixer.IControl[]) {
+        controls.forEach(control => {
+            assert(
+                !this.controls[control.controlID],
+                `Tried to create control "${control.controlID}", but it already exists`,
+            );
+
+            this.controls[control.controlID] = new MControl(this, control);
+            this.emit('update', this.toObject());
+        });
+    }
+
+    protected updateControls(controls: Mixer.IControl[]) {
+        controls.forEach(control => {
+            if (!this.controls[control.controlID]) {
+                this.createControls([control]);
+                return;
+            }
+
+            (<any> this.controls[control.controlID]).update(control);
+            this.emit('update', this.toObject());
+        });
+    }
+
+    protected deleteControls(controls: { controlID: string }[]) {
+        controls.forEach(control => {
+            if (!this.controls[control.controlID]) {
+                return;
+            }
+
+            this.controls[control.controlID].emit('delete');
+            delete this.controls[control.controlID];
+            this.emit('update', this.toObject());
+        });
+    }
 }
 
 /**
@@ -296,8 +372,16 @@ export class MControl<T extends Mixer.IControl = Mixer.IControl> extends Resourc
     }
 
     public on(event: 'delete', handler: (ev: Mixer.ISceneDelete) => void): this;
-    public on(event: 'update', handler: (ev: T) => void): this;
+    public on(event: 'update', handler: () => void): this;
     public on(event: string, handler: (...args: any[]) => void): this {
         return super.on(event, handler);
+    }
+
+    /**
+     * @override
+     */
+    protected update(value: T) {
+        remap(() => this.state.registry.getControl(value.kind));
+        super.update(value);
     }
 }

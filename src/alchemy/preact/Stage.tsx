@@ -16,11 +16,8 @@ export class PreactStage extends Component<{ registry: Mixer.Registry }, { scene
     public componentDidMount() {
         const i = (this.interactive = new State(this.props.registry));
 
-        i.once('ready', () => {
-            this.updateScene(i.participant.group.sceneID);
-            i.participant.on('update', ev => this.updateScene(i.participant.group.sceneID));
-            i.participant.on('groupUpdate', ev => this.updateScene(ev.sceneID));
-        });
+        i.participant.on('update', ev => this.updateScene(i.participant.group.sceneID));
+        i.participant.on('groupUpdate', ev => this.updateScene(ev.sceneID));
     }
 
     public render() {
