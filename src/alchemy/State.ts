@@ -56,7 +56,7 @@ export class State extends EventEmitter {
         Mixer.socket.on('onGroupUpdate', ({ groups }) => {
             groups.forEach(s => {
                 (<any>this.groups[s.groupID]).update(s);
-                if (this.participant.groupID === s.groupID) {
+                if (this.participant.props.groupID === s.groupID) {
                     this.participant.emit('groupUpdate', s);
                 }
             });
@@ -101,7 +101,7 @@ export abstract class Resource<T> extends EventEmitter {
     /**
      * The resource's underlying data properties.
      */
-    protected props: T;
+    public props: T;
 
     /**
      * Gets a custom property defined on the resource.
@@ -195,48 +195,6 @@ export class Participant<T extends Mixer.IParticipant = Mixer.IParticipant> exte
      */
     public readonly group: Group;
 
-    /**
-     * The user's unique ID for this interactive session.
-     */
-    public get sessionID() {
-        return this.props.sessionID;
-    }
-
-    /**
-     * The users's ID on Mixer.
-     */
-    public get userID() {
-        return this.props.userID;
-    }
-
-    /**
-     * The user's Mixer username
-     */
-    public get username() {
-        return this.props.username;
-    }
-
-    /**
-     * the users's level.
-     */
-    public get level() {
-        return this.props.level;
-    }
-
-    /**
-     * Whether the game client has disabled this user's input.
-     */
-    public get disabled() {
-        return this.props.disabled;
-    }
-
-    /**
-     * The group ID this participant belongs to.
-     */
-    public get groupID() {
-        return this.props.groupID;
-    }
-
     constructor(state: State) {
         super();
         this.state = state;
@@ -258,13 +216,6 @@ export class Participant<T extends Mixer.IParticipant = Mixer.IParticipant> exte
  * Scene holds a group of controls. User groups can be assigned to a scene.
  */
 export class MScene<T extends Mixer.IScene = Mixer.IScene> extends Resource<T> {
-    /**
-     * The scene's ID.
-     */
-    public get sceneID() {
-        return this.props.sceneID;
-    }
-
     /**
      * Map of control IDs to Control objects.
      */
@@ -289,7 +240,7 @@ export class MScene<T extends Mixer.IScene = Mixer.IScene> extends Resource<T> {
      * with `@Scene`.
      */
     public descriptor(): Mixer.ISceneDescriptor {
-        return this.state.registry.getScene(this.sceneID);
+        return this.state.registry.getScene(this.props.sceneID);
     }
 
     /**
@@ -310,20 +261,6 @@ export class MScene<T extends Mixer.IScene = Mixer.IScene> extends Resource<T> {
  * Control is a control type in the scene.
  */
 export class MControl<T extends Mixer.IControl = Mixer.IControl> extends Resource<T> {
-    /**
-     * Unique ID of the control in the scene.
-     */
-    public get controlID() {
-        return this.props.controlID;
-    }
-
-    /**
-     * The kind of this control.
-     */
-    public get kind() {
-        return this.props.kind;
-    }
-
     /**
      * The Scene this control belongs to.
      */
@@ -346,7 +283,7 @@ export class MControl<T extends Mixer.IControl = Mixer.IControl> extends Resourc
      * decoratored with `@Control`.
      */
     public descriptor(): Mixer.IControlDescriptor {
-        return this.state.registry.getControl(this.kind);
+        return this.state.registry.getControl(this.props.kind);
     }
 
     /**
@@ -354,7 +291,7 @@ export class MControl<T extends Mixer.IControl = Mixer.IControl> extends Resourc
      * and back down to the game client.
      */
     public giveInput<I extends Partial<Mixer.IInput>>(input: I) {
-        input.controlID = this.controlID;
+        input.controlID = this.props.controlID;
         Mixer.socket.call('giveInput', input);
     }
 

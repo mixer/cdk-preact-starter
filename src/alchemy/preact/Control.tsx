@@ -2,7 +2,9 @@ import { Component } from 'preact';
 import * as Mixer from 'miix/std';
 
 import { MControl } from '../State';
-import { RuleSet } from './Style';
+import { RuleSet } from '../Style';
+
+type ControlProps<C> = { resource: MControl<C & Mixer.IControl>, style?: RuleSet } & C & Mixer.IControl;
 
 /**
  * PreactControl is the "primitve" control that you can extend to implement
@@ -10,21 +12,15 @@ import { RuleSet } from './Style';
  * to register them! Check out our built-in Joystick and Button types for
  * some examples.
  */
-export abstract class PreactControl<T, C extends Mixer.IControl = Mixer.IControl>
-    extends Component<{ control: MControl; style?: RuleSet }, T & C> {
+export abstract class PreactControl<T = {}, C = {}> extends Component<ControlProps<C>, T> {
+    protected control: MControl<C & Mixer.IControl>;
 
-    protected readonly control: MControl<C>;
-    private controlUpdateListener = (ev: C) => {
-        this.setState(Object.assign({}, this.state, ev));
-    };
-
-    constructor(props: { control: MControl<C>; style?: RuleSet }) {
+    constructor(props: ControlProps<C>) {
         super(props);
-        this.control = props.control;
-
+        this.control = props.resource;
         this.control.state.registry.getInputs(this).forEach(input => {
             Object.defineProperty(this, input.propertyName, {
-                get: () => (this.props as any)[input.propertyName],
+                get: () => this.control.get(input.propertyName as keyof C),
             });
         });
     }
@@ -32,15 +28,7 @@ export abstract class PreactControl<T, C extends Mixer.IControl = Mixer.IControl
     /**
      * @override
      */
-    public componentWillMount() {
-        this.setState(this.control.toObject());
-        this.control.on('update', this.controlUpdateListener);
-    }
-
-    /**
-     * @override
-     */
-    public componentWillUnmount() {
-        this.control.removeListener('update', this.controlUpdateListener);
+    public componentWillReceiveProps(nextProps: ControlProps<C>) {
+        this.control = nextProps.resource;
     }
 }

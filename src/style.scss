@@ -5,8 +5,31 @@
  * you can use if you want to. Here's an intro: http://sass-lang.com/guide
  */
 
+@import './variables';
+@import './button';
+@import './joystick';
+
+ @font-face {
+    font-family: 'Titillium';
+    src: url('static/fonts/titillium-regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Titillium';
+    src: url('static/fonts/titillium-bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+
 html,
 body {
     margin: 0;
     height: 100%;
+    font-family: $font-family-sans-serif;
+
+    // these make fonts nicer on Chrome and Safari:
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
 }

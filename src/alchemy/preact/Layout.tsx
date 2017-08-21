@@ -1,3 +1,4 @@
+import { ResourceHolder } from './Helpers';
 /**
  * This module defines the layout engines used for custom controls. They create
  * Preact components. See the documentation on each class for further details.
@@ -6,10 +7,11 @@
 import { Component, h } from 'preact';
 import { display, Layout } from 'miix/std';
 import { bind, debounce } from 'decko';
+import { getSettings } from 'miix/std';
 
 import { MControl, MScene } from '../State';
 import { log } from '../Log';
-import { css, RuleSet } from './Style';
+import { css, RuleSet } from '../Style';
 import { PreactControl } from './Control';
 
 export interface IFixedGridState {
@@ -42,9 +44,15 @@ export interface Layout extends Component<ILayoutOptions, any> {
   */
 export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> implements Layout {
     /**
-     * Width/height in pixels of each grid cell.
+     * Default width/height in pixels of each grid cell. This can be tweaked
+     * on mobile devices to fit the controls more exactly.
      */
     public static gridScale = 12;
+
+    /**
+     * Padding around the video, in pixels.
+     */
+    public static videoPadding = 8;
 
     /**
      * "unlisteners" for media queries.
@@ -81,22 +89,39 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
      * Implements Layout.refresh()
      */
     public refresh() {
-        const [, height] = this.getGridPixelSize();
+        const { isMobile, height } = this.getGridPixelSize();
+        if (isMobile) {
+            return;
+        }
 
+        const padding = FixedGridLayout.videoPadding;
         display.moveVideo({
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: height,
+            top: padding,
+            left: padding,
+            right: padding,
+            bottom: height + padding,
         });
     }
 
     /**
      * Returns the currently active grid height, in pixels.
      */
-    private getGridPixelSize(): [number, number] {
+    private getGridPixelSize()  {
         const grid = Layout.gridLayouts[this.state.activeGrid];
-        return [grid.width * FixedGridLayout.gridScale, grid.height * FixedGridLayout.gridScale];
+        const width = grid.width * FixedGridLayout.gridScale;
+        const height = grid.height * FixedGridLayout.gridScale;
+        const isMobile = getSettings().isMobile;
+
+        // On mobile, fill the available window.
+        let multiplier = 1;
+        if (isMobile) {
+            multiplier = Math.min(
+                window.innerWidth / width,
+                window.innerHeight / height,
+            );
+        }
+
+        return { isMobile, width: width * multiplier, height: height * multiplier };
     }
 
     /**
@@ -118,18 +143,19 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
     }
 
     public render() {
-        const [width, height] = this.getGridPixelSize();
+        const { width, height, isMobile } = this.getGridPixelSize();
 
         return (
             <div
                 class="alchemy-grid-layout"
                 style={css({
                     position: 'absolute',
-                    bottom: 0,
+                    bottom: isMobile ? '50%' : 0,
                     left: '50%',
                     height,
                     width,
                     marginLeft: width / -2,
+                    marginBottom: isMobile ? height / -2 : 0,
                 })}
             >
                 {this.props.scene
@@ -151,16 +177,17 @@ class FixedGridControl extends Component<{ control: MControl; grid: number }, {}
         }
 
         return (
-            <Control
-                control={this.props.control}
-                style={
-                    new RuleSet({
+            <ResourceHolder
+                resource={this.props.control}
+                component={Control}
+                nest={{
+                    style: new RuleSet({
                         left: grid.x * FixedGridLayout.gridScale,
                         right: grid.x * FixedGridLayout.gridScale,
                         width: grid.width * FixedGridLayout.gridScale,
                         height: grid.height * FixedGridLayout.gridScale,
                     })
-                }
+                }}
             />
         );
     }
@@ -173,9 +200,9 @@ class FixedGridControl extends Component<{ control: MControl; grid: number }, {}
         const control = this.props.control;
         const configuredGrids = control.get('grids', []);
         if (configuredGrids.length === 0) {
-            console.error(
-                `A control in scene "${control.scene.sceneID}" is missing a list ` +
-                    `of grids, we won't display it`,
+            log.error(
+                `A control in scene "${control.scene.props.sceneID}" is ` +
+                    `missing a list of grids, we won't display it`,
                 control.toObject(),
             );
             return;
@@ -220,7 +247,7 @@ export class FlexLayout extends Component<ILayoutOptions, {}> implements Layout 
     public refresh() {
         const video = this.container.getVideoContainer();
         const rect = video && video.getBoundingClientRect();
-        if (!video || rect.width) {
+        if (!video || rect.width === 0) {
             // width=0 indicates it's hidden
             log.warn('No video element was found in the containers, skipping reposition');
             return;
@@ -307,6 +334,7 @@ export class FlexContainer extends Component<IFlexContainerOptions, IFlexContain
             children: this.getChildren(),
         });
     }
+
     public render() {
         if (this.rules.isHidden()) {
             return;
@@ -343,7 +371,7 @@ export class FlexContainer extends Component<IFlexContainerOptions, IFlexContain
 
                 const control = this.props.scene.controls[child.controlID];
                 const Control = control.descriptor().ctor as typeof PreactControl;
-                return <Control control={control} />;
+                return <ResourceHolder component={Control} resource={control} />;
             })
             .filter(control => !!control);
     }

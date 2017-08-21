@@ -3,6 +3,7 @@ import * as Mixer from 'miix/std';
 
 import { PreactScene } from './Scene';
 import { MScene, State } from '../State';
+import { ResourceHolder } from './Helpers';
 
 /**
  * PreactStage is the bootstrap component for the interactive integration.
@@ -34,7 +35,7 @@ export class PreactStage extends Component<{ registry: Mixer.Registry }, { scene
      * Updates the displayed scene to match the ID.
      */
     protected updateScene(id: string) {
-        if (!this.state.scene || this.state.scene.sceneID !== id) {
+        if (!this.state.scene || this.state.scene.props.sceneID !== id) {
             this.setState({ ...this.state, scene: this.interactive.scenes[id] });
         }
     }
@@ -44,6 +45,6 @@ export class PreactStage extends Component<{ registry: Mixer.Registry }, { scene
      */
     protected getSceneComponent(scene: MScene) {
         const Scene = scene.descriptor().ctor as typeof PreactScene;
-        return <Scene scene={scene} />;
+        return <ResourceHolder resource={scene} component={Scene} />;
     }
 }
