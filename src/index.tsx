@@ -1,29 +1,16 @@
-import { bind } from 'decko';
 import { h, render } from 'preact';
+import * as Mixer from 'miix/std';
 
-import { Control, Input, Scene } from './alchemy';
-import { PreactControl, PreactScene, PreactStage, classes } from './alchemy/Preact';
+import { PreactScene, PreactStage } from './alchemy/preact/index';
+import { Joystick } from './joystick';
+import { Button } from './button';
 
-@Control({ kind: 'button' })
-export class Button extends PreactControl<{ pressed: boolean }> {
-    @Input()
-    public text: string;
+// Import our custom CSS.
+require('./style.scss');
 
-    public render() {
-        return <button onMouseDown={this.mousedown} onMouseUp={this.mouseup}>{this.text}</button>
-    }
+// The registry contains a list of all your custom scenes and buttons. You
+// should pass them in here so that we're aware of them!
+const registry = new Mixer.Registry().register(Button, Joystick, PreactScene);
 
-    @bind
-    protected mousedown() {
-        this.control.giveInput({ event: 'mousedown' })
-    }
-
-    @bind
-    protected mouseup() {
-        this.control.giveInput({ event: 'mousedown' })
-    }
-}
-
-render(<PreactStage/>, document.querySelector('#app'));
-
-
+// Do the thing!
+render(<PreactStage registry={registry} />, document.querySelector('#app'));
