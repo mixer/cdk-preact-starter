@@ -5,9 +5,8 @@ import { ResourceHolder } from './Helpers';
  */
 
 import { Component, h } from 'preact';
-import { display, Layout } from 'miix/std';
+import { display, Layout, ISettings } from 'miix/std';
 import { bind, debounce } from 'decko';
-import { getSettings } from 'miix/std';
 
 import { MControl, MScene } from '../State';
 import { log } from '../Log';
@@ -20,6 +19,7 @@ export interface IFixedGridState {
 
 export interface ILayoutOptions {
     scene: MScene;
+    settings: ISettings;
 }
 
 /**
@@ -89,8 +89,8 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
      * Implements Layout.refresh()
      */
     public refresh() {
-        const { isMobile, height } = this.getGridPixelSize();
-        if (isMobile) {
+        const { height } = this.getGridPixelSize();
+        if (!this.props.settings.placesVideo) {
             return;
         }
 
@@ -110,18 +110,17 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
         const grid = Layout.gridLayouts[this.state.activeGrid];
         const width = grid.width * FixedGridLayout.gridScale;
         const height = grid.height * FixedGridLayout.gridScale;
-        const isMobile = getSettings().isMobile;
 
         // On mobile, fill the available window.
         let multiplier = 1;
-        if (isMobile) {
+        if (!this.props.settings.placesVideo) {
             multiplier = Math.min(
                 window.innerWidth / width,
                 window.innerHeight / height,
             );
         }
 
-        return { isMobile, width: width * multiplier, height: height * multiplier };
+        return { width: width * multiplier, height: height * multiplier };
     }
 
     /**
@@ -143,51 +142,53 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
     }
 
     public render() {
-        const { width, height, isMobile } = this.getGridPixelSize();
+        const { width, height } = this.getGridPixelSize();
 
         return (
             <div
                 class="alchemy-grid-layout"
                 style={css({
                     position: 'absolute',
-                    bottom: isMobile ? '50%' : 0,
+                    bottom: this.props.settings.placesVideo ? 0 : '50%',
                     left: '50%',
                     height,
                     width,
                     marginLeft: width / -2,
-                    marginBottom: isMobile ? height / -2 : 0,
+                    marginBottom: this.props.settings.placesVideo ? 0 : height / -2,
                 })}
             >
                 {this.props.scene
                     .listControls()
                     .map(control =>
-                        <FixedGridControl control={control} grid={this.state.activeGrid} />,
+                        <ResourceHolder
+                            resource={control}
+                            component={FixedGridControl as typeof Component}
+                            nest={{ grid: this.state.activeGrid }} />,
                     )}
             </div>
         );
     }
 }
 
-class FixedGridControl extends Component<{ control: MControl; grid: number }, {}> {
+class FixedGridControl extends Component<{ resource: MControl; grid: number }, {}> {
     public render() {
-        const Control = this.props.control.descriptor().ctor as typeof PreactControl;
+        const Control = this.props.resource.descriptor().ctor as typeof PreactControl;
         const grid = this.getRelevantGrid();
         if (!grid) {
             return;
         }
 
         return (
-            <ResourceHolder
-                resource={this.props.control}
-                component={Control}
-                nest={{
-                    style: new RuleSet({
-                        left: grid.x * FixedGridLayout.gridScale,
-                        right: grid.x * FixedGridLayout.gridScale,
-                        width: grid.width * FixedGridLayout.gridScale,
-                        height: grid.height * FixedGridLayout.gridScale,
-                    })
-                }}
+            <Control
+                resource={this.props.resource}
+                style={new RuleSet({
+                    position: 'absolute',
+                    left: grid.x * FixedGridLayout.gridScale,
+                    top: grid.y * FixedGridLayout.gridScale,
+                    width: grid.width * FixedGridLayout.gridScale,
+                    height: grid.height * FixedGridLayout.gridScale,
+                })}
+                {...this.props.resource.toObject()}
             />
         );
     }
@@ -197,7 +198,7 @@ class FixedGridControl extends Component<{ control: MControl; grid: number }, {}
      */
     private getRelevantGrid(): Layout.IGridPlacement | undefined {
         const activeGrid = Layout.gridLayouts[this.props.grid].size;
-        const control = this.props.control;
+        const control = this.props.resource as MControl;
         const configuredGrids = control.get('grids', []);
         if (configuredGrids.length === 0) {
             log.error(
