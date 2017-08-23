@@ -63,3 +63,4 @@ typings/
 /build/index.js
 /build/index.js.map
 /dist
+*.tar.gz

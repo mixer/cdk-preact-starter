@@ -32,6 +32,13 @@ export class State extends EventEmitter {
     constructor(public readonly registry: Mixer.Registry) {
         super();
 
+        // debug handler -----------------------
+        Mixer.socket.dumpHandler(() => ({
+            participant: this.participant.toObject(),
+            scenes: Object.keys(this.scenes).map(g => this.scenes[g].toObject()),
+            groups: Object.keys(this.groups).map(g => this.groups[g].toObject()),
+        }));
+
         // scenes -------------------------------
         Mixer.socket.on('onSceneCreate', guard(({ scenes }) => {
             scenes.forEach(s => {
