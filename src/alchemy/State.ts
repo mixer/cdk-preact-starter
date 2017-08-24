@@ -41,6 +41,7 @@ export class State extends EventEmitter {
 
         // scenes -------------------------------
         Mixer.socket.on('onSceneCreate', guard(({ scenes }) => {
+            console.log('create', JSON.stringify(scenes));
             scenes.forEach(s => {
                 assert(!this.scenes[s.sceneID], `Tried to create scene in "${s.sceneID}", but it already exists`);
                 const scene = (this.scenes[s.sceneID] = new MScene(this, s));
@@ -77,7 +78,7 @@ export class State extends EventEmitter {
         // groups -------------------------------
         Mixer.socket.on('onGroupCreate', guard(({ groups }) => {
             groups.forEach(g => {
-                assert(!this.groups[g.groupID], `Tried create group "${g.groupID}", but it already exists`);
+                assert(!this.groups[g.groupID], `Tried to create group "${g.groupID}", but it already exists`);
                 assert(this.scenes[g.sceneID], `Tried to assign group to "${g.sceneID}", but it didn't exist`);
                 const group = (this.groups[g.groupID] = new Group(this.scenes[g.sceneID], g));
                 this.emit('groupCreate', group);
@@ -85,8 +86,8 @@ export class State extends EventEmitter {
         }));
         Mixer.socket.on('onGroupUpdate', guard(({ groups }) => {
             groups.forEach(g => {
-                assert(!this.groups[g.groupID], `Tried update group "${g.groupID}", but it already exists`);
-                assert(!this.scenes[g.sceneID], `Tried to assign group to "${g.sceneID}", but it didn't exist`);
+                assert(this.groups[g.groupID], `Tried to update group "${g.groupID}", but it didn't exist`);
+                assert(this.scenes[g.sceneID], `Tried to assign group to "${g.sceneID}", but it didn't exist`);
 
                 (<any>this.groups[g.groupID]).update(g);
                 if (this.participant.props.groupID === g.groupID) {
@@ -272,6 +273,18 @@ export class MScene<T extends Mixer.IScene = Mixer.IScene> extends Resource<T> {
             this.controls[c.controlID] = new MControl(this, c);
         });
         this.update(props);
+    }
+
+    /**
+     * Returns the resource's plain properties.
+     * @override
+     */
+    public toObject(): T {
+        return Object.assign(
+            {},
+            this.props,
+            { controls: Object.keys(this.controls).map(k => this.controls[k].toObject()) },
+        );
     }
 
     /**

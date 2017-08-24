@@ -199,11 +199,11 @@ class FixedGridControl extends Component<{ resource: MControl; grid: number }, {
     private getRelevantGrid(): Layout.IGridPlacement | undefined {
         const activeGrid = Layout.gridLayouts[this.props.grid].size;
         const control = this.props.resource as MControl;
-        const configuredGrids = control.get('grids', []);
+        const configuredGrids = control.get('position', []);
         if (configuredGrids.length === 0) {
             log.error(
                 `A control in scene "${control.scene.props.sceneID}" is ` +
-                    `missing a list of grids, we won't display it`,
+                    `missing a list of positions, we won't display it`,
                 control.toObject(),
             );
             return;

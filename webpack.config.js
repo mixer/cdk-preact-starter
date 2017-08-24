@@ -62,7 +62,7 @@ module.exports = {
   // which makes debugging a whole lot easier. These are enabled in development
   // but turned off in production: they're large and also contain your raw
   // source which you may want to keep private.
-  devtool: isProduction ? 'source-map' : false,
+  devtool: isProduction ? false : 'source-map',
   // Entry file that webpack will start looking at:
   entry: ['./src/index'],
   // Tell webpack that we want to output our bundle to the `build` directory.
