@@ -10,7 +10,7 @@ const webpack = require('webpack');
 const path = require('path');
 
 const { CheckerPlugin } = require('awesome-typescript-loader');
-const { MixerPlugin } = require('miix/webpack');
+const { MixerPlugin } = require('@mcph/miix/webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const CleanPlugin = require('clean-webpack-plugin');
 
@@ -104,7 +104,7 @@ module.exports = {
     // Indicate to webpack that the Mixer standard library is "external" and
     // will be injected later, so Webpack shouldn't try to throw it into the
     // bundle with everything else.
-    'miix/std': 'mixer',
+    '@mcph/miix/std': 'mixer',
   },
   // Plugins we defined above.
   plugins,

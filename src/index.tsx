@@ -1,5 +1,5 @@
 import { h, render } from 'preact';
-import * as Mixer from 'miix/std';
+import * as Mixer from '@mcph/miix/std';
 
 import { PreactScene, PreactStage } from './alchemy/preact/index';
 import { Joystick } from './joystick';

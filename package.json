@@ -1,11 +1,9 @@
 {
-  "name": "interactive-scratch",
-  "version": "0.1.0",
-  "description": "",
-  "main": "index.js",
+  "name": "interactive-launchpad",
+  "version": "1.0.0",
+  "description": "Standard kit for Mixer interactive",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --content-base build/"
+    "start": "miix serve"
   },
   "interactive": {
     "display": {
@@ -17,6 +15,7 @@
   "dependencies": {
     "decko": "^1.2.0",
     "eventemitter3": "^2.0.3",
+    "@mcph/miix": "0.1.0-alpha.2",
     "preact": "^8.2.1"
   },
   "devDependencies": {

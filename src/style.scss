@@ -29,6 +29,9 @@ body {
     height: 100%;
     font-family: $font-family-sans-serif;
 
+    // don't show ugly scrollbars if things are outside the window.
+    overflow: hidden;
+
     // these make fonts nicer on Chrome and Safari:
     -webkit-text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;

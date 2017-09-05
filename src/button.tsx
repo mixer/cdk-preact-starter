@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 import { bind } from 'decko';
 import { h } from 'preact';
-import * as Mixer from 'miix/std';
+import * as Mixer from '@mcph/miix/std';
 
 import { classes, css, RuleSet } from './alchemy/Style';
 import { PreactControl } from './alchemy/preact/index';

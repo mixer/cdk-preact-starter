@@ -1,5 +1,5 @@
 import { Component, h } from 'preact';
-import * as Mixer from 'miix/std';
+import * as Mixer from '@mcph/miix/std';
 
 import { PreactScene } from './Scene';
 import { MScene, State } from '../State';

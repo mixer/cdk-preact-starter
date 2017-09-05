@@ -1,5 +1,5 @@
 import { Component } from 'preact';
-import * as Mixer from 'miix/std';
+import * as Mixer from '@mcph/miix/std';
 
 import { MControl } from '../State';
 import { RuleSet } from '../Style';

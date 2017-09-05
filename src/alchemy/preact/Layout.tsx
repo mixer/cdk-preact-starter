@@ -5,7 +5,7 @@ import { ResourceHolder } from './Helpers';
  */
 
 import { Component, h } from 'preact';
-import { display, Layout, ISettings } from 'miix/std';
+import { display, Layout, ISettings } from '@mcph/miix/std';
 import { bind, debounce } from 'decko';
 
 import { MControl, MScene } from '../State';
