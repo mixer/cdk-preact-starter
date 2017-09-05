@@ -1,4 +1,4 @@
-import { IDimensions, Layout } from '@mcph/miix/std';
+import { IDimensions, Layout } from '@mcph/miix-std';
 
 /**
  * Returns the name translated from camelCase to kebab-case.

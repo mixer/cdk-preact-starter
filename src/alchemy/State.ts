@@ -1,5 +1,5 @@
 import { EventEmitter } from 'eventemitter3';
-import * as Mixer from '@mcph/miix/std';
+import * as Mixer from '@mcph/miix-std';
 
 import { assert, guard, remap } from './Log';
 

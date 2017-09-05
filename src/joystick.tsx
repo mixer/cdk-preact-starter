@@ -1,6 +1,6 @@
 import { bind } from 'decko';
 import { Component, h } from 'preact';
-import * as Mixer from '@mcph/miix/std';
+import * as Mixer from '@mcph/miix-std';
 
 import { css, RuleSet } from './alchemy/Style';
 import { PreactControl } from './alchemy/preact/index';

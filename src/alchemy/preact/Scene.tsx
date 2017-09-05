@@ -1,5 +1,5 @@
 import { Component, h } from 'preact';
-import * as Mixer from '@mcph/miix/std';
+import * as Mixer from '@mcph/miix-std';
 import { bind } from 'decko';
 
 import { FixedGridLayout, FlexLayout } from './Layout';
