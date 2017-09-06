@@ -33,7 +33,6 @@
             color: $base-color-bolt;
         }
     }
-
     // The disabled class is applied when the input gets disabled.
     &[disabled] {
         opacity: 0.7;
@@ -52,8 +51,8 @@
     text-align: center;
     color: $button-text-color;
     font-size: $button-font-size;
-    text-overflow: ellipsis;
     padding: 0 5px;
+    max-height: 100%;
 }
 
 // Styling for the cooldown that overlays custom controls.
