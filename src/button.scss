@@ -25,6 +25,7 @@
     text-shadow: $button-font-shadow;
     outline: 0 !important;
     z-index: $button-z-base;
+    transition: border-color 1s, background-color 0.5s;
 
     &:hover {
         border-color: $button-active-border-color;
@@ -32,6 +33,12 @@
         .mixer-spark-pill:not(.unaffordable) {
             color: $base-color-bolt;
         }
+    }
+
+    &:active {
+        background-color: lighten($button-background-color, 5%);
+        border-color: lighten($button-active-border-color, 40%);
+        transition: 0s;
     }
 
     // The disabled class is applied when the input gets disabled.
