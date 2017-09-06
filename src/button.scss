@@ -52,8 +52,8 @@
     text-align: center;
     color: $button-text-color;
     font-size: $button-font-size;
-    text-overflow: ellipsis;
     padding: 0 5px;
+    max-height: 100%;
 }
 
 // Styling for the cooldown that overlays custom controls.
