@@ -1,9 +1,9 @@
-import { h, render } from 'preact';
 import * as Mixer from '@mcph/miix-std';
+import { h, render } from 'preact';
 
 import { PreactScene, PreactStage } from './alchemy/preact/index';
-import { Joystick } from './joystick';
 import { Button } from './button';
+import { Joystick } from './joystick';
 
 // Import our custom CSS.
 require('./style.scss');

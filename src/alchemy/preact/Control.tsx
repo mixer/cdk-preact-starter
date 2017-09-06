@@ -1,10 +1,11 @@
-import { Component } from 'preact';
 import * as Mixer from '@mcph/miix-std';
+import { Component } from 'preact';
 
 import { MControl } from '../State';
 import { RuleSet } from '../Style';
 
-type ControlProps<C> = { resource: MControl<C & Mixer.IControl>, style?: RuleSet } & C & Mixer.IControl;
+type ControlProps<C> = { resource: MControl<C & Mixer.IControl>; style?: RuleSet } & C &
+  Mixer.IControl;
 
 /**
  * PreactControl is the "primitve" control that you can extend to implement
@@ -13,22 +14,22 @@ type ControlProps<C> = { resource: MControl<C & Mixer.IControl>, style?: RuleSet
  * some examples.
  */
 export abstract class PreactControl<T = {}, C = {}> extends Component<ControlProps<C>, T> {
-    protected control: MControl<C & Mixer.IControl>;
+  protected control: MControl<C & Mixer.IControl>;
 
-    constructor(props: ControlProps<C>) {
-        super(props);
-        this.control = props.resource;
-        this.control.state.registry.getInputs(this).forEach(input => {
-            Object.defineProperty(this, input.propertyName, {
-                get: () => this.control.get(input.propertyName as keyof C),
-            });
-        });
-    }
+  constructor(props: ControlProps<C>) {
+    super(props);
+    this.control = props.resource;
+    this.control.state.registry.getInputs(this).forEach(input => {
+      Object.defineProperty(this, input.propertyName, {
+        get: () => this.control.get(input.propertyName as keyof C),
+      });
+    });
+  }
 
-    /**
-     * @override
-     */
-    public componentWillReceiveProps(nextProps: ControlProps<C>) {
-        this.control = nextProps.resource;
-    }
+  /**
+   * @override
+   */
+  public componentWillReceiveProps(nextProps: ControlProps<C>) {
+    this.control = nextProps.resource;
+  }
 }
