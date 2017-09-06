@@ -11,10 +11,13 @@
     "target": "es5",
     "outDir": "dist",
     "lib": [
-        "node",
-        "es5",
-        "es6",
-        "dom"
+      "es5",
+      "es6",
+      "dom"
+    ],
+    "types": [
+      "mocha",
+      "node"
     ]
   },
   "include": [

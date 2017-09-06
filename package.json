@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "Standard kit for Mixer interactive",
   "scripts": {
-    "start": "miix serve"
+    "start": "miix serve",
+    "test": "tslint --type-check --project tsconfig.json \"src/**/*.{ts,tsx}\"",
+    "fmt": "npm-run-all --silent fmt:style fmt:lint",
+    "fmt:lint": "tslint --type-check --project tsconfig.json \"src/**/*.{ts,tsx}\" --fix",
+    "fmt:style": "prettier --single-quote --trailing-comma all --parser typescript --print-width 100 --write \"src/**/*.{ts,tsx}\""
   },
   "interactive": {
     "display": {
@@ -28,8 +32,13 @@
     "css-loader": "^0.28.5",
     "file-loader": "^0.11.2",
     "node-sass": "^4.5.3",
+    "npm-run-all": "^4.1.1",
+    "prettier": "^1.6.1",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
+    "ts-node": "^3.3.0",
+    "tslint": "^5.7.0",
+    "tslint-microsoft-contrib": "^5.0.1",
     "typescript": "^2.4.2",
     "webpack": "^3.5.3",
     "webpack-dev-server": "^2.7.1"

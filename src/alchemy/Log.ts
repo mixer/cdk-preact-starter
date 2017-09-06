@@ -8,45 +8,46 @@ const compactWhitespace = (str: string) => str.replace(/[ \n\r\t]+/g, ' ');
  * An AssertionError is thrown by assert().
  */
 export class AssertionError extends Error {
-    constructor(message: string) {
-        super(compactWhitespace(message));
-        AssertionError.setProto(this);
-    }
+  constructor(message: string) {
+    super(compactWhitespace(message));
+    AssertionError.setProto(this);
+  }
 
-    protected static setProto(error: AssertionError) {
-        if (Object.setPrototypeOf) {
-            Object.setPrototypeOf(error, this.prototype);
-            return;
-        }
-        (<any>error).__proto__ = this.prototype; // Super emergency fallback
+  protected static setProto(error: AssertionError) {
+    if (Object.setPrototypeOf) {
+      Object.setPrototypeOf(error, this.prototype);
+      return;
     }
+    (<any>error).__proto__ = this.prototype; // Super emergency fallback
+  }
 }
 
 /**
  * Throws an AssertionError if the value is not truthy.
  */
 export function assert(value: any, message: string) {
-    if (!value) {
-        throw new AssertionError(message);
-    }
+  if (!value) {
+    throw new AssertionError(message);
+  }
 }
 
 /**
  * Guard wraps the provided function and catches and logs assertionerrors.
  */
 export function guard<T, R>(fn: (arg: T) => R): (arg: T) => R | undefined {
-    return function () {
-        try {
-            return fn.apply(this, arguments)
-        } catch (e) {
-            if (e instanceof AssertionError) {
-                log.error(e.message);
-                return undefined;
-            }
+  return function() {
+    try {
+      // tslint:disable-next-line
+      return fn.apply(this, arguments);
+    } catch (e) {
+      if (e instanceof AssertionError) {
+        log.error(e.message);
+        return undefined;
+      }
 
-            throw e;
-        }
+      throw e;
     }
+  };
 }
 
 /**
@@ -54,9 +55,9 @@ export function guard<T, R>(fn: (arg: T) => R): (arg: T) => R | undefined {
  * AssertionError. Should be used with great care.
  */
 export function remap<R>(fn: () => R): R {
-    try {
-        return fn();
-    } catch (e) {
-        throw new AssertionError(e.message);
-    }
+  try {
+    return fn();
+  } catch (e) {
+    throw new AssertionError(e.message);
+  }
 }
