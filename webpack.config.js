@@ -23,8 +23,8 @@ const isProduction = process.env.ENV === 'production';
 const plugins = [
   // TypeScript checking, needed for `miix serve`.
   new CheckerPlugin(),
-  // Mixer dev server, standard library injection
-  new MixerPlugin({ homepage: 'src/index.html' }),
+  // Mixer dev server, handles standard library injection and locale building.
+  new MixerPlugin({ homepage: 'src/index.html', locales: 'locales/*.json' }),
 ];
 
 if (isProduction) {
