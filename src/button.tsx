@@ -1,6 +1,7 @@
 import * as Mixer from '@mcph/miix-std';
 import { Component, h } from 'preact';
 
+import { gamepad } from './alchemy/Gamepad';
 import { PreactControl } from './alchemy/preact/index';
 import { classes, css, RuleSet } from './alchemy/Style';
 
@@ -111,7 +112,7 @@ export class CoolDown extends Component<{ cooldown: number }, { ttl: number }> {
  *  - Buttons can be disabled.
  */
 @Mixer.Control({ kind: 'button' })
-export class Button extends PreactControl<{ availableSparks: number }> {
+export class Button extends PreactControl<{ availableSparks: number; active: boolean }> {
   /**
    * Size of the button.
    */
@@ -144,13 +145,35 @@ export class Button extends PreactControl<{ availableSparks: number }> {
    */
   @Mixer.Input() public disabled: boolean;
 
+  /**
+   * JavaScript keycode to bind to. When that key is pressed, this button will
+   * be automatically triggered.
+   */
+  @Mixer.Input() public keyCode: number;
+
+  /**
+   * Gamepad button index to bind to.
+   */
+  @Mixer.Input() public gamepadButton: number;
+
+  private gamepad = gamepad;
+
   public componentWillMount() {
     this.updateAvailableSparks();
     this.control.state.participant.on('update', this.updateAvailableSparks);
+    this.registerGamepadButton();
+    window.addEventListener('keydown', this.keyDown);
+    window.addEventListener('keyup', this.keyUp);
+  }
+
+  public componentWillReceiveProps() {
+    this.registerGamepadButton();
   }
 
   public componentWillUnmount() {
     this.control.state.participant.removeListener('update', this.updateAvailableSparks);
+    window.removeEventListener('keydown', this.keyDown);
+    window.removeEventListener('keyup', this.keyUp);
   }
 
   public render() {
@@ -158,7 +181,7 @@ export class Button extends PreactControl<{ availableSparks: number }> {
 
     return (
       <div
-        class="mixer-button"
+        class={classes({ mixerButton: true, active: this.state.active })}
         disabled={this.disabled}
         role="button"
         onMouseDown={this.mousedown}
@@ -173,12 +196,47 @@ export class Button extends PreactControl<{ availableSparks: number }> {
     );
   }
 
+  protected registerGamepadButton() {
+    if (this.disabled) {
+      this.gamepad.unregisterButtonListener(this.gamepadButtonPress);
+      return;
+    }
+
+    this.gamepad.registerButtonListener({
+      boundButton: this.gamepadButton,
+      keyCode: this.keyCode,
+      listener: this.gamepadButtonPress,
+    });
+  }
+
   protected mousedown = () => {
     this.control.giveInput({ event: 'mousedown' });
+    this.setState({ ...this.state, active: true });
   };
 
   protected mouseup = () => {
     this.control.giveInput({ event: 'mouseup' });
+    this.setState({ ...this.state, active: false });
+  };
+
+  protected gamepadButtonPress = (pressed: boolean) => {
+    if (pressed) {
+      this.mousedown();
+    } else {
+      this.mouseup();
+    }
+  };
+
+  protected keyDown = (ev: KeyboardEvent) => {
+    if (ev.keyCode === this.keyCode) {
+      this.mousedown();
+    }
+  };
+
+  protected keyUp = (ev: KeyboardEvent) => {
+    if (ev.keyCode === this.keyCode) {
+      this.mouseup();
+    }
   };
 
   private updateAvailableSparks = () => {
