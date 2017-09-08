@@ -17,10 +17,7 @@ export const enum Button {
   DPadRight,
 }
 
-export interface IJoystickListener {
-  boundIndex: number;
-  listener(x: number, y: number): void;
-}
+export type JoystickListener = (x: number, y: number) => void;
 
 /**
  * The JoystickState holds state for one gamepad joystick, along with the
@@ -32,33 +29,50 @@ class JoystickState {
    */
   public static deadZoneSquared = 0.2 ** 2;
 
-  public listener: IJoystickListener | undefined;
+  private listeners: JoystickListener[] = [];
   private inDeadZone = true;
 
+  /**
+   * Moves the joystick, and notifies listeners.
+   */
   public setXY(x: number, y: number) {
-    if (!this.listener) {
+    if (this.listeners.length === 0) {
       return;
     }
 
     const dead = x * x + y * y < JoystickState.deadZoneSquared;
     if (!dead) {
-      this.listener.listener(x, y);
+      this.listeners.forEach(fn => fn(x, y));
       this.inDeadZone = false;
       return;
     }
 
     if (!this.inDeadZone) {
       this.inDeadZone = true;
-      this.listener.listener(0, 0);
+      this.listeners.forEach(fn => fn(0, 0));
     }
+  }
+
+  /**
+   * addListener adds a listener to be notified when this joystick is moved.
+   */
+  public addListener(listener: JoystickListener) {
+    if (this.listeners.some(l => l !== listener)) {
+      return;
+    }
+
+    this.listeners.push(listener);
+  }
+
+  /**
+   * removeListener removes a previously added listener.
+   */
+  public removeListener(listener: JoystickListener) {
+    this.listeners = this.listeners.filter(l => l !== listener);
   }
 }
 
-export interface IButtonListener {
-  boundButton: number;
-  keyCode: number;
-  listener(active: boolean): void;
-}
+export type ButtonListener = (active: boolean) => void;
 
 /**
  * ButtonState stores and dispatch listeners for a gamepad button. See the docs
@@ -72,8 +86,8 @@ class ButtonState {
   public static buttonThreshold = 0.5;
 
   private pressed = false;
-  private listeners: IButtonListener[] = [];
-  private toProcess: IButtonListener[] = [];
+  private listeners: ButtonListener[] = [];
+  private toProcess: ButtonListener[] = [];
 
   /**
    * Signals that the button is depressed the given amount (0 to 1).
@@ -85,16 +99,8 @@ class ButtonState {
     }
 
     this.pressed = pressed;
-    let sawSpecific = false;
     for (let i = 0; i < this.listeners.length; i++) {
-      const listener = this.listeners[i];
-      const isSpecific = typeof listener.boundButton === 'number';
-      if (sawSpecific && !isSpecific) {
-        break;
-      }
-
-      sawSpecific = isSpecific;
-      listener.listener(pressed);
+      this.listeners[i](pressed);
     }
 
     for (let i = 0; i < this.toProcess.length; i++) {
@@ -108,18 +114,13 @@ class ButtonState {
    * addListener adds a listener to be notified when this
    * gamepad input is pressed.
    */
-  public addListener(listener: IButtonListener) {
+  public addListener(listener: ButtonListener) {
     // If the button is pressed, wait to add the listener. This prevents
     // unmatched mouseup's and "dangling" mousedowns if a specific listener
     // game in in a previous non-specific group.
     if (this.pressed) {
       this.toProcess.push(listener);
-    }
-
-    this.listeners = this.listeners.filter(l => l.listener !== listener.listener);
-    if (typeof listener.boundButton === 'number') {
-      this.listeners.unshift(listener);
-    } else {
+    } else if (!this.listeners.some(l => l === listener)) {
       this.listeners.push(listener);
     }
   }
@@ -127,22 +128,9 @@ class ButtonState {
   /**
    * removeListener removes a previously added listener.
    */
-  public removeListener(listener: (active: boolean) => void) {
-    this.listeners = this.listeners.filter(l => l.listener !== listener);
-    this.toProcess = this.toProcess.filter(l => l.listener !== listener);
+  public removeListener(listener: ButtonListener) {
+    this.listeners = this.listeners.filter(l => l !== listener);
   }
-}
-
-function toCharCode(s: string) {
-  const char = s.toLowerCase().charCodeAt(0);
-  if (char >= 97 && char < 123) {
-    return char - 32; // ascii letters
-  }
-  if (char >= 48 && char < 58) {
-    return char + 48; // numbers
-  }
-
-  return char;
 }
 
 /**
@@ -175,61 +163,24 @@ class Gamepad {
    */
   public static maxButtonIndex = 15;
 
-  private joystickState: JoystickState[] = [];
-  private joystickListenerQueue: IJoystickListener[] = [];
-  private joystickAutobindEnabled: boolean;
-  private buttonStates: { [index: number]: ButtonState } = {};
-  private buttonAutoKeycode: { [keyCode: number]: number[] } = {};
+  private joystickStates: JoystickState[] = [];
+  private buttonStates: ButtonState[] = [];
   private raf: number;
 
   constructor() {
     for (let i = 0; i <= Gamepad.maxJoystickIndex; i++) {
-      this.joystickState.push(new JoystickState());
+      this.joystickStates.push(new JoystickState());
     }
     for (let i = 0; i <= Gamepad.maxButtonIndex; i++) {
-      this.buttonStates[i] = new ButtonState();
+      this.buttonStates.push(new ButtonState());
     }
-  }
-
-  /**
-   * bindJoysticks sets whether we should automatically bind gamepad joysticks
-   * to Interactive joysticks.
-   */
-  public bindJoysticks(enabled: boolean): this {
-    this.joystickAutobindEnabled = enabled;
-    return this;
-  }
-
-  /**
-   * bindButtons sets up bindings so that the given gamepad inputs
-   * automatically trigger key presses for buttons bound to the keycode.
-   */
-  public bindButtons(mapping: { [button: number]: string | number }) {
-    Object.keys(mapping).forEach((button: keyof typeof mapping) => {
-      const raw = mapping[button];
-      const keyCode = typeof raw === 'number' ? raw : toCharCode(raw);
-
-      if (this.buttonAutoKeycode[keyCode]) {
-        this.buttonAutoKeycode[keyCode].push(button);
-      } else {
-        this.buttonAutoKeycode[keyCode] = [button];
-      }
-    });
   }
 
   /**
    * registerButtonListener attaches a listener for a gamepad button.
    */
-  public registerButtonListener(listener: IButtonListener) {
-    if (listener.boundButton) {
-      this.buttonStates[listener.boundButton].addListener(listener);
-    }
-    if (this.buttonAutoKeycode[listener.keyCode]) {
-      this.buttonAutoKeycode[listener.keyCode].forEach(button => {
-        this.buttonStates[button].addListener(listener);
-      });
-    }
-
+  public registerButtonListener(button: number, listener: ButtonListener) {
+    this.buttonStates[button].addListener(listener);
     this.ensurePolling();
   }
 
@@ -245,76 +196,18 @@ class Gamepad {
   /**
    * Registers the function as a listener for a gamepad joystick.
    */
-  public registerJoystickListener(listener: IJoystickListener) {
-    // The general idea here is that we can have several listeners, with some
-    // explicitly bound to an index. If the new listener is bound, overwrite
-    // any existing listener and move it to the array of inactive listeners.
-    // Otherwise, only bind it if no one is already listening to a joystick.
-
-    if (listener.boundIndex) {
-      const state = this.joystickState[listener.boundIndex];
-      if (state.listener.listener === listener.listener) {
-        return;
-      }
-
-      if (state) {
-        this.joystickListenerQueue.unshift(state.listener);
-      }
-
-      state.listener = listener;
-      this.ensurePolling();
-      return;
-    }
-
-    if (!this.joystickAutobindEnabled) {
-      return;
-    }
-
-    for (let i = 0; i <= Gamepad.maxJoystickIndex; i++) {
-      const existing = this.joystickState[i].listener;
-      if (!existing) {
-        this.joystickState[i].listener = listener;
-        this.ensurePolling();
-        return;
-      } else if (existing.listener === listener.listener) {
-        return;
-      }
-    }
-
-    if (!this.joystickListenerQueue.some(j => j.listener === listener.listener)) {
-      this.joystickListenerQueue.push(listener);
-    }
+  public registerJoystickListener(index: number, listener: JoystickListener) {
+    this.joystickStates[index].addListener(listener);
+    this.ensurePolling();
   }
 
   /**
    * Unregisters the joystick listener.
    */
-  public unregisterJoystickListener(fn: (x: number, y: number) => void) {
-    // Check through the active listeners; if we're unbinding one of them,
-    // try to "promote" the next best listener from the queue. Otherwise just
-    // filter the given listener out of the queue.
-
+  public unregisterJoystickListener(listener: JoystickListener) {
     for (let i = 0; i <= Gamepad.maxJoystickIndex; i++) {
-      const state = this.joystickState[i];
-      if (state.listener && state.listener.listener !== fn) {
-        continue;
-      }
-
-      let nextUp = this.joystickListenerQueue.findIndex(l => l.boundIndex === i);
-      if (nextUp === -1) {
-        nextUp = this.joystickListenerQueue.findIndex(l => l.boundIndex === undefined);
-      }
-      if (nextUp === -1) {
-        state.listener = undefined;
-      } else {
-        state.listener = this.joystickListenerQueue[nextUp];
-        this.joystickListenerQueue.splice(nextUp, 1);
-      }
-
-      return;
+      this.joystickStates[i].removeListener(listener);
     }
-
-    this.joystickListenerQueue = this.joystickListenerQueue.filter(l => l.listener !== fn);
   }
 
   private getGamepad() {
@@ -336,7 +229,7 @@ class Gamepad {
     }
 
     for (let i = 0; i <= Gamepad.maxJoystickIndex; i++) {
-      this.joystickState[i].setXY(pad.axes[i * 2 + 0], pad.axes[i * 2 + 1]);
+      this.joystickStates[i].setXY(pad.axes[i * 2 + 0], pad.axes[i * 2 + 1]);
     }
 
     for (let i = 0; i < Gamepad.maxButtonIndex; i++) {
