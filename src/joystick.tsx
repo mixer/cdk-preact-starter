@@ -153,8 +153,7 @@ export class Joystick extends PreactControl {
 
   /**
    * Gamepad joystick number to bind to. On Xbox, `0` is the left stick and
-   * `1` is the right stick. The joystick will bind automatically if this
-   * isn't set.
+   * `1` is the right stick.
    */
   @Mixer.Input() public gamepadJoystick: number;
 
@@ -199,13 +198,9 @@ export class Joystick extends PreactControl {
   protected registerGamepadJoysticks() {
     if (this.disabled) {
       this.gamepad.unregisterJoystickListener(this.gamepadJoystickMove);
-      return;
+    } else if (typeof this.gamepadJoystick === 'number') {
+      this.gamepad.registerJoystickListener(this.gamepadJoystick, this.gamepadJoystickMove);
     }
-
-    this.gamepad.registerJoystickListener({
-      boundIndex: this.gamepadJoystick,
-      listener: this.gamepadJoystickMove,
-    });
   }
 
   protected setJoystick = (element: HTMLElement) => {

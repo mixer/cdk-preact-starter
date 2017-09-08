@@ -34,10 +34,6 @@
         }
     }
 
-    &.active {
-      background: #f00;
-    }
-
     // The disabled class is applied when the input gets disabled.
     &[disabled] {
         opacity: 0.7;

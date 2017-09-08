@@ -199,14 +199,9 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
   protected registerGamepadButton() {
     if (this.disabled) {
       this.gamepad.unregisterButtonListener(this.gamepadButtonPress);
-      return;
+    } else if (typeof this.gamepadButton === 'number') {
+      this.gamepad.registerButtonListener(this.gamepadButton, this.gamepadButtonPress);
     }
-
-    this.gamepad.registerButtonListener({
-      boundButton: this.gamepadButton,
-      keyCode: this.keyCode,
-      listener: this.gamepadButtonPress,
-    });
   }
 
   protected mousedown = () => {
