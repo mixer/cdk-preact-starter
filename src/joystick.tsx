@@ -1,6 +1,7 @@
 import * as Mixer from '@mcph/miix-std';
 import { Component, h } from 'preact';
 
+import { gamepad } from './alchemy/Gamepad';
 import { PreactControl } from './alchemy/preact/index';
 import { css, RuleSet } from './alchemy/Style';
 
@@ -150,11 +151,28 @@ export class Joystick extends PreactControl {
    */
   @Mixer.Input() public disabled: boolean;
 
+  /**
+   * Gamepad joystick number to bind to. On Xbox, `0` is the left stick and
+   * `1` is the right stick. The joystick will bind automatically if this
+   * isn't set.
+   */
+  @Mixer.Input() public gamepadJoystick: number;
+
   private size: ISizes;
   private joystick: HTMLElement;
   private handle: HTMLElement;
+  private gamepad = gamepad;
+
+  public componentDidMount() {
+    this.registerGamepadJoysticks();
+  }
+
+  public componentWillReceiveProps() {
+    this.registerGamepadJoysticks();
+  }
 
   public componentWillUnmount() {
+    this.gamepad.unregisterJoystickListener(this.gamepadJoystickMove);
     this.windowMouseUp();
   }
 
@@ -178,6 +196,18 @@ export class Joystick extends PreactControl {
     );
   }
 
+  protected registerGamepadJoysticks() {
+    if (this.disabled) {
+      this.gamepad.unregisterJoystickListener(this.gamepadJoystickMove);
+      return;
+    }
+
+    this.gamepad.registerJoystickListener({
+      boundIndex: this.gamepadJoystick,
+      listener: this.gamepadJoystickMove,
+    });
+  }
+
   protected setJoystick = (element: HTMLElement) => {
     this.joystick = element;
   };
@@ -192,17 +222,7 @@ export class Joystick extends PreactControl {
       return;
     }
 
-    const handle = this.handle.getBoundingClientRect();
-    this.size = {
-      joystick: this.joystick.getBoundingClientRect(),
-      handle,
-      dragOffset: capMagnitude(
-        ev.pageX - (handle.left + handle.width / 2),
-        ev.pageY - (handle.top + handle.height / 2),
-        handle.width / 2,
-      ),
-    };
-
+    this.calculateSizes();
     this.windowMouseMove(ev);
     this.handle.style.transition = 'none';
     window.addEventListener('mousemove', this.windowMouseMove);
@@ -211,13 +231,12 @@ export class Joystick extends PreactControl {
 
   protected windowMouseMove = (ev: MouseEvent) => {
     const radius = this.size.joystick.width / 2;
-    const [localX, localY] = capMagnitude(
-      ev.pageX - (this.size.joystick.left + radius) - this.size.dragOffset[0],
-      ev.pageY - (this.size.joystick.top + radius) - this.size.dragOffset[1],
-      radius,
+    const [x, y] = capMagnitude(
+      (ev.pageX - (this.size.joystick.left + radius) - this.size.dragOffset[0]) / radius,
+      (ev.pageY - (this.size.joystick.top + radius) - this.size.dragOffset[1]) / radius,
     );
 
-    this.handle.style.transform = `translate(${localX}px, ${localY}px)`;
+    this.moveXY(x, y);
   };
 
   protected windowMouseUp = () => {
@@ -226,5 +245,37 @@ export class Joystick extends PreactControl {
 
     window.removeEventListener('mousemove', this.windowMouseMove);
     window.removeEventListener('mouseup', this.windowMouseUp);
+    setTimeout(() => (this.handle.style.transition = 'none'), 300);
+  };
+
+  protected moveXY(x: number, y: number) {
+    if (!this.size) {
+      this.calculateSizes();
+    }
+
+    const radius = this.size.joystick.width / 2;
+    this.handle.style.transform = `translate(${x * radius}px, ${y * radius}px)`;
+  }
+
+  protected calculateSizes(ev?: MouseEvent) {
+    const offset: [number, number] = [0, 0];
+    const handle = this.handle.getBoundingClientRect();
+    if (ev) {
+      capMagnitude(
+        ev.pageX - (handle.left + handle.width / 2),
+        ev.pageY - (handle.top + handle.height / 2),
+        handle.width / 2,
+      );
+    }
+
+    this.size = {
+      joystick: this.joystick.getBoundingClientRect(),
+      handle,
+      dragOffset: offset,
+    };
+  }
+
+  protected gamepadJoystickMove = (x: number, y: number) => {
+    this.moveXY(x, y);
   };
 }
