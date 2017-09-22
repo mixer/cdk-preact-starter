@@ -4,6 +4,7 @@ import { Component, h } from 'preact';
 import { gamepad } from './alchemy/Gamepad';
 import { PreactControl } from './alchemy/preact/index';
 import { css, RuleSet } from './alchemy/Style';
+import { throttle } from './alchemy/Toolbox';
 
 interface ISizes {
   joystick: ClientRect;
@@ -139,12 +140,12 @@ export class Joystick extends PreactControl {
    * Angle of the "halo" around the Joystick. Often used to show what the
    * overall viewers are doing. The angle is given in radians.
    */
-  @Mixer.Input() public angle: number;
+  @Mixer.Input() public angle: number = 0;
 
   /**
    * Intensity of the halo around the button.
    */
-  @Mixer.Input() public intensity: number;
+  @Mixer.Input() public intensity: number = 0;
 
   /**
    * Whether input is disabled on the button.
@@ -157,21 +158,34 @@ export class Joystick extends PreactControl {
    */
   @Mixer.Input() public gamepadJoystick: number;
 
+  /**
+   * How often to send the joystick's coordinates to the server.
+   */
+  @Mixer.Input() public sampleRate: number = 50;
+
   private size: ISizes;
   private joystick: HTMLElement;
   private handle: HTMLElement;
   private gamepad = gamepad;
 
+  private lastSampleRate: number;
+  private throttledInputSender: (x: number, y: number) => void;
+
   public componentDidMount() {
     this.registerGamepadJoysticks();
+    this.throttledInputSender = throttle(this.sampleRate, this.sendInputToInteractive);
   }
 
   public componentWillReceiveProps() {
     this.registerGamepadJoysticks();
+
+    if (this.lastSampleRate !== this.sampleRate) {
+      this.throttledInputSender = throttle(this.sampleRate, this.sendInputToInteractive);
+    }
   }
 
   public componentWillUnmount() {
-    this.gamepad.unregisterJoystickListener(this.gamepadJoystickMove);
+    this.gamepad.unregisterJoystickListener(this.moveXY);
     this.windowMouseUp();
   }
 
@@ -195,22 +209,40 @@ export class Joystick extends PreactControl {
     );
   }
 
+  /**
+   * Attaches this joystick to gamepad joysticks, if it's enabled and
+   * joysticks are plugged in.
+   */
   protected registerGamepadJoysticks() {
     if (this.disabled) {
-      this.gamepad.unregisterJoystickListener(this.gamepadJoystickMove);
+      this.gamepad.unregisterJoystickListener(this.moveXY);
     } else if (typeof this.gamepadJoystick === 'number') {
-      this.gamepad.registerJoystickListener(this.gamepadJoystick, this.gamepadJoystickMove);
+      this.gamepad.registerJoystickListener(this.gamepadJoystick, this.moveXY);
     }
   }
 
+  /**
+   * Sets the actual HTML element for the joystick. This is used to get
+   * sizing information for moving the dot around as users drag the joystick.
+   */
   protected setJoystick = (element: HTMLElement) => {
     this.joystick = element;
   };
 
+  /**
+   * Sets the HTML element for the Joystick "handle", the dot that can be
+   * dragged around. This is used for getting sizing information and moving
+   * it around.
+   */
   protected setHandle = (element: HTMLElement) => {
     this.handle = element;
   };
 
+  /**
+   * Starts a drag on the joystick. Grabs the mouse's current position
+   * relative to the handle and saves that, and attaches listeners to see
+   * when the mouse moves and is released.
+   */
   protected mousedown = (ev: MouseEvent) => {
     ev.preventDefault();
     if (this.disabled) {
@@ -224,6 +256,11 @@ export class Joystick extends PreactControl {
     window.addEventListener('mouseup', this.windowMouseUp);
   };
 
+  /**
+   * Called when the mouse moves on the screen while the joystick is being
+   * dragged. Does some math to get the (x, y) position to send to
+   * Interactive, and calls moveXY to update the visual styling.
+   */
   protected windowMouseMove = (ev: MouseEvent) => {
     const radius = this.size.joystick.width / 2;
     const [x, y] = capMagnitude(
@@ -234,6 +271,10 @@ export class Joystick extends PreactControl {
     this.moveXY(x, y);
   };
 
+  /**
+   * Called when the mouse is released after dragging. Removes event listeners
+   * and triggers an animation to reset the handle position.
+   */
   protected windowMouseUp = () => {
     this.handle.style.transition = 'transform 300ms';
     this.handle.style.transform = 'translate(0px, 0px)';
@@ -243,15 +284,33 @@ export class Joystick extends PreactControl {
     setTimeout(() => (this.handle.style.transition = 'none'), 300);
   };
 
-  protected moveXY(x: number, y: number) {
+  /**
+   * Called when the joystick is moved, by the mouse or the gamepad.
+   */
+  protected moveXY = (x: number, y: number): void => {
     if (!this.size) {
       this.calculateSizes();
     }
 
     const radius = this.size.joystick.width / 2;
     this.handle.style.transform = `translate(${x * radius}px, ${y * radius}px)`;
+    this.throttledInputSender(x, y);
+  };
+
+  /**
+   * Sends the give x/y position to Interactive. This is not called directly,
+   * rather this is passed to the `throttle()` utility to which limits how
+   * quickly we sample joystick input.
+   */
+  protected sendInputToInteractive(x: number, y: number) {
+    this.control.giveInput({ event: 'move', x, y });
   }
 
+  /**
+   * Does some calculations to get the current size and position of the
+   * joystick on the screen. This is used in calculations in windowMouseMove
+   * to correctly position the joystick.
+   */
   protected calculateSizes(ev?: MouseEvent) {
     const offset: [number, number] = [0, 0];
     const handle = this.handle.getBoundingClientRect();
@@ -269,8 +328,4 @@ export class Joystick extends PreactControl {
       dragOffset: offset,
     };
   }
-
-  protected gamepadJoystickMove = (x: number, y: number) => {
-    this.moveXY(x, y);
-  };
 }
