@@ -1,5 +1,6 @@
 import * as Mixer from '@mcph/miix-std';
 import { Component } from 'preact';
+import { log } from '../Log';
 
 import { MControl } from '../State';
 import { RuleSet } from '../Style';
@@ -21,7 +22,17 @@ export abstract class PreactControl<T = {}, C = {}> extends Component<ControlPro
     this.control = props.resource;
     this.control.state.registry.getInputs(this).forEach(input => {
       Object.defineProperty(this, input.propertyName, {
-        get: () => this.control.get(input.propertyName as keyof C),
+        get: () => this.control.get(input.propertyName as keyof C, input.defaultValue),
+        set: value => {
+          // Define a setter and warn if people use it. For default values,
+          // TypeScript will try setting them, so don't warn then.
+          if (value !== input.defaultValue) {
+            log.warn(
+              `Tried to set ${input}, but you cannot set inputs from the frontend. Use your ` +
+                `game client instead, or store temporary data in your component's Preact state.`,
+            );
+          }
+        },
       });
     });
   }
