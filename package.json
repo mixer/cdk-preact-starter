@@ -17,14 +17,14 @@
   "author": "Connor Peet <connor@peet.io>",
   "license": "MIT",
   "dependencies": {
-    "@mcph/miix-std": "^0.1.0",
+    "@mcph/miix-std": "^0.1.2",
     "decko": "^1.2.0",
     "eventemitter3": "^2.0.3",
     "intl-messageformat": "^2.1.0",
     "preact": "^8.2.1"
   },
   "devDependencies": {
-    "@mcph/miix-cli": "0.1.0-alpha.3",
+    "@mcph/miix-cli": "0.1.0-alpha.9",
     "@types/node": "^8.0.24",
     "awesome-typescript-loader": "^3.2.2",
     "clean-webpack-plugin": "^0.1.16",

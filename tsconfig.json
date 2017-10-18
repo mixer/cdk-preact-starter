@@ -16,7 +16,6 @@
       "dom"
     ],
     "types": [
-      "mocha",
       "node"
     ]
   },
