@@ -177,21 +177,20 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
   }
 
   public render() {
-    const rules = RuleSet.fromDimensions(this.dimensions).concat(this.props.style);
-
     return (
-      <div
-        class={classes({ mixerButton: true, active: this.state.active })}
-        disabled={this.disabled}
-        role="button"
-        onMouseDown={this.mousedown}
-        onMouseUp={this.mouseup}
-        style={rules.compile()}
-      >
-        <div class="mixer-content">{this.text}</div>
-        <SparkPill cost={this.cost} available={this.state.availableSparks} />
-        <CoolDown cooldown={this.cooldown} />
-        <ProgressBar value={this.progress} />
+      <div class="mixer-button-container" style={this.props.style.compile()}>
+          <div
+            class={classes({ mixerButton: true, active: this.state.active })}
+            disabled={this.disabled}
+            role="button"
+            onMouseDown={this.mousedown}
+            onMouseUp={this.mouseup}
+          >
+            <div class="mixer-content">{this.text}</div>
+            <SparkPill cost={this.cost} available={this.state.availableSparks} />
+            <CoolDown cooldown={this.cooldown} />
+            <ProgressBar value={this.progress} />
+          </div>
       </div>
     );
   }

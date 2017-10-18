@@ -19,7 +19,11 @@
     @include layout-center-contents();
     @include button-like();
 
-    position: relative;
+    position: absolute;
+    top: $button-margin;
+    left: $button-margin;
+    right: $button-margin;
+    bottom: $button-margin;
     cursor: pointer;
     font-weight: $button-font-weight;
     text-shadow: $button-font-shadow;
