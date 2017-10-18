@@ -128,10 +128,11 @@
 
     position: absolute;
     left: 50%;
-    top: 0;
-    transform: translate(-50%, -50%);
+    top: -0.75em;
+    transform: translateX(-50%);
     font-weight: $button-font-weight;
     color: $button-cost-default-color;
+    line-height: 1.5em;
     font-size: 0.8em;
     padding: 0 8px 0 5px;
     transition: color $easing-default-duration $easing-default-curve;

@@ -3,7 +3,7 @@ import { Component, h } from 'preact';
 
 import { gamepad } from './alchemy/Gamepad';
 import { PreactControl } from './alchemy/preact/index';
-import { classes, css, RuleSet } from './alchemy/Style';
+import { classes, css } from './alchemy/Style';
 
 /**
  * SparkPill is the component that shows the spark cost above a button.
