@@ -2,9 +2,9 @@ import * as Mixer from '@mcph/miix-std';
 import { h, render } from 'preact';
 
 import { PreactStage } from './alchemy/preact/index';
-import { Button as ButtonControl } from './button';
-import { Joystick as JoystickControl } from './joystick';
-import { DefaultScene } from './scene';
+import { Button as ButtonControl } from './prefabs/button/button';
+import { DefaultScene } from './prefabs/default-scene/scene';
+import { Joystick as JoystickControl } from './prefabs/joystick/joystick';
 
 // Import our custom CSS.
 require('./style.scss');
