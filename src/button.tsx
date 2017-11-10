@@ -114,11 +114,6 @@ export class CoolDown extends Component<{ cooldown: number }, { ttl: number }> {
 @Mixer.Control({ kind: 'button' })
 export class Button extends PreactControl<{ availableSparks: number; active: boolean }> {
   /**
-   * Size of the button.
-   */
-  @Mixer.Input() public dimensions: Mixer.IDimensions;
-
-  /**
    * Content to display on the button.
    */
   @Mixer.Input() public text: string;
@@ -178,20 +173,18 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
 
   public render() {
     return (
-      <div class="mixer-button-container" style={this.props.style.compile()}>
-          <div
-            class={classes({ mixerButton: true, active: this.state.active })}
-            disabled={this.disabled}
-            role="button"
-            onMouseDown={this.mousedown}
-            onMouseUp={this.mouseup}
-          >
-            <div class="mixer-content">{this.text}</div>
-            <SparkPill cost={this.cost} available={this.state.availableSparks} />
-            <CoolDown cooldown={this.cooldown} />
-            <ProgressBar value={this.progress} />
-          </div>
-      </div>
+        <div
+          class={classes({ mixerButton: true, active: this.state.active })}
+          disabled={this.disabled}
+          role="button"
+          onMouseDown={this.mousedown}
+          onMouseUp={this.mouseup}
+        >
+          <div class="mixer-content">{this.text}</div>
+          <SparkPill cost={this.cost} available={this.state.availableSparks} />
+          <CoolDown cooldown={this.cooldown} />
+          <ProgressBar value={this.progress} />
+        </div>
     );
   }
 

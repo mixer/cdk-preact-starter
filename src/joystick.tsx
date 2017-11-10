@@ -3,7 +3,7 @@ import { Component, h } from 'preact';
 
 import { gamepad } from './alchemy/Gamepad';
 import { PreactControl } from './alchemy/preact/index';
-import { css, RuleSet } from './alchemy/Style';
+import { css } from './alchemy/Style';
 import { throttle } from './alchemy/Toolbox';
 
 interface ISizes {
@@ -132,11 +132,6 @@ export class Halo extends Component<IHaloProps, { transitionSpeed: number }> {
 })
 export class Joystick extends PreactControl {
   /**
-   * Size of the button.
-   */
-  @Mixer.Input() public dimensions: Mixer.IDimensions;
-
-  /**
    * Angle of the "halo" around the Joystick. Often used to show what the
    * overall viewers are doing. The angle is given in radians.
    */
@@ -190,15 +185,12 @@ export class Joystick extends PreactControl {
   }
 
   public render() {
-    const rules = RuleSet.fromDimensions(this.dimensions).concat(this.props.style);
-
     return (
       <div
         role="button"
         class="mixer-joystick"
         disabled={this.props.disabled}
         onMouseDown={this.mousedown}
-        style={rules.compile()}
         ref={this.setJoystick}
       >
         <div class="arrows top" />

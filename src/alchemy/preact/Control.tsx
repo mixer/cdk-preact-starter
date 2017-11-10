@@ -3,9 +3,8 @@ import { Component } from 'preact';
 import { log } from '../Log';
 
 import { MControl } from '../State';
-import { RuleSet } from '../Style';
 
-type ControlProps<C> = { resource: MControl<C & Mixer.IControl>; style?: RuleSet } & C &
+type ControlProps<C> = { resource: MControl<C & Mixer.IControl> } & C &
   Mixer.IControl;
 
 /**
