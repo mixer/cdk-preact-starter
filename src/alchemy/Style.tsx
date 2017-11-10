@@ -1,4 +1,4 @@
-import { IDimensions, Layout } from '@mcph/miix-std';
+import { display, Layout } from '@mcph/miix-std';
 
 /**
  * Returns the name translated from camelCase to kebab-case.
@@ -8,30 +8,176 @@ function toKebabCase(str: string): string {
   return str.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`);
 }
 
+// The rules are from https://github.com/rofrischmann/unitless-css-property.
+// They are made available under the following license:
+//
+// The MIT License (MIT)
+//
+// Copyright (c) 2016 Robin Frischmann
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+const unitlessRules = {
+  'border-image-outset': true,
+  'border-image-slice': true,
+  'border-image-width': true,
+  'font-weight': true,
+  'line-height': true,
+  opacity: true,
+  orphans: true,
+  'tab-size': true,
+  widows: true,
+  'z-index': true,
+  zoom: true,
+
+  // SVG-related properties
+  'fill-opacity': true,
+  'stop-opacity': true,
+  'stroke-dashoffset': true,
+  'stroke-opacity': true,
+  'stroke-width': true,
+
+  // Prefixed
+  'animation-iteration-count': true,
+  'box-flex': true,
+  'box-flex-group': true,
+  'box-ordinal-group': true,
+  'column-count': true,
+  flex: true,
+  'flex-grow': true,
+  'flex-positive': true,
+  'flex-shrink': true,
+  'flex-negative': true,
+  'flex-order': true,
+  'grid-row': true,
+  'grid-column': true,
+  order: true,
+  'line-clamp': true,
+};
+
+/**
+ * Returns whether the rule's value, if a number, can be presented as unitless
+ * without a `px` suffix.
+ */
+function isUnitless(rule: string): boolean {
+  if (unitlessRules.hasOwnProperty(rule)) {
+    return true;
+  }
+
+  const unprefixed = /^[a-z]\-(.+)$/.exec(rule);
+  return unprefixed && unitlessRules.hasOwnProperty(unprefixed[1]);
+}
+
+/**
+ * IQueryMatcher matches mediaquery-like strings. This includes plain
+ * CSS media-queries as well as user-defined extensions.
+ */
+interface IQueryMatcher {
+  /**
+   * Returns whether the state matches the given query in this moment.
+   */
+  matches(): boolean;
+
+  /**
+   * Watches for changes in the state. Returns a function to use to
+   * unsubscribe from the watch.
+   */
+  watch(fn: (matches: boolean) => void): () => void;
+}
+
+/**
+ * PlacesVideoMatcher handles queries like `(places-video: true)`.
+ */
+class PlacesVideoMatcher implements IQueryMatcher {
+  /**
+   * Pattern used for matching the placesVideo media queries.
+   */
+  private static pattern = /^\(places-video: *(true|false)\)$/;
+
+  constructor(private readonly query: string) {}
+
+  /**
+   * Returns whether the matcher can handle th given patterns.
+   */
+  public static test(pattern: string): boolean {
+    return this.pattern.test(pattern);
+  }
+
+  /**
+   * @override
+   */
+  public matches(): boolean {
+    const places = display.getSettings().placesVideo;
+    const matches = PlacesVideoMatcher.pattern.exec(this.query);
+    const expected = matches && matches[1] === 'true';
+    return expected === places;
+  }
+
+  /**
+   * @override
+   */
+  public watch(fn: (matches: boolean) => void): () => void {
+    const handler = () => fn(this.matches());
+    display.on('settings', handler);
+    return () => display.removeListener('settings', handler);
+  }
+}
+
+/**
+ * MediaQueryMatcher is a QueryMatcher for browser media queries.
+ */
+class MediaQueryMatcher implements IQueryMatcher {
+  constructor(private readonly query: string) {}
+
+  /**
+   * Returns whether the matcher can handle th given patterns.
+   */
+  public static test(pattern: string): boolean {
+    return true;
+  }
+
+  /**
+   * @override
+   */
+  public matches(): boolean {
+    return matchMedia(this.query).matches;
+  }
+
+  /**
+   * @override
+   */
+  public watch(fn: (matches: boolean) => void): () => void {
+    const query = matchMedia(this.query);
+    const handler = (result: MediaQueryList) => fn(result.matches);
+    query.addListener(handler);
+    return () => query.removeListener(handler);
+  }
+}
+
 /**
  * RuleSet is a set of CSS rules.
  */
 export class RuleSet {
   private observerMap = new Map<Function, () => void>();
   private lastRules: { [key: string]: Layout.Style };
+  private queryMatchers = [PlacesVideoMatcher, MediaQueryMatcher];
 
   constructor(private readonly rules: Layout.StyleRules) {}
-
-  /**
-   * Returns a new set of CSS rules based on the given dimensions.
-   */
-  public static fromDimensions(dimensions: IDimensions): RuleSet {
-    if (!dimensions) {
-      return new RuleSet({});
-    }
-
-    return new RuleSet({
-      width: dimensions.width,
-      height: dimensions.height,
-      x: dimensions.x,
-      y: dimensions.y,
-    });
-  }
 
   /**
    * Compiles the set of CSS rules into an inline style. Breakpoints will
@@ -52,7 +198,7 @@ export class RuleSet {
         return;
       }
 
-      if (!matchMedia(name).matches) {
+      if (!this.getMatcherFor(name).matches()) {
         // key is a media query, abort if no match
         return;
       }
@@ -97,10 +243,10 @@ export class RuleSet {
    * and breakpoints are hit. The callback fires with the new,compiled rules.
    */
   public observe(callback: (rules: string) => void): void {
-    const queries = this.getMediaQueries().map(matchMedia);
+    const queries = this.getMediaQueries().map(query => this.getMatcherFor(query));
     const wrapped = () => callback(this.compile());
-    this.observerMap.set(callback, () => queries.forEach(q => q.removeListener(wrapped)));
-    queries.forEach(q => q.addListener(wrapped));
+    const unsubscribers = queries.map(q => q.watch(wrapped));
+    this.observerMap.set(callback, () => unsubscribers.forEach(fn => fn()));
   }
 
   /**
@@ -120,11 +266,19 @@ export class RuleSet {
   }
 
   /**
+   * Returns the query matcher for the given media query.
+   */
+  private getMatcherFor(query: string): IQueryMatcher {
+    const matcherCls = this.queryMatchers.find(m => m.test(query));
+    return new matcherCls(query);
+  }
+
+  /**
    * Compiles a single property:value pair, and adds it to the working ruleset.
    */
   private compileAndAddRule(name: string, value: Layout.Style) {
     const parsedName = toKebabCase(name);
-    const parsedValue = typeof value === 'number' ? `${value}px` : value;
+    const parsedValue = typeof value === 'number' && !isUnitless(parsedName) ? `${value}px` : value;
     this.lastRules[name] = value;
 
     return `${parsedName}:${parsedValue}`;
