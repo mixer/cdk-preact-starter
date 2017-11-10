@@ -4,8 +4,7 @@ import { log } from '../Log';
 
 import { MControl } from '../State';
 
-type ControlProps<C> = { resource: MControl<C & Mixer.IControl> } & C &
-  Mixer.IControl;
+type ControlProps<C> = { resource: MControl<C & Mixer.IControl> } & C & Mixer.IControl;
 
 /**
  * PreactControl is the "primitve" control that you can extend to implement
