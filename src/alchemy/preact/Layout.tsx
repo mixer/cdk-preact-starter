@@ -182,8 +182,8 @@ class FixedGridControl extends Component<{ resource: MControl; grid: number }, {
     }
 
     return (
-      <Control
-        resource={this.props.resource}
+      <div
+        class="control-container"
         style={
           new RuleSet({
             position: 'absolute',
@@ -191,10 +191,14 @@ class FixedGridControl extends Component<{ resource: MControl; grid: number }, {
             top: grid.y * FixedGridLayout.gridScale,
             width: grid.width * FixedGridLayout.gridScale,
             height: grid.height * FixedGridLayout.gridScale,
-          })
+          }).compile()
         }
-        {...this.props.resource.toObject()}
-      />
+      >
+        <Control
+          resource={this.props.resource}
+          {...this.props.resource.toObject()}
+        />
+      </div>
     );
   }
 
