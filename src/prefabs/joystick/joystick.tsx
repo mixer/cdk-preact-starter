@@ -1,10 +1,10 @@
 import * as Mixer from '@mcph/miix-std';
 import { Component, h } from 'preact';
 
-import { gamepad } from './alchemy/Gamepad';
-import { PreactControl } from './alchemy/preact/index';
-import { css } from './alchemy/Style';
-import { throttle } from './alchemy/Toolbox';
+import { gamepad } from '../../alchemy/Gamepad';
+import { PreactControl } from '../../alchemy/preact/index';
+import { css } from '../../alchemy/Style';
+import { throttle } from '../../alchemy/Toolbox';
 
 interface ISizes {
   joystick: ClientRect;

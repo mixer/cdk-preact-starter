@@ -6,9 +6,9 @@
  */
 
 @import './variables';
-@import './button';
-@import './joystick';
-@import './scene';
+@import './prefabs/button/button';
+@import './prefabs/joystick/joystick';
+@import './prefabs/default-scene/scene';
 
  @font-face {
     font-family: 'Titillium';
