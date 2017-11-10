@@ -1,25 +1,16 @@
 import * as Mixer from '@mcph/miix-std';
 import { bind } from 'decko';
-import { Component, h } from 'preact';
+import { Component } from 'preact';
 
 import { MScene } from '../State';
 import { FixedGridLayout, FlexLayout } from './Layout';
 
-function getLayoutEngine() {
-  if (Mixer.packageConfig.display.mode === 'flex') {
-    return FlexLayout;
-  }
-
-  return FixedGridLayout;
-}
-
-type SceneProps<S> = { resource: MScene<S & Mixer.IScene> } & S & Mixer.IScene;
+export type SceneProps<S> = { resource: MScene<S & Mixer.IScene> } & S & Mixer.IScene;
 
 /**
  * PreactScene is the base scene. You can extend and override this scene.
  */
-@Mixer.Scene({ default: true })
-export class PreactScene<T, S = {}> extends Component<
+export abstract class PreactScene<T, S = {}> extends Component<
   SceneProps<S>,
   T & { settings: Mixer.ISettings }
 > {
@@ -52,14 +43,15 @@ export class PreactScene<T, S = {}> extends Component<
     this.scene = nextProps.resource;
   }
 
-  public render() {
-    // tslint:disable-next-line
-    const Layout = getLayoutEngine();
-    return (
-      <div class={`scene scene-${this.scene.props.sceneID}`}>
-        <Layout scene={this.scene} settings={this.state.settings} />
-      </div>
-    );
+  /**
+   * Returns the layout engine that these controls are using.
+   */
+  protected getLayoutEngine() {
+    if (Mixer.packageConfig.display.mode === 'flex') {
+      return FlexLayout;
+    }
+
+    return FixedGridLayout;
   }
 
   @bind

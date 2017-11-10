@@ -77,12 +77,18 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
 
       this.unregisterListeners.push(() => match.removeListener(fn));
     });
+  }
 
-    setTimeout(() => this.refresh());
+  public componentDidMount() {
+    this.refresh();
   }
 
   public componentWillUnmount() {
     this.unregisterListeners.forEach(l => l());
+  }
+
+  public componentDidUpdate() {
+    this.refresh();
   }
 
   /**
@@ -184,20 +190,15 @@ class FixedGridControl extends Component<{ resource: MControl; grid: number }, {
     return (
       <div
         class="control-container"
-        style={
-          new RuleSet({
-            position: 'absolute',
-            left: grid.x * FixedGridLayout.gridScale,
-            top: grid.y * FixedGridLayout.gridScale,
-            width: grid.width * FixedGridLayout.gridScale,
-            height: grid.height * FixedGridLayout.gridScale,
-          }).compile()
-        }
+        style={new RuleSet({
+          position: 'absolute',
+          left: grid.x * FixedGridLayout.gridScale,
+          top: grid.y * FixedGridLayout.gridScale,
+          width: grid.width * FixedGridLayout.gridScale,
+          height: grid.height * FixedGridLayout.gridScale,
+        }).compile()}
       >
-        <Control
-          resource={this.props.resource}
-          {...this.props.resource.toObject()}
-        />
+        <Control resource={this.props.resource} {...this.props.resource.toObject()} />
       </div>
     );
   }
@@ -235,14 +236,27 @@ class FixedGridControl extends Component<{ resource: MControl; grid: number }, {
  * changes we'll trigger a resize of the video.
  */
 export class FlexLayout extends Component<ILayoutOptions, {}> implements ILayout {
+  /**
+   * Padding around the video, in pixels.
+   */
+  public static videoPadding = 8;
+
   private container: FlexContainer;
 
   public componentWillMount() {
     window.addEventListener('resize', this.resizeListener);
   }
 
+  public componentDidMount() {
+    this.refresh();
+  }
+
   public componentWillUnmount() {
     window.removeEventListener('resize', this.resizeListener);
+  }
+
+  public componentDidUpdate() {
+    this.refresh();
   }
 
   /**
@@ -251,17 +265,17 @@ export class FlexLayout extends Component<ILayoutOptions, {}> implements ILayout
   public refresh() {
     const video = this.container.getVideoContainer();
     const rect = video && video.getBoundingClientRect();
-    if (!video || rect.width === 0) {
+    if (!video || (rect.width === 0 && display.getSettings().placesVideo)) {
       // width=0 indicates it's hidden
       log.warn('No video element was found in the containers, skipping reposition');
       return;
     }
 
     display.moveVideo({
-      top: rect.top,
-      left: rect.left,
-      right: rect.right,
-      bottom: rect.bottom,
+      top: rect.top + FlexLayout.videoPadding,
+      left: rect.left + FlexLayout.videoPadding,
+      width: rect.width - 2 * FlexLayout.videoPadding,
+      height: rect.height - 2 * FlexLayout.videoPadding,
     });
   }
 
@@ -273,6 +287,15 @@ export class FlexLayout extends Component<ILayoutOptions, {}> implements ILayout
         container={{
           class: ['alchemy-flex-layout'],
           children: this.props.scene.get('containers', []),
+          styles: {
+            display: 'flex',
+            flexDirection: 'column',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+          },
         }}
       />
     );
@@ -303,7 +326,7 @@ export interface IFlexContainerState {
 }
 
 function isControlChild(e: Layout.IContainer | Layout.IControlChild): e is Layout.IControlChild {
-  return (e as any).ControlID !== 'undefined';
+  return (e as any).controlID !== undefined;
 }
 
 /**
@@ -312,6 +335,7 @@ function isControlChild(e: Layout.IContainer | Layout.IControlChild): e is Layou
 export class FlexContainer extends Component<IFlexContainerOptions, IFlexContainerState> {
   private rules: RuleSet;
   private videoContainer: Element;
+  private containerElement: Element;
 
   /**
    * Returns the video container contained in this tree, or undefined if none.
@@ -320,22 +344,12 @@ export class FlexContainer extends Component<IFlexContainerOptions, IFlexContain
     return this.videoContainer as HTMLElement;
   }
 
-  public componentWillReceiveProps() {
-    if (this.rules) {
-      this.rules.unobserve();
-    }
+  public componentWillReceiveProps(nextProps: IFlexContainerOptions) {
+    this.updateRules(nextProps);
+  }
 
-    const children = this.props.container.children || [];
-
-    this.rules = new RuleSet(this.props.container.styles || {});
-    this.rules.observe(style => this.setState({ ...this.state, style }));
-    this.setState({
-      ...this.state,
-      style: this.rules.compile(),
-      classes: (this.props.container.class || []).join(' '),
-      hasVideo: children.indexOf('video') > -1,
-      children: this.getChildren(),
-    });
+  public componentWillMount() {
+    this.updateRules(this.props);
   }
 
   public render() {
@@ -344,29 +358,58 @@ export class FlexContainer extends Component<IFlexContainerOptions, IFlexContain
     }
 
     return (
-      <div style={this.state.style} class={this.state.classes} ref={this.setVideoContainer}>
+      <div style={this.state.style} class={this.state.classes} ref={this.onContainer}>
         {this.state.children}
       </div>
     );
   }
 
   /**
+   * Called after we render the layout container. If the container contains
+   * the video, bubble the call up.
+   */
+  protected onContainer = (el: Element) => {
+    this.containerElement = el;
+    if (this.state.hasVideo) {
+      this.setVideoContainer(el);
+    }
+  };
+
+  /**
    * Updates the video container of the root of the container tree.
    */
-  protected setVideoContainer = (el: Element) => {
+  protected setVideoContainer(el: Element) {
     if (el && this.props.parent && !this.rules.isHidden()) {
       this.props.parent.setVideoContainer(el);
     } else {
       this.videoContainer = el;
     }
-  };
+  }
+
+  private updateRules(props: IFlexContainerOptions) {
+    if (this.rules) {
+      this.rules.unobserve();
+    }
+
+    const children = props.container.children || [];
+
+    this.rules = new RuleSet(props.container.styles || {});
+    this.rules.observe(style => this.setState({ ...this.state, style }));
+    this.setState({
+      ...this.state,
+      style: this.rules.compile(),
+      classes: (props.container.class || []).join(' '),
+      hasVideo: children.indexOf('video') > -1,
+      children: this.getChildren(props),
+    });
+  }
 
   /**
    * Returns a list of child components (a mix of FlexContainers and
    * PreactControls) in this layout.
    */
-  private getChildren(): JSX.Element[] {
-    const children = this.props.container.children || [];
+  private getChildren(props: IFlexContainerOptions): JSX.Element[] {
+    const children = props.container.children || [];
     return children
       .map(child => {
         if (child === 'video') {
