@@ -24,6 +24,7 @@
     "promise-function-async": false,
     "no-void-expression": false,
     "no-use-before-declare": false,
+    "no-floating-promises": false,
 
     // Prettier-incompatible or prettier-handled rules
     "align": false,
