@@ -86,15 +86,15 @@ export class CoolDown extends Component<{ cooldown: number }, { ttl: number }> {
     // second. This keeps the timeout from "flickering" and make sure it
     // counts perfectly down to 1. (Intervals will fire later, but never
     // earlier, than the specified time.)
-    let remaining = Math.floor(delta / 1000);
+    let remaining = Math.round(delta / 1000);
     const timeout = setTimeout(() => {
       const interval = setInterval(() => {
-        this.setState({ ...this.state, ttl: remaining-- });
         if (remaining === 0) {
           clearInterval(interval);
         }
+        this.setState({ ...this.state, ttl: remaining-- });
       }, 1000);
-
+      this.setState({ ...this.state, ttl: remaining-- });
       this.cancel = () => clearInterval(interval);
     }, delta % 1000);
 
