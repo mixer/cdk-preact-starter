@@ -352,9 +352,7 @@ export class MScene<T extends Mixer.IScene = Mixer.IScene> extends Resource<T> {
   constructor(state: State, props: T) {
     super();
     this.state = state;
-    props.controls.forEach(c => {
-      this.controls[c.controlID] = new MControl(this, c);
-    });
+    this.createControls(props.controls);
     this.update(props);
   }
 
@@ -399,6 +397,10 @@ export class MScene<T extends Mixer.IScene = Mixer.IScene> extends Resource<T> {
   }
 
   protected createControls(controls: Mixer.IControl[]) {
+    if (!Array.isArray(controls)) {
+      return;
+    }
+
     controls.forEach(control => {
       assert(
         !this.controls[control.controlID],
@@ -411,6 +413,10 @@ export class MScene<T extends Mixer.IScene = Mixer.IScene> extends Resource<T> {
   }
 
   protected updateControls(controls: Mixer.IControl[]) {
+    if (!Array.isArray(controls)) {
+      return;
+    }
+
     controls.forEach(control => {
       if (!this.controls[control.controlID]) {
         this.createControls([control]);
