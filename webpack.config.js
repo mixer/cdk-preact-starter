@@ -98,6 +98,14 @@ module.exports = {
           'sass-loader',
         ],
       },
+      // Allow importing html and svg files directly, for the HtmlControl.
+      // See the docs and examples in the HtmlControl for more info!
+      {
+        test: /\.(html|svg)$/,
+        loaders: [
+          'file-loader',
+        ],
+      },
     ],
   },
   externals: {

@@ -11,7 +11,7 @@
   },
   "interactive": {
     "display": {
-      "mode": "fixed-grid"
+      "mode": "flex"
     }
   },
   "author": "Connor Peet <connor@peet.io>",
@@ -24,7 +24,7 @@
     "preact": "^8.2.1"
   },
   "devDependencies": {
-    "@mcph/miix-cli": "0.1.0-alpha.9",
+    "@mcph/miix-cli": "^0.1.1",
     "@types/node": "^8.0.24",
     "awesome-typescript-loader": "^3.2.2",
     "clean-webpack-plugin": "^0.1.16",
