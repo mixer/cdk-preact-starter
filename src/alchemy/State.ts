@@ -349,6 +349,13 @@ export class MScene<T extends Mixer.IScene = Mixer.IScene> extends Resource<T> {
    */
   public readonly state: State;
 
+  /**
+   * The scene's unique ID in the integration.
+   */
+  public get id() {
+    return this.props.sceneID;
+  }
+
   constructor(state: State, props: T) {
     super();
     this.state = state;
@@ -407,7 +414,7 @@ export class MScene<T extends Mixer.IScene = Mixer.IScene> extends Resource<T> {
         `Tried to create control "${control.controlID}", but it already exists`,
       );
 
-      this.controls[control.controlID] = new MControl(this, control);
+      this.controls[control.controlID] = new MControl(control.controlID, this, control);
       this.emit('update', this.toObject());
     });
   }
@@ -455,7 +462,14 @@ export class MControl<T extends Mixer.IControl = Mixer.IControl> extends Resourc
    */
   public readonly state: State;
 
-  constructor(scene: MScene, props: T) {
+  /**
+   * The control's unique ID in the scene.
+   */
+  public get id() {
+    return this.props.controlID;
+  }
+
+  constructor(id: string, scene: MScene, props: T) {
     super();
     this.scene = scene;
     this.state = scene.state;
