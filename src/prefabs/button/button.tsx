@@ -59,12 +59,14 @@ export class CoolDown extends Component<{ cooldown: number }, { ttl: number }> {
   public componentWillReceiveProps() {
     this.cancel();
 
-    const delta = this.props.cooldown - Date.now();
-    if (delta < 0) {
-      return;
-    }
+    Mixer.clock.remoteToLocal(this.props.cooldown).then(date => {
+      const delta = date - Date.now();
+      if (delta < 0) {
+        return;
+      }
 
-    this.setCountdown(delta);
+      this.setCountdown(delta);
+    });
   }
 
   public componentWillUnmount() {
