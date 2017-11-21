@@ -11,7 +11,7 @@
   },
   "interactive": {
     "display": {
-      "mode": "flex"
+      "mode": "fixed-grid"
     }
   },
   "author": "Connor Peet <connor@peet.io>",

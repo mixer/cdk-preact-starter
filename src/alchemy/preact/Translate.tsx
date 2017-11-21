@@ -10,7 +10,7 @@ const locales = new Locales().bindListeners();
  * Translate takes a string, and translates it! Additional interpolations for
  * the translation can be provided as further properties.
  */
-export class Translate extends Component<any, { translated: string }> {
+export class Translate<T> extends Component<T & { string: string }, { translated: string }> {
   /**
    * locales is the Locales instance that Translate components pull from.
    */
@@ -21,8 +21,8 @@ export class Translate extends Component<any, { translated: string }> {
     this.translate();
   }
 
-  public componentWillReceiveProps() {
-    this.translate();
+  public componentWillReceiveProps(props: T & { string: string }) {
+    this.translate(props);
   }
 
   public componentWillUnmount() {
@@ -34,10 +34,10 @@ export class Translate extends Component<any, { translated: string }> {
   }
 
   @bind
-  private translate() {
+  private translate(props: T & { string: string } = this.props) {
     locales
-      .translate(this.props.string, this.props)
+      .translate(props.string, props)
       .then(translated => this.setState({ translated }))
-      .catch(err => log.warn(`Error translating string ${this.props.string}`, err));
+      .catch(err => log.warn(`Error translating string ${props.string}`, err));
   }
 }

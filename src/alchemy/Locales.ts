@@ -95,9 +95,13 @@ export class Locales extends EventEmitter {
       return;
     }
 
-    this.loadLocale(settings.language).catch(err => {
-      log.error(`Error loading locale data for ${settings.language}`, err);
-    });
+    this.loadLocale(settings.language)
+      .then(() => {
+        this.emit('update');
+      })
+      .catch(err => {
+        log.error(`Error loading locale data for ${settings.language}`, err);
+      });
   }
 
   private loadRemoteLocaleJSON(locale: string) {

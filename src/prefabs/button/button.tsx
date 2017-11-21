@@ -56,10 +56,10 @@ export class ProgressBar extends Component<{ value: number }, {}> {
  * cooldown timer and text on the button.
  */
 export class CoolDown extends Component<{ cooldown: number }, { ttl: number }> {
-  public componentWillReceiveProps() {
+  public componentWillReceiveProps(nextProps: { cooldown: number }) {
     this.cancel();
 
-    Mixer.clock.remoteToLocal(this.props.cooldown).then(date => {
+    Mixer.clock.remoteToLocal(nextProps.cooldown).then(date => {
       const delta = date - Date.now();
       if (delta < 0) {
         return;
