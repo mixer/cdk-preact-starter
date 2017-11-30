@@ -47,7 +47,7 @@ export abstract class PreactScene<T, S = {}> extends Component<
    * Returns the layout engine that these controls are using.
    */
   protected getLayoutEngine() {
-    if (Mixer.packageConfig.display.mode === 'flex') {
+    if (this.scene.get('containers')) {
       return FlexLayout;
     }
 
