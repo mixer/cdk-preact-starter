@@ -7,7 +7,8 @@
     "test": "tslint --type-check --project tsconfig.json \"src/**/*.{ts,tsx}\"",
     "fmt": "npm-run-all --silent fmt:style fmt:lint",
     "fmt:lint": "tslint --type-check --project tsconfig.json \"src/**/*.{ts,tsx}\" --fix",
-    "fmt:style": "prettier --single-quote --trailing-comma all --parser typescript --print-width 100 --write \"src/**/*.{ts,tsx}\""
+    "fmt:style": "prettier --single-quote --trailing-comma all --parser typescript --print-width 100 --write \"src/**/*.{ts,tsx}\"",
+    "publish:azure": "node bin/upload-to-azure.js"
   },
   "interactive": {
     "display": {
@@ -36,6 +37,7 @@
     "prettier": "^1.6.1",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
+    "targz": "^1.0.1",
     "ts-node": "^3.3.0",
     "tslint": "^5.7.0",
     "tslint-microsoft-contrib": "^5.0.1",
