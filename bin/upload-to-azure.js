@@ -3,7 +3,7 @@
 const webpack = require('webpack');
 const { execSync } = require('child_process');
 const tar = require('tar');
-const glob = require('glob');
+const globby = require('globby');
 const fs = require('fs');
 const wpconfig = require('../webpack.config');
 const { version } = require('../package.json');
@@ -22,25 +22,14 @@ webpack(wpconfig, err => {
 
   console.log(' → Compressing files to tarball');
 
-  const ignore = fs.readFileSync('.gitignore', {encoding: 'utf8'})
-  .split('\n')
-  .filter(pattern => !!pattern && pattern[0] !== '#' && pattern[0] !== '!') // Removing Comments & Files to be negated in gitignore.
-  .map(pattern => pattern + (pattern.split('/').pop().indexOf('.') < 0 && pattern.indexOf('/') !== pattern.length - 1 ? '/**' : '')) // Add proper filtering for folders.
-  .map(pattern => pattern + (pattern.indexOf('/') === pattern.length - 1 ? '**' : '')) // More filtering for folders.
-  ignore.push('bin/**'); // Let's exclude the goodies in bin as well.
-  // console.log(ignore);
-  glob('**/**', {ignore: ignore}, (err, files) => {
-    if (err) {
-      console.error(err);
-      return process.exit(1);
-    }
-
+  (async () => {
+    const paths = await globby(['**/**', '!bin/*'], { gitignore: true });
     tar.c(
       {
         gzip: true,
         file: `build/${blobName}`
       },
-      files,
+      paths,
       (err, res) => {
         if (err) {
           console.error(err);
@@ -51,19 +40,19 @@ webpack(wpconfig, err => {
 
         console.log(' → Upload to Azure');
 
-          execSync([
-            'az storage blob upload',
-            '--content-type "application/gzip"',
-            '-c controls',
-            `-f ../build/${blobName}`,
-            `-n ${blobName}`
-            ].join(' '), {
-              cwd: __dirname,
-              env: process.env,
-          });
+        execSync([
+          'az storage blob upload',
+          '--content-type "application/gzip"',
+          '-c controls',
+          `-f ../build/${blobName}`,
+          `-n ${blobName}`
+          ].join(' '), {
+            cwd: __dirname,
+            env: process.env,
+        });
 
           console.log(' ✔ Uploaded to Azure');
-      }
-    )
-  });
+        }
+      )
+  })();
 });
