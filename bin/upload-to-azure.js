@@ -13,11 +13,17 @@ const blobName = `interactive-launchpad_${major}.${minor}.tar.gz`;
 console.log(' → Compressing files to tarball');
 
 (async () => {
-  const paths = await globby(['**/**', '!bin/*'], { gitignore: true });
+  const cwd = path.resolve(__dirname, '..')
+  const paths = await globby([`**/**`, `!bin/*`], {
+    gitignore: true,
+    cwd
+  });
+
   tar.c(
     {
       gzip: true,
-      file: `build/${blobName}`
+      file: `${cwd}/build/${blobName}`,
+      cwd
     },
     paths,
     (err, res) => {
@@ -37,7 +43,7 @@ console.log(' → Compressing files to tarball');
         `-f build/${blobName}`,
         `-n ${blobName}`
         ].join(' '), {
-          cwd: path.resolve(__dirname, '..'),
+          cwd,
           env: process.env,
       });
 
