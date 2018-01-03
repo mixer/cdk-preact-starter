@@ -25,6 +25,9 @@
     "no-void-expression": false,
     "no-use-before-declare": false,
     "no-floating-promises": false,
+    "no-import-side-effect": [true, {
+      "ignore-module": "\\.scss"
+    }],
 
     // Prettier-incompatible or prettier-handled rules
     "align": false,

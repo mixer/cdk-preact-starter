@@ -6,6 +6,8 @@ import { PreactControl } from '../../alchemy/preact/index';
 import { css } from '../../alchemy/Style';
 import { throttle } from '../../alchemy/Toolbox';
 
+import './joystick.scss';
+
 interface ISizes {
   joystick: ClientRect;
   handle: ClientRect;
