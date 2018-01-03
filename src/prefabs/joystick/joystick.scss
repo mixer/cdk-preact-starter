@@ -1,5 +1,12 @@
 @import '../../variables';
 
+// Joystick styling variables
+$joystick-color-handle: #465A94 !default;
+$joystick-color-background: #222D4D !default;
+$joystick-color-halo: #0071BC !default;
+$joystick-handle-size: 32px !default;
+$joystick-arrow-size: 6px !default;
+
 .mixer-joystick {
     position: absolute;
     top: 0;

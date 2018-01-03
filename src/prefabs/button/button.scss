@@ -1,5 +1,34 @@
 @import '../../variables';
 
+// Button styling variables
+$button-margin: 4px;
+$button-bolt-color: $base-color-bolt !default;
+$button-background-color: $base-color-default !default;
+$button-border-color: $base-color-border !default;
+$button-active-border-color: $base-color-primary !default;
+$button-progress-height: 5px !default;
+$button-border-radius: 3px !default;
+$button-progress-foreground: $base-color-primary !default;
+$button-progress-background: #232b47 !default;
+// todo(connor4312): ripples
+$button-text-color: #f3f5fd !default;
+$button-cost-default-color: #a2a5b0 !default;
+$button-cost-unaffordable-color: #fe5353 !default;
+$button-cost-background-color: $base-color-default !default;
+$button-cost-border-color: $base-color-border !default;
+$button-cost-bolt-color: $base-color-bolt !default;
+$button-cost-bolt-size: 13px !default;
+$button-tooltip-background: #2e354b !default;
+$button-font-size: 15px !default;
+$button-font-weight: bold !default;
+$button-font-shadow: 0 1px 2px rgba(#000, 0.2) !default;
+$button-cooldown-spinner-size: 12px !default;
+
+$button-z-base: 0 !default;
+$button-z-progress: $button-z-base + 1;
+$button-z-cooldown: $button-z-progress + 1;
+$button-z-cost: $button-z-cooldown + 1;
+
 // Mixin (used by the spark pill and the button itself) to define base
 // background and border colors/styles.
 @mixin button-like() {
