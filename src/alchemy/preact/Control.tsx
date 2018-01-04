@@ -41,4 +41,11 @@ export abstract class PreactControl<T = {}, C = {}> extends Component<ControlPro
   public componentWillReceiveProps(nextProps: ControlProps<C>) {
     this.control = nextProps.resource;
   }
+
+  /**
+   * @override
+   */
+  public componentWillUpdate(nextProps: ControlProps<C>) {
+    this.control = nextProps.resource;
+  }
 }
