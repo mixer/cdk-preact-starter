@@ -25,7 +25,7 @@ export class Locales extends EventEmitter {
    */
   public bindListeners(): this {
     this.loadLocaleFromSettings(Mixer.display.getSettings());
-    Mixer.display.on('settings', s => this.loadLocaleFromSettings(s));
+    Mixer.display.settings().subscribe(s => this.loadLocaleFromSettings(s));
     return this;
   }
 

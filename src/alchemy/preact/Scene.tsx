@@ -1,8 +1,8 @@
 import * as Mixer from '@mcph/miix-std';
-import { bind } from 'decko';
 import { Component } from 'preact';
 
 import { MScene } from '../State';
+import { untilUnmount } from '../Toolbox';
 import { FixedGridLayout, FlexLayout } from './Layout';
 
 export type SceneProps<S> = { resource: MScene<S & Mixer.IScene> } & S & Mixer.IScene;
@@ -25,15 +25,12 @@ export abstract class PreactScene<T, S = {}> extends Component<
    * @override
    */
   public componentWillMount() {
-    this.updateSettings();
-    Mixer.display.on('settings', this.updateSettings);
-  }
-
-  /**
-   * @override
-   */
-  public componentWillUnmount() {
-    Mixer.display.removeListener('settings', this.updateSettings);
+    Mixer.display
+      .settings()
+      .pipe(untilUnmount(this))
+      .subscribe(settings => {
+        this.setState(Object.assign({}, this.state, { settings }));
+      });
   }
 
   /**
@@ -52,10 +49,5 @@ export abstract class PreactScene<T, S = {}> extends Component<
     }
 
     return FixedGridLayout;
-  }
-
-  @bind
-  private updateSettings() {
-    this.setState(Object.assign({}, this.state, { settings: Mixer.display.getSettings() }));
   }
 }

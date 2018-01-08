@@ -122,7 +122,8 @@ class PlacesVideoMatcher implements IQueryMatcher {
    * @override
    */
   public matches(): boolean {
-    const places = display.getSettings().placesVideo;
+    const settings = display.getSettings();
+    const places = settings && settings.placesVideo;
     const matches = PlacesVideoMatcher.pattern.exec(this.query);
     const expected = matches && matches[1] === 'true';
     return expected === places;
@@ -132,9 +133,8 @@ class PlacesVideoMatcher implements IQueryMatcher {
    * @override
    */
   public watch(fn: (matches: boolean) => void): () => void {
-    const handler = () => fn(this.matches());
-    display.on('settings', handler);
-    return () => display.removeListener('settings', handler);
+    const subscription = display.settings().subscribe(() => fn(this.matches()));
+    return () => subscription.unsubscribe();
   }
 }
 

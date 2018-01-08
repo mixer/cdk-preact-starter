@@ -21,7 +21,8 @@
     "decko": "^1.2.0",
     "eventemitter3": "^2.0.3",
     "intl-messageformat": "^2.1.0",
-    "preact": "^8.2.1"
+    "preact": "^8.2.1",
+    "rxjs": "^5.5.6"
   },
   "devDependencies": {
     "@mcph/miix-cli": "^0.2.0",
