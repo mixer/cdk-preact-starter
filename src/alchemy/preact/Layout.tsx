@@ -4,12 +4,14 @@
  */
 
 import { display, ISettings, Layout } from '@mcph/miix-std';
-import { bind, debounce } from 'decko';
 import { Component, h } from 'preact';
+import { fromEvent } from 'rxjs/observable/fromEvent';
+import { debounceTime, startWith } from 'rxjs/operators';
 
 import { log } from '../Log';
 import { MControl, MScene } from '../State';
 import { css, RuleSet } from '../Style';
+import { untilUnmount } from '../Toolbox';
 import { PreactControl } from './Control';
 import { ResourceHolder } from './Helpers';
 
@@ -243,16 +245,10 @@ export class FlexLayout extends Component<ILayoutOptions, {}> implements ILayout
 
   private container: FlexContainer;
 
-  public componentWillMount() {
-    window.addEventListener('resize', this.resizeListener);
-  }
-
   public componentDidMount() {
-    this.refresh();
-  }
-
-  public componentWillUnmount() {
-    window.removeEventListener('resize', this.resizeListener);
+    fromEvent(window, 'resize')
+      .pipe(debounceTime(5), untilUnmount(this), startWith(null))
+      .subscribe(() => this.refresh());
   }
 
   public componentDidUpdate() {
@@ -304,12 +300,6 @@ export class FlexLayout extends Component<ILayoutOptions, {}> implements ILayout
   private setContainer = (container: FlexContainer) => {
     this.container = container;
   };
-
-  @bind
-  @debounce(5)
-  private resizeListener() {
-    this.refresh();
-  }
 }
 
 export interface IFlexContainerOptions {
