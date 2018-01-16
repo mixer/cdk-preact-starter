@@ -24,6 +24,15 @@ export interface ILayoutOptions {
   settings: ISettings;
 }
 
+function rectsEqual(a: ClientRect, b: ClientRect): boolean {
+  if (Boolean(a) !== Boolean(b)) {
+    // xor
+    return false;
+  }
+
+  return a.width === b.width && a.height === b.height && a.left === b.left && a.top === b.top;
+}
+
 /**
  * Layout is a Component that takes a set of layout options. Layouts are
  * direct children of the scenes and take care of arranging and inserting
@@ -69,6 +78,12 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
    */
   private activeGrids: boolean[] = [];
 
+  /**
+   * Previous position of the video, so we don't need to update
+   * when things don't move.
+   */
+  private previousVideoHeight: number;
+
   public componentWillMount() {
     Layout.gridLayouts.forEach((layout, i) => {
       const match = window.matchMedia(`(min-width: ${layout.minWidth}px)`);
@@ -98,9 +113,11 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
    */
   public refresh() {
     const { height } = this.getGridPixelSize();
-    if (!this.props.settings.placesVideo) {
+    if (!this.props.settings.placesVideo || height === this.previousVideoHeight) {
       return;
     }
+
+    this.previousVideoHeight = height;
 
     const padding = FixedGridLayout.videoPadding;
     display.moveVideo({
@@ -243,6 +260,12 @@ export class FlexLayout extends Component<ILayoutOptions, {}> implements ILayout
    */
   public static videoPadding = 8;
 
+  /**
+   * Previous position of the video, so we don't need to update
+   * when things don't move.
+   */
+  private previousVideoRect: ClientRect;
+
   private container: FlexContainer;
 
   public componentDidMount() {
@@ -266,6 +289,11 @@ export class FlexLayout extends Component<ILayoutOptions, {}> implements ILayout
       log.warn('No video element was found in the containers, skipping reposition');
       return;
     }
+    if (rectsEqual(this.previousVideoRect, rect)) {
+      return;
+    }
+
+    this.previousVideoRect = rect;
 
     display.moveVideo({
       top: rect.top + FlexLayout.videoPadding,
