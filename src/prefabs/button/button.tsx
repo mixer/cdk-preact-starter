@@ -176,6 +176,7 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
   public render() {
     return (
       <div
+        tabIndex={0}
         class={classes({ mixerButton: true, active: this.state.active })}
         disabled={this.disabled}
         role="button"
