@@ -108,6 +108,7 @@ export class Halo extends Component<IHaloProps, { transitionSpeed: number }> {
 
     return (
       <div
+        tabIndex={0}
         class="mixer-joystick-rings"
         style={css({
           transform: `rotate(${Number(this.props.angle)}rad)`,
