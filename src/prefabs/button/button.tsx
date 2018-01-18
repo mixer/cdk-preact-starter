@@ -219,13 +219,15 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
 
   protected keyDown = (ev: KeyboardEvent) => {
     if (ev.keyCode === this.keyCode) {
-      this.mousedown();
+      this.control.giveInput({ event: 'keydown' })
+      this.setState({ ...this.state, active: true })
     }
   };
 
   protected keyUp = (ev: KeyboardEvent) => {
     if (ev.keyCode === this.keyCode) {
-      this.mouseup();
+      this.control.giveInput({ event: 'keyup' })
+      this.setState({ ...this.state, active: false })
     }
   };
 
