@@ -186,6 +186,7 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
         role="button"
         onMouseDown={this.mousedown}
         onMouseUp={this.mouseup}
+        onMouseLeave={this.mouseleave}
       >
         <div class="mixer-content">{this.text}</div>
         <SparkPill cost={this.cost} available={this.state.availableSparks} />
@@ -212,6 +213,12 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
     this.control.giveInput({ event: 'mouseup' });
     this.setState({ ...this.state, active: false });
   };
+
+  protected mouseleave = () => {
+    if (this.state.active) {
+      this.mouseup();
+    }
+  }
 
   protected gamepadButtonPress = (pressed: boolean) => {
     if (pressed) {
