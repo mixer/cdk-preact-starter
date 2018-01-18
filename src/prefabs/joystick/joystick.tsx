@@ -108,7 +108,6 @@ export class Halo extends Component<IHaloProps, { transitionSpeed: number }> {
 
     return (
       <div
-        tabIndex={0}
         class="mixer-joystick-rings"
         style={css({
           transform: `rotate(${Number(this.props.angle)}rad)`,
@@ -198,7 +197,7 @@ export class Joystick extends PreactControl {
       >
         <div class="arrows top" />
         <div class="arrows left" />
-        <div class="handle" ref={this.setHandle} />
+        <div class="handle" tabIndex={0} ref={this.setHandle} />
         <Halo angle={this.angle} intensity={this.intensity} />
       </div>
     );

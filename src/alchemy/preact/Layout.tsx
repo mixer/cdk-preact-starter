@@ -323,9 +323,9 @@ function isControlChild(e: Layout.IContainer | Layout.IControlChild): e is Layou
  * FlexContainer correspondings to an IContainer, nested in the FlexLayout.
  */
 export class FlexContainer extends Component<IFlexContainerOptions, IFlexContainerState> {
+  public containerElement: Element;
   private rules: RuleSet;
   private videoContainer: Element;
-  private containerElement: Element;
 
   /**
    * Returns the video container contained in this tree, or undefined if none.
