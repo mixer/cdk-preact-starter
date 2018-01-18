@@ -177,7 +177,7 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
     })
   }
 
-  public componentWillReceiveProps(nextProps: any) {
+  public componentWillReceiveProps() {
     this.registerGamepadButton();
     if (this.cooldown - Date.now() > 0) {
       this.setState({
