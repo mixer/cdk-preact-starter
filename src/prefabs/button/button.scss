@@ -19,6 +19,7 @@ $button-cost-border-color: $base-color-border !default;
 $button-cost-bolt-color: $base-color-bolt !default;
 $button-cost-bolt-size: 13px !default;
 $button-tooltip-background: #2e354b !default;
+$button-tooltip-arrow-size: 8px;
 $button-font-size: 15px !default;
 $button-font-weight: bold !default;
 $button-font-shadow: 0 1px 2px rgba(#000, 0.2) !default;
@@ -28,6 +29,7 @@ $button-z-base: 0 !default;
 $button-z-progress: $button-z-base + 1;
 $button-z-cooldown: $button-z-base + 1;
 $button-z-cost: $button-z-cooldown + 1;
+$button-z-tooltip: $button-z-cost + 1;
 
 // Mixin (used by the spark pill and the button itself) to define base
 // background and border colors/styles.
@@ -87,16 +89,50 @@ $button-z-cost: $button-z-cooldown + 1;
             border-color: $base-color-border;
         }
     }
-}
 
-// A content element is nested in the button and contains the text
-// to display in the control.
-.mixer-content {
-    text-align: center;
-    color: $button-text-color;
-    font-size: $button-font-size;
-    padding: 0 5px;
-    max-height: 100%;
+  // A content element is nested in the button and contains the text
+  // to display in the control.
+  &-content {
+      overflow: hidden;
+      text-align: center;
+      color: $button-text-color;
+      font-size: $button-font-size;
+      padding: 0 5px;
+      max-height: 100%;
+  }
+
+  &-tooltip {
+    position: absolute;
+    top: 100%;
+    z-index: $button-z-tooltip;
+    background: $button-tooltip-background;
+    font-weight: normal;
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: opacity $easing-default-duration $easing-default-curve, transform $easing-default-duration $easing-default-curve;
+    transform: translateY(100%);
+    opacity: 0;
+    pointer-events: none;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      border: $button-tooltip-arrow-size solid transparent;
+      border-bottom-color: $button-tooltip-background;
+      bottom: calc(100% - 1px);
+      margin-left: -$button-tooltip-arrow-size;
+    }
+
+    .mixer-button:focus &,
+    .mixer-button:hover & {
+      opacity: 1;
+      transform: translateY(calc(0% + 15px));
+    }
+  }
 }
 
 // Styling for the cooldown that overlays custom controls.
@@ -167,7 +203,6 @@ $button-z-cost: $button-z-cooldown + 1;
     line-height: 1.5em;
     font-size: 0.8em;
     padding: 0 8px 0 5px;
-    transition: color $easing-default-duration $easing-default-curve;
     z-index: $button-z-cost;
 
     &:before {
@@ -204,7 +239,7 @@ $button-z-cost: $button-z-cooldown + 1;
         content: '';
         background: $button-progress-background;
         transform: translateY(100%);
-        transition: transform $easing-default-duration
+        transition: transform $easing-default-duration;
     }
 
     &.enabled::before {

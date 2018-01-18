@@ -149,6 +149,11 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
   @Mixer.Input() public keyCode: number;
 
   /**
+   * Optional tooltip to display on the button.
+   */
+  @Mixer.Input() public tooltip: string;
+
+  /**
    * Gamepad button index to bind to.
    */
   @Mixer.Input() public gamepadButton: number;
@@ -188,10 +193,11 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
         onMouseUp={this.mouseup}
         onMouseLeave={this.mouseleave}
       >
-        <div class="mixer-content">{this.text}</div>
+        <div class="mixer-button-content">{this.text}</div>
         <SparkPill cost={this.cost} available={this.state.availableSparks} />
         <CoolDown cooldown={this.cooldown} />
         <ProgressBar value={this.progress} />
+        {this.tooltip ? <div class="mixer-button-tooltip">{this.tooltip}</div> : undefined}
       </div>
     );
   }
