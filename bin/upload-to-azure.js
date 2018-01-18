@@ -19,6 +19,10 @@ console.log(" → Compressing files to tarball");
     cwd
   });
 
+  if (!fs.existsSync(`${cwd}/build`)){
+    fs.mkdirSync(`${cwd}/build`);
+  }
+
   tar
     .c(
       {

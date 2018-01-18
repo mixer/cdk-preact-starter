@@ -36,7 +36,7 @@ export function throttle<T extends Function>(duration: number, fn: T): T {
  *   .pipe(untilUnmount(this))
  *   .subscribe(settings => this.updateSettings(settings));
  */
-export function untilUnmount(component: Component<any, any>) {
+export function untilUnmount<T>(component: Component<any, any>) {
   const inner = component.componentWillUnmount;
   const notifier = new ReplaySubject<void>(1);
   component.componentWillMount = function() {
@@ -47,5 +47,5 @@ export function untilUnmount(component: Component<any, any>) {
     }
   };
 
-  return takeUntil(notifier);
+  return takeUntil<T>(notifier);
 }

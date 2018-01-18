@@ -1,6 +1,11 @@
-// todo(connor4312): we may need more than this eventually. Namely I want to
-// capture logs and publish them in the miix UI if nothing else.
-export const log = console;
+import * as Mixer from '@mcph/miix-std';
+
+/**
+ * `log` has methods to capture messages from your controls. These'll be
+ * exposed in the miix UI, and we will continue to build further telemetry
+ * around them.
+ */
+export const log = Mixer.log;
 
 const compactWhitespace = (str: string) => str.replace(/[ \n\r\t]+/g, ' ');
 
@@ -41,7 +46,7 @@ export function guard<T, R>(fn: (arg: T) => R): (arg: T) => R | undefined {
       return fn.apply(this, arguments);
     } catch (e) {
       if (e instanceof AssertionError) {
-        log.error(e.message);
+        log.error(e);
         return undefined;
       }
 

@@ -89,7 +89,6 @@ $button-z-cost: $button-z-cooldown + 1;
 // A content element is nested in the button and contains the text
 // to display in the control.
 .mixer-content {
-    overflow: hidden;
     text-align: center;
     color: $button-text-color;
     font-size: $button-font-size;
