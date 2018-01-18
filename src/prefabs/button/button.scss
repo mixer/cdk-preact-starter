@@ -26,7 +26,7 @@ $button-cooldown-spinner-size: 12px !default;
 
 $button-z-base: 0 !default;
 $button-z-progress: $button-z-base + 1;
-$button-z-cooldown: $button-z-progress + 1;
+$button-z-cooldown: $button-z-base + 1;
 $button-z-cost: $button-z-cooldown + 1;
 
 // Mixin (used by the spark pill and the button itself) to define base
