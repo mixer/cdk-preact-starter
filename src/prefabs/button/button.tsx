@@ -114,7 +114,7 @@ export class CoolDown extends Component<{ cooldown: number }, { ttl: number }> {
  *  - Buttons can be disabled.
  */
 @Mixer.Control({ kind: 'button' })
-export class Button extends PreactControl<{ availableSparks: number; active: boolean }> {
+export class Button extends PreactControl<{ availableSparks: number; active: boolean, keysPressed: number[] }> {
   /**
    * Content to display on the button.
    */
@@ -161,6 +161,10 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
     this.registerGamepadButton();
     window.addEventListener('keydown', this.keyDown);
     window.addEventListener('keyup', this.keyUp);
+    this.setState({
+      ...this.state,
+      keysPressed: []
+    })
   }
 
   public componentWillReceiveProps() {
@@ -182,6 +186,7 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
         role="button"
         onMouseDown={this.mousedown}
         onMouseUp={this.mouseup}
+        onMouseLeave={this.mouseleave}
       >
         <div class="mixer-content">{this.text}</div>
         <SparkPill cost={this.cost} available={this.state.availableSparks} />
@@ -209,6 +214,12 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
     this.setState({ ...this.state, active: false });
   };
 
+  protected mouseleave = () => {
+    if (this.state.active) {
+      this.mouseup();
+    }
+  }
+
   protected gamepadButtonPress = (pressed: boolean) => {
     if (pressed) {
       this.mousedown();
@@ -218,14 +229,18 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
   };
 
   protected keyDown = (ev: KeyboardEvent) => {
-    if (ev.keyCode === this.keyCode) {
-      this.mousedown();
+    if (ev.keyCode === this.keyCode && this.state.keysPressed.indexOf(ev.keyCode) < 0) {
+      this.control.giveInput({ event: 'keydown' });
+      const newKeysPressed = [...this.state.keysPressed, ev.keyCode];
+      this.setState({ ...this.state, active: true, keysPressed: newKeysPressed});
     }
   };
 
   protected keyUp = (ev: KeyboardEvent) => {
-    if (ev.keyCode === this.keyCode) {
-      this.mouseup();
+    if (ev.keyCode === this.keyCode && this.state.keysPressed.indexOf(ev.keyCode) >= 0) {
+      const newKeysPressed = this.state.keysPressed.filter(i => i !== ev.keyCode);
+      this.control.giveInput({ event: 'keyup' });
+      this.setState({ ...this.state, active: false, keysPressed: newKeysPressed });
     }
   };
 
