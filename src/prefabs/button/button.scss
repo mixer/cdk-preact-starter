@@ -99,6 +99,11 @@ $button-z-tooltip: $button-z-cost + 1;
       font-size: $button-font-size;
       padding: 0 5px;
       max-height: 100%;
+
+      &.cooldown {
+        margin-bottom: 18px;
+        transition: margin-bottom $easing-default-duration;
+      }
   }
 
   &-tooltip {
@@ -152,6 +157,7 @@ $button-z-tooltip: $button-z-cost + 1;
     z-index: $button-z-cooldown;
 
     > div {
+        margin-top: 18px;
         text-align: center;
         min-height: $button-cooldown-spinner-size;
         padding-left: $button-cooldown-spinner-size + $base-border-width * 2 + 6px;

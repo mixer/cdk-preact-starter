@@ -57,8 +57,8 @@ export class ProgressBar extends Component<{ value: number }, {}> {
  * When the cooldown is active, Cooldown shows the
  * cooldown timer and text on the button.
  */
-export class CoolDown extends Component<{ cooldown: number }, { ttl: number }> {
-  public componentWillReceiveProps(nextProps: { cooldown: number }) {
+export class CoolDown extends Component<{ cooldown: number, onEnd: Function }, { ttl: number }> {
+  public componentWillReceiveProps(nextProps: { cooldown: number, onEnd: Function }) {
     this.cancel();
 
     Mixer.clock.remoteToLocal(nextProps.cooldown).then(date => {
@@ -95,12 +95,17 @@ export class CoolDown extends Component<{ cooldown: number }, { ttl: number }> {
       const interval = setInterval(() => {
         if (remaining === 0) {
           clearInterval(interval);
+          this.props.onEnd();
         }
         this.setState({ ...this.state, ttl: remaining-- });
       }, 1000);
+      if (remaining === 0) {
+        this.props.onEnd();
+      }
       this.setState({ ...this.state, ttl: remaining-- });
       this.cancel = () => clearInterval(interval);
     }, delta % 1000);
+    this.setState({ ...this.state, ttl: remaining-- });
     this.cancel = () => clearTimeout(timeout);
   }
 }
@@ -114,7 +119,7 @@ export class CoolDown extends Component<{ cooldown: number }, { ttl: number }> {
  *  - Buttons can be disabled.
  */
 @Mixer.Control({ kind: 'button' })
-export class Button extends PreactControl<{ availableSparks: number; active: boolean, keysPressed: number[] }> {
+export class Button extends PreactControl<{ availableSparks: number; active: boolean, cooldown: boolean, keysPressed: number[] }> {
   /**
    * Content to display on the button.
    */
@@ -174,6 +179,12 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
 
   public componentWillReceiveProps() {
     this.registerGamepadButton();
+    if (this.cooldown - Date.now() > 0) {
+      this.setState({
+        ...this.state,
+        cooldown: true
+      })
+    }
   }
 
   public componentWillUnmount() {
@@ -187,19 +198,28 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
       <div
         tabIndex={0}
         class={classes({ mixerButton: true, active: this.state.active })}
-        disabled={this.disabled}
+        disabled={this.disabled || this.state.cooldown}
         role="button"
         onMouseDown={this.mousedown}
         onMouseUp={this.mouseup}
         onMouseLeave={this.mouseleave}
       >
-        <div class="mixer-button-content">{this.text}</div>
+        <div class={classes({ mixerButtonContent: true, cooldown: this.state.cooldown })}>{this.text}</div>
         <SparkPill cost={this.cost} available={this.state.availableSparks} />
-        <CoolDown cooldown={this.cooldown} />
+        <CoolDown cooldown={this.cooldown} onEnd={this.endCooldown} />
         <ProgressBar value={this.progress} />
         {this.tooltip ? <div class="mixer-button-tooltip">{this.tooltip}</div> : undefined}
       </div>
     );
+  }
+
+  protected endCooldown = () => {
+    if (this.state.cooldown) {
+        this.setState({
+        ...this.state,
+        cooldown: false
+      })
+    }
   }
 
   protected registerGamepadButton() {
