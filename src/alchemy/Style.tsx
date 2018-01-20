@@ -310,3 +310,18 @@ export function classes(map: { [cls: string]: boolean }): string {
     .map(toKebabCase)
     .join(' ');
 }
+
+export function blockRule(controlID: string, selector: string, styles: any): string {
+  let s = `\n\t[name="control-${controlID}"] ${selector} {\n`;
+
+  Object.keys(styles).forEach(name => {
+    const value = styles[name];
+    if (value == null) {
+      return;
+    }
+    s += `\t\t${toKebabCase(name)}: ${value};\n`
+  });
+
+  s += `\t}\n\n`;
+  return s;
+}
