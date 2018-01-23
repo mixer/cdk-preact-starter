@@ -99,7 +99,8 @@ $button-z-tooltip: $button-z-cost + 1;
       font-size: $button-font-size;
       padding: 0 5px;
       max-height: 100%;
-
+      white-space: pre;
+      text-overflow: ellipsis;
       &.cooldown {
         margin-bottom: 18px;
         transition: margin-bottom $easing-default-duration;
