@@ -238,8 +238,7 @@ class FixedGridControl extends Component<{ resource: MControl; grid: number }, {
       return;
     }
     return (
-      configuredGrids.find(g => g.size === activeGrid) ||
-      configuredGrids[configuredGrids.length - 1]
+      configuredGrids.find(g => g.size === activeGrid)
     );
   }
 }
