@@ -1,0 +1,25 @@
+
+$textbox-margin: 4px;
+
+.mixer-textbox.mixer-has-focus {
+    border-color: rgb(0, 117, 213);
+}
+
+.mixer-textbox {
+  resize: none;
+  border: 2px solid rgba(228, 238, 242, 0.22);
+  background: transparent;
+  height: 100%;
+  width: 100%;
+  font-family: 'Segoe UI';
+  font-size: 17px;
+  color: #FFFFFF;
+  padding: 0 18px;
+  vertical-align: middle;
+
+  position: absolute;
+  top: $textbox-margin;
+  left: $textbox-margin;
+  right: $textbox-margin;
+  bottom: $textbox-margin;
+}
