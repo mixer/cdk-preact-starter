@@ -18,7 +18,7 @@ const registry = new Mixer.Registry().register(
   ButtonControl,
   JoystickControl,
   DefaultScene,
-  LabelControl
+  LabelControl,
 );
 
 // Do the thing!

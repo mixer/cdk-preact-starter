@@ -11,41 +11,28 @@ $label-default-border-style: solid;
 
 // Styling for default label control.
 .mixer-label-container {
-    position: absolute;
-    top: $label-margin;
-    left: $label-margin;
-    right: $label-margin;
-    bottom: $label-margin;
-    z-index: $label-z-base;
-    user-select: none;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    word-wrap: break-word;
-    border-width: $label-default-border-width;
-    border-style: $label-default-border-style;
-    border-color: transparent;
-    text-align: center;
-    border-radius: $label-border-radius;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: absolute;
+  top: $label-margin;
+  left: $label-margin;
+  right: $label-margin;
+  bottom: $label-margin;
+  z-index: $label-z-base;
+  user-select: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  border-width: $label-default-border-width;
+  border-style: $label-default-border-style;
+  border-color: transparent;
+  text-align: center;
+  border-radius: $label-border-radius;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    .mixer-label {
-      font-size: 14pt;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #ffffff;
+  .mixer-label {
+    font-size: 14pt;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #ffffff;
   }
-
-  // TODO: Use this styling if we make the label focusable, and clickable.
-  // &:hover,
-  // &:focus {
-  //     z-index: $label-z-base + 1;
-  //     border-color: $label-active-border-color;
-  // }
-
-  // &:active,
-  // &.active {
-  //     border-color: lighten($label-active-border-color, 40%);
-  //     transition: 0s;
-  // }
 }

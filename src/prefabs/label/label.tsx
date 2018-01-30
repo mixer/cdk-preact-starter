@@ -11,11 +11,6 @@ import './label.scss';
 @Mixer.Control({ kind: 'label' })
 export class Label extends PreactControl {
   /**
-   * Size of the label.
-   */
-  @Mixer.Input() public dimensions: Mixer.IDimensions;
-
-  /**
    * The text in the label.
    */
   @Mixer.Input() public text: string;
@@ -28,7 +23,8 @@ export class Label extends PreactControl {
   /**
    * The text color of the label.
    */
-  @Mixer.Input( { kind: Mixer.InputKind.Color }) public textColor: string;
+  @Mixer.Input({ kind: Mixer.InputKind.Color })
+  public textColor: string;
 
   /**
    * Is the text of the label underlined?
@@ -45,49 +41,32 @@ export class Label extends PreactControl {
    */
   @Mixer.Input() public italic: boolean;
 
-  private handleControlUpdateBound: any;
-
-  public constructor(props: any) {
-    super(props);
-    this.handleControlUpdateBound = this.handleControlUpdate.bind(this);
-    Mixer.socket.on("onControlUpdate", this.handleControlUpdateBound);
-  };
-
   public render() {
     const { controlID } = this.props;
-      return (
-        <div class="mixer-label-container" name={`control-${controlID}`}>
-          {this.renderCustomStyleBlock()}
-          <div class="mixer-label">{this.text}</div>
-        </div>
-      );
+    return (
+      <div class="mixer-label-container" name={`control-${controlID}`}>
+        {this.renderCustomStyleBlock()}
+        <div class="mixer-label">{this.text}</div>
+      </div>
+    );
+  }
+
+  private renderCustomStyleBlock = () => {
+    const { controlID } = this.props;
+    return (
+      <style>
+        {
+        /**
+         * Custom border color for the button.
+         */
+        blockRule(controlID, '.mixer-label', {
+          fontSize: this.textSize,
+          color: this.textColor,
+          textDecoration: this.underline ? 'underline' : null,
+          fontWeight: this.bold ? '600' : null,
+          fontStyle: this.italic ? 'italic' : null,
+        })}
+      </style>
+    );
   };
-
-    private handleControlUpdate = (evt: Mixer.IControlChange) => {
-      // TODO: Define the "Text Control" interface.
-      this.text = (evt.controls[0] as any).text;
-      this.forceUpdate();
-    };
-
-    private renderCustomStyleBlock = () => {
-      const { controlID } = this.props
-      return (
-        <style>
-          {
-            /**
-             * Custom border color for the button.
-             */
-            blockRule(controlID, '.mixer-label',
-              {
-                fontSize: this.textSize,
-                color: this.textColor,
-                textDecoration: this.underline ? 'underline' : null,
-                fontWeight: this.bold ? '600' : null,
-                fontStyle: this.italic ? 'italic' : null
-              }
-            )
-          }
-          </style>
-      )
-    }
 }

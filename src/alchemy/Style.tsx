@@ -319,7 +319,7 @@ export function blockRule(controlID: string, selector: string, styles: any): str
     if (value == null) {
       return;
     }
-    s += `\t\t${toKebabCase(name)}: ${value};\n`
+    s += `\t\t${toKebabCase(name)}: ${value};\n`;
   });
 
   s += `\t}\n\n`;
