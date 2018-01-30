@@ -6,6 +6,7 @@ import { PreactStage } from './alchemy/preact/index';
 import { Button as ButtonControl } from './prefabs/button/button';
 import { DefaultScene } from './prefabs/default-scene/scene';
 import { Joystick as JoystickControl } from './prefabs/joystick/joystick';
+import { Label as LabelControl } from './prefabs/label/label';
 
 // Import our custom CSS.
 require('./style.scss');
@@ -17,6 +18,7 @@ const registry = new Mixer.Registry().register(
   ButtonControl,
   JoystickControl,
   DefaultScene,
+  LabelControl
 );
 
 // Do the thing!
