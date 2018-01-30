@@ -99,7 +99,8 @@ $button-z-tooltip: $button-z-cost + 1;
       color: $button-text-color;
       font-size: $button-font-size;
       padding: 0 5px;
-      max-height: 100%;
+      // max-height: 100%; // This was commented out in order to support current styling on prod.
+      // This will be changed after we have a label prefab for people to use.
       white-space: pre;
       text-overflow: ellipsis;
       &.cooldown {
