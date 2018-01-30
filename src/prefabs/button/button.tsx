@@ -7,6 +7,24 @@ import { blockRule, classes, css } from '../../alchemy/Style';
 
 import './button.scss';
 
+function prettyTime (secs: number): string {
+  const seconds: number = Math.floor(secs) % 60;
+  const minutes: number = Math.floor(secs / 60) % 60;
+  const hours: number = Math.floor(secs / 3600) % 60;
+  const days: number = Math.floor(secs / 86400) % 60;
+  let sTime: string = `${seconds}s`;
+
+  if (days) {
+    sTime = `${days}d ${hours}h`;
+  } else if (hours) {
+    sTime = `${hours}h ${minutes}m`;
+  } else if (minutes) {
+    sTime = `${minutes}m ${sTime}`;
+  }
+
+  return sTime;
+}
+
 /**
  * SparkPill is the component that shows the spark cost above a button.
  */
@@ -78,7 +96,7 @@ export class CoolDown extends Component<{ cooldown: number }, { ttl: number }> {
   public render() {
     return (
       <div class={classes({ mixerCooldown: true, active: this.state.ttl >= 0 })}>
-        <div>{this.state.ttl + 1}s</div>
+        <div>{prettyTime(this.state.ttl + 1)}</div>
       </div>
     );
   }
