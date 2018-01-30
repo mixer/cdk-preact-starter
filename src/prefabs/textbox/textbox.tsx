@@ -31,9 +31,10 @@ export class TextBox extends PreactControl {
   };
 
   public render() {
+    const { controlID } = this.props;
     const classNames = `mixer-textbox${this.hasFocus ? " mixer-has-focus" : ""}`;
     return (
-        <div class="mixer-textbox-container">
+        <div class="mixer-textbox-container" name={`control-${controlID}`}>
           <Label text={this.label} />
           <Input class={classNames}
             ref={this.setReference}
@@ -46,7 +47,7 @@ export class TextBox extends PreactControl {
       );
   };
 
-  protected setReference(input: Input) {
+  protected setReference = (input: Input) => {
     this.refInput = input;
   }
 
