@@ -23,6 +23,8 @@ export class TextBox extends PreactControl {
 
   @Mixer.Input() public label: string = "";
 
+  @Mixer.Input() public hasSubmit: boolean = false;
+
   private hasFocus: boolean;
   private refInput: Input;
 
@@ -41,6 +43,7 @@ export class TextBox extends PreactControl {
             placeholder={this.defaultText}
             multiline={this.multiline}
             onClick={this.handleClick}
+            onKeyPress={this.handleKeyPress}
             onBlur={this.handleBlur} />
           <Button onClick={this.sendText} />
         </div>
@@ -61,8 +64,20 @@ export class TextBox extends PreactControl {
     this.forceUpdate();
   };
 
+  protected handleKeyPress = (evt: KeyboardEvent) => {
+    // Do we send both events on Enter?
+    if (!this.hasSubmit) {
+      const target = evt.target as HTMLInputElement;
+      this.control.giveInput({ event: 'keypress', value: target.value })
+    }
+    if (evt.keyCode === 13 && !this.multiline) {
+      this.sendText();
+    }
+  }
+
   private sendText = () => {
-    this.control.giveInput({ event: 'change', value: this.refInput });
+    const target = this.refInput.base as HTMLInputElement;
+    this.control.giveInput({ event: 'submit', value: target.value });
   };
 }
 

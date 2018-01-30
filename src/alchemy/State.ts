@@ -504,6 +504,7 @@ export class MControl<T extends Mixer.IControl = Mixer.IControl> extends Resourc
    * and back down to the game client.
    */
   public giveInput<I extends Partial<Mixer.IInput>>(input: I) {
+    console.log(input.event, input.value);
     input.controlID = this.props.controlID;
     Mixer.socket.call('giveInput', input, false);
   }
