@@ -1,0 +1,38 @@
+@import '../../variables';
+
+// Label styling variables
+
+$label-margin: 4px;
+$label-z-base: 1;
+$label-border-radius: 3px;
+$label-active-border-color: $base-color-primary !default;
+$label-default-border-width: 2px;
+$label-default-border-style: solid;
+
+// Styling for default label control.
+.mixer-label-container {
+  position: absolute;
+  top: $label-margin;
+  left: $label-margin;
+  right: $label-margin;
+  bottom: $label-margin;
+  z-index: $label-z-base;
+  user-select: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  border-width: $label-default-border-width;
+  border-style: $label-default-border-style;
+  border-color: transparent;
+  text-align: center;
+  border-radius: $label-border-radius;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .mixer-label {
+    font-size: 14pt;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #ffffff;
+  }
+}
