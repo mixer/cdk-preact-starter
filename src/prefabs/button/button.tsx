@@ -7,7 +7,7 @@ import { blockRule, classes, css } from '../../alchemy/Style';
 
 import './button.scss';
 
-function prettyTime (secs: number): string {
+function prettyTime(secs: number): string {
   const seconds: number = Math.floor(secs) % 60;
   const minutes: number = Math.floor(secs / 60) % 60;
   const hours: number = Math.floor(secs / 3600) % 60;
@@ -75,7 +75,10 @@ export class ProgressBar extends Component<{ value: number }, {}> {
  * When the cooldown is active, Cooldown shows the
  * cooldown timer and text on the button.
  */
-export class CoolDown extends Component<{ cooldown: number, onCooldownEnd: Function }, { ttl: number }> {
+export class CoolDown extends Component<
+  { cooldown: number; onCooldownEnd: Function },
+  { ttl: number }
+> {
   public componentDidMount() {
     this.handleCooldown(this.props.cooldown);
   }
@@ -92,7 +95,6 @@ export class CoolDown extends Component<{ cooldown: number, onCooldownEnd: Funct
     return (
       <div class={classes({ mixerCooldown: true, cActive: this.state.ttl >= 0 })}>
         <div>{prettyTime(this.state.ttl + 1)}</div>
-
       </div>
     );
   }
@@ -119,7 +121,7 @@ export class CoolDown extends Component<{ cooldown: number, onCooldownEnd: Funct
     this.cancel = () => clearTimeout(timeout);
   }
 
-  private handleCooldown (cooldown: number) {
+  private handleCooldown(cooldown: number) {
     this.cancel();
     Mixer.clock.remoteToLocal(cooldown).then(date => {
       const delta = date - Date.now();
@@ -131,16 +133,19 @@ export class CoolDown extends Component<{ cooldown: number, onCooldownEnd: Funct
     });
   }
 
-  private updateTtl (ttl: number) {
+  private updateTtl(ttl: number) {
     if (ttl !== this.state.ttl) {
-      this.setState({
-        ...this.state,
-        ttl
-      }, () => {
-        if (this.state.ttl === -1) {
-          this.props.onCooldownEnd();
-        }
-      })
+      this.setState(
+        {
+          ...this.state,
+          ttl,
+        },
+        () => {
+          if (this.state.ttl === -1) {
+            this.props.onCooldownEnd();
+          }
+        },
+      );
     }
   }
 }
@@ -154,7 +159,12 @@ export class CoolDown extends Component<{ cooldown: number, onCooldownEnd: Funct
  *  - Buttons can be disabled.
  */
 @Mixer.Control({ kind: 'button' })
-export class Button extends PreactControl<{ availableSparks: number; active: boolean, cooldown: boolean, keysPressed: number[] }> {
+export class Button extends PreactControl<{
+  availableSparks: number;
+  active: boolean;
+  cooldown: boolean;
+  keysPressed: number[];
+}> {
   /**
    * Content to display on the button.
    */
@@ -201,17 +211,20 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
   /**
    * Background color of the button.
    */
-  @Mixer.Input({ kind: Mixer.InputKind.Color }) public backgroundColor: string;
+  @Mixer.Input({ kind: Mixer.InputKind.Color })
+  public backgroundColor: string;
 
   /**
    * Background image of the button.
    */
-  @Mixer.Input({ kind: Mixer.InputKind.Url }) public backgroundImage: string;
+  @Mixer.Input({ kind: Mixer.InputKind.Url })
+  public backgroundImage: string;
 
   /**
    * Text color for the button.
    */
-  @Mixer.Input({ kind: Mixer.InputKind.Color }) public textColor: string;
+  @Mixer.Input({ kind: Mixer.InputKind.Color })
+  public textColor: string;
 
   /**
    * Text size for the button.
@@ -220,17 +233,20 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
   /**
    * Border color of the button.
    */
-   @Mixer.Input({ kind: Mixer.InputKind.Color }) public borderColor: string;
+  @Mixer.Input({ kind: Mixer.InputKind.Color })
+  public borderColor: string;
 
   /**
    * Focus color for when hovering over the button.
    */
-  @Mixer.Input({ kind: Mixer.InputKind.Color }) public focusColor: string;
+  @Mixer.Input({ kind: Mixer.InputKind.Color })
+  public focusColor: string;
 
   /**
    * Accent color used on the cooldown spin, and progress bar of button.
    */
-  @Mixer.Input({ kind: Mixer.InputKind.Color }) public accentColor: string;
+  @Mixer.Input({ kind: Mixer.InputKind.Color })
+  public accentColor: string;
 
   private gamepad = gamepad;
 
@@ -243,16 +259,16 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
     this.setState({
       ...this.state,
       keysPressed: [],
-      cooldown: this.cooldown - Date.now() > 0
-    })
+      cooldown: this.cooldown - Date.now() > 0,
+    });
   }
 
   public componentWillReceiveProps() {
     this.registerGamepadButton();
     this.setState({
       ...this.state,
-      cooldown: this.cooldown - Date.now() > 0
-    })
+      cooldown: this.cooldown - Date.now() > 0,
+    });
   }
 
   public componentWillUnmount() {
@@ -275,7 +291,9 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
           onMouseUp={this.mouseup}
           onMouseLeave={this.mouseleave}
         >
-          <div class={classes({ mixerButtonContent: true, cooldown: this.state.cooldown })}>{this.text}</div>
+          <div class={classes({ mixerButtonContent: true, cooldown: this.state.cooldown })}>
+            {this.text}
+          </div>
           <SparkPill cost={this.cost} available={this.state.availableSparks} />
           <CoolDown cooldown={this.cooldown} onCooldownEnd={this.endCooldown} />
           <ProgressBar value={this.progress} />
@@ -311,7 +329,7 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
     if (this.state.active) {
       this.mouseup();
     }
-  }
+  };
 
   protected gamepadButtonPress = (pressed: boolean) => {
     if (pressed) {
@@ -322,15 +340,25 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
   };
 
   protected keyDown = (ev: KeyboardEvent) => {
-    if (!this.disabled && !this.state.cooldown && ev.keyCode === this.keyCode && this.state.keysPressed.indexOf(ev.keyCode) < 0) {
+    if (
+      !this.disabled &&
+      !this.state.cooldown &&
+      ev.keyCode === this.keyCode &&
+      this.state.keysPressed.indexOf(ev.keyCode) < 0
+    ) {
       this.control.giveInput({ event: 'keydown' });
       const newKeysPressed = [...this.state.keysPressed, ev.keyCode];
-      this.setState({ ...this.state, active: true, keysPressed: newKeysPressed});
+      this.setState({ ...this.state, active: true, keysPressed: newKeysPressed });
     }
   };
 
   protected keyUp = (ev: KeyboardEvent) => {
-    if (!this.disabled && !this.state.cooldown && ev.keyCode === this.keyCode && this.state.keysPressed.indexOf(ev.keyCode) >= 0) {
+    if (
+      !this.disabled &&
+      !this.state.cooldown &&
+      ev.keyCode === this.keyCode &&
+      this.state.keysPressed.indexOf(ev.keyCode) >= 0
+    ) {
       const newKeysPressed = this.state.keysPressed.filter(i => i !== ev.keyCode);
       this.control.giveInput({ event: 'keyup' });
       this.setState({ ...this.state, active: false, keysPressed: newKeysPressed });
@@ -340,9 +368,9 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
   private endCooldown = () => {
     this.setState({
       ...this.state,
-      cooldown: false
-    })
-  }
+      cooldown: false,
+    });
+  };
 
   private updateAvailableSparks = () => {
     this.setState({
@@ -352,93 +380,45 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
   };
 
   private renderCustomStyleBlock = () => {
-    const { controlID } = this.props
+    const { controlID } = this.props;
     return (
       <style>
-        {
-          /**
-           * Custom border color for the button.
-           */
-          blockRule(controlID, '.mixer-button',
-            {
-              borderColor: this.borderColor,
-              backgroundColor: this.backgroundColor,
-              backgroundImage: this.backgroundImage ? `url(${this.backgroundImage})` : null
-            }
-          )
-        }
-        {
-          /**
-           * Custom border color on hover for the button.
-           */
-          blockRule(controlID, '.mixer-button:hover',
-            {
-              borderColor: this.focusColor
-            }
-          )
-        }
-        {
-          /**
-           * Custom border color on focus for the button.
-           */
-          blockRule(controlID, '.mixer-button:focus',
-            {
-              borderColor: this.focusColor
-            }
-          )
-        }
-        {
-          /**
-           * Custom border color on active for the button.
-           */
-          blockRule(controlID, '.mixer-button:active',
-            {
-              borderColor: this.focusColor
-            }
-          )
-        }
-        {
-          /**
-           * Custom border color on active for the button.
-           */
-          blockRule(controlID, '.mixer-button.active',
-            {
-              borderColor: this.focusColor
-            }
-          )
-        }
-        {
-          /**
-           * Custom text size for the button.
-           */
-          blockRule(controlID, '.mixer-button-content',
-            {
-              fontSize: this.textSize,
-              color: this.textColor
-            }
-          )
-        }
-        {
-          /**
-           * Custom accent color for the progress bar of the button.
-           */
-          blockRule(controlID, '.mixer-progress-bar > div',
-            {
-              background: this.accentColor
-            }
-          )
-        }
-        {
-          /**
-           * Custom accent color for the cooldown spinner of the button.
-           */
-          blockRule(controlID, '.mixer-cooldown > div::before',
-            {
-              borderLeftColor: this.accentColor
-            }
-          )
-        }
-        </style>
-    )
-  }
+        {// Custom border color for the button.
+        blockRule(controlID, '.mixer-button', {
+          borderColor: this.borderColor,
+          backgroundColor: this.backgroundColor,
+          backgroundImage: this.backgroundImage ? `url(${this.backgroundImage})` : null,
+        })}
+        {// Custom border color on hover for the button.
+        blockRule(controlID, '.mixer-button:hover', {
+          borderColor: this.focusColor,
+        })}
+        {// Custom border color on focus for the button.
+        blockRule(controlID, '.mixer-button:focus', {
+          borderColor: this.focusColor,
+        })}
+        {// Custom border color on active for the button.
+        blockRule(controlID, '.mixer-button:active', {
+          borderColor: this.focusColor,
+        })}
+        {// Custom border color on active for the button.
+        blockRule(controlID, '.mixer-button.active', {
+          borderColor: this.focusColor,
+        })}
+        {// Custom text size for the button.
+        blockRule(controlID, '.mixer-button-content', {
+          fontSize: this.textSize,
+          color: this.textColor,
+        })}
+        {// Custom accent color for the progress bar of the button.
+        blockRule(controlID, '.mixer-progress-bar > div', {
+          background: this.accentColor,
+        })}
+        {// Custom accent color for the cooldown spinner of the button.
+        blockRule(controlID, '.mixer-cooldown > div::before', {
+          borderLeftColor: this.accentColor,
+        })}
+      </style>
+    );
+  };
 }
