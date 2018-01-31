@@ -75,18 +75,13 @@ export class ProgressBar extends Component<{ value: number }, {}> {
  * When the cooldown is active, Cooldown shows the
  * cooldown timer and text on the button.
  */
-export class CoolDown extends Component<{ cooldown: number }, { ttl: number }> {
+export class CoolDown extends Component<{ cooldown: number, onCooldownEnd: Function }, { ttl: number }> {
+  public componentDidMount() {
+    this.handleCooldown(this.props.cooldown);
+  }
+
   public componentWillReceiveProps(nextProps: { cooldown: number }) {
-    this.cancel();
-
-    Mixer.clock.remoteToLocal(nextProps.cooldown).then(date => {
-      const delta = date - Date.now();
-      if (delta < 0) {
-        return;
-      }
-
-      this.setCountdown(delta);
-    });
+    this.handleCooldown(nextProps.cooldown);
   }
 
   public componentWillUnmount() {
@@ -95,8 +90,9 @@ export class CoolDown extends Component<{ cooldown: number }, { ttl: number }> {
 
   public render() {
     return (
-      <div class={classes({ mixerCooldown: true, active: this.state.ttl >= 0 })}>
+      <div class={classes({ mixerCooldown: true, cActive: this.state.ttl >= 0 })}>
         <div>{prettyTime(this.state.ttl + 1)}</div>
+
       </div>
     );
   }
@@ -111,16 +107,41 @@ export class CoolDown extends Component<{ cooldown: number }, { ttl: number }> {
     let remaining = Math.floor(delta / 1000);
     const timeout = setTimeout(() => {
       const interval = setInterval(() => {
-        if (remaining === 0) {
+        if (remaining <= 0) {
           clearInterval(interval);
         }
-        this.setState({ ...this.state, ttl: remaining-- });
+        this.updateTtl(remaining--);
       }, 1000);
-      this.setState({ ...this.state, ttl: remaining-- });
+      this.updateTtl(remaining--);
       this.cancel = () => clearInterval(interval);
     }, delta % 1000);
-    this.setState({ ...this.state, ttl: remaining-- });
+    this.updateTtl(remaining--);
     this.cancel = () => clearTimeout(timeout);
+  }
+
+  private handleCooldown (cooldown: number) {
+    this.cancel();
+    Mixer.clock.remoteToLocal(cooldown).then(date => {
+      const delta = date - Date.now();
+      if (delta < 0) {
+        return;
+      }
+
+      this.setCountdown(delta);
+    });
+  }
+
+  private updateTtl (ttl: number) {
+    if (ttl !== this.state.ttl) {
+      this.setState({
+        ...this.state,
+        ttl
+      }, () => {
+        if (this.state.ttl === -1) {
+          this.props.onCooldownEnd();
+        }
+      })
+    }
   }
 }
 
@@ -221,7 +242,8 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
     window.addEventListener('keyup', this.keyUp);
     this.setState({
       ...this.state,
-      keysPressed: []
+      keysPressed: [],
+      cooldown: this.cooldown - Date.now() > 0
     })
   }
 
@@ -255,7 +277,7 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
         >
           <div class={classes({ mixerButtonContent: true, cooldown: this.state.cooldown })}>{this.text}</div>
           <SparkPill cost={this.cost} available={this.state.availableSparks} />
-          <CoolDown cooldown={this.cooldown} />
+          <CoolDown cooldown={this.cooldown} onCooldownEnd={this.endCooldown} />
           <ProgressBar value={this.progress} />
           {this.tooltip ? <div class="mixer-button-tooltip">{this.tooltip}</div> : undefined}
         </div>
@@ -272,13 +294,17 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
   }
 
   protected mousedown = () => {
-    this.control.giveInput({ event: 'mousedown' });
-    this.setState({ ...this.state, active: true });
+    if (!this.disabled && !this.state.cooldown) {
+      this.control.giveInput({ event: 'mousedown' });
+      this.setState({ ...this.state, active: true });
+    }
   };
 
   protected mouseup = () => {
-    this.control.giveInput({ event: 'mouseup' });
-    this.setState({ ...this.state, active: false });
+    if (!this.disabled && !this.state.cooldown) {
+      this.control.giveInput({ event: 'mouseup' });
+      this.setState({ ...this.state, active: false });
+    }
   };
 
   protected mouseleave = () => {
@@ -296,7 +322,7 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
   };
 
   protected keyDown = (ev: KeyboardEvent) => {
-    if (ev.keyCode === this.keyCode && this.state.keysPressed.indexOf(ev.keyCode) < 0) {
+    if (!this.disabled && !this.state.cooldown && ev.keyCode === this.keyCode && this.state.keysPressed.indexOf(ev.keyCode) < 0) {
       this.control.giveInput({ event: 'keydown' });
       const newKeysPressed = [...this.state.keysPressed, ev.keyCode];
       this.setState({ ...this.state, active: true, keysPressed: newKeysPressed});
@@ -304,12 +330,19 @@ export class Button extends PreactControl<{ availableSparks: number; active: boo
   };
 
   protected keyUp = (ev: KeyboardEvent) => {
-    if (ev.keyCode === this.keyCode && this.state.keysPressed.indexOf(ev.keyCode) >= 0) {
+    if (!this.disabled && !this.state.cooldown && ev.keyCode === this.keyCode && this.state.keysPressed.indexOf(ev.keyCode) >= 0) {
       const newKeysPressed = this.state.keysPressed.filter(i => i !== ev.keyCode);
       this.control.giveInput({ event: 'keyup' });
       this.setState({ ...this.state, active: false, keysPressed: newKeysPressed });
     }
   };
+
+  private endCooldown = () => {
+    this.setState({
+      ...this.state,
+      cooldown: false
+    })
+  }
 
   private updateAvailableSparks = () => {
     this.setState({
