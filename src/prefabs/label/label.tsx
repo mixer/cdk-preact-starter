@@ -55,10 +55,7 @@ export class Label extends PreactControl {
     const { controlID } = this.props;
     return (
       <style>
-        {
-        /**
-         * Custom border color for the button.
-         */
+        {// Custom border color for the button.
         blockRule(controlID, '.mixer-label', {
           fontSize: this.textSize,
           color: this.textColor,
