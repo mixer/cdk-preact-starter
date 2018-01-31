@@ -109,7 +109,7 @@ export class CoolDown extends Component<
     let remaining = Math.floor(delta / 1000);
     const timeout = setTimeout(() => {
       const interval = setInterval(() => {
-        if (remaining <= 0) {
+        if (remaining < 0) {
           clearInterval(interval);
         }
         this.updateTtl(remaining--);
