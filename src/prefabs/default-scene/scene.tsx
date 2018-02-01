@@ -17,7 +17,11 @@ export class DefaultScene extends PreactScene<{}> {
     const Layout = this.getLayoutEngine();
     return (
       <div class={`mixer-default-scene scene-${this.scene.props.sceneID}`}>
-        <Layout scene={this.scene} settings={this.state.settings} />
+        <Layout
+          key={`mixer-default-scene scene-${this.scene.props.sceneID}`}
+          scene={this.scene}
+          settings={this.state.settings}
+        />
       </div>
     );
   }
