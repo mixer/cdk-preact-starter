@@ -280,7 +280,7 @@ export class Button extends PreactControl<{
   public render() {
     const { controlID } = this.props;
     return (
-      <div name={`control-${controlID}`}>
+      <div key={`control-${controlID}`} name={`control-${controlID}`}>
         {this.renderCustomStyleBlock()}
         <div
           tabIndex={0}
