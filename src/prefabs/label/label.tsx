@@ -44,7 +44,7 @@ export class Label extends PreactControl {
   public render() {
     const { controlID } = this.props;
     return (
-      <div class="mixer-label-container" name={`control-${controlID}`}>
+      <div key={`control-${controlID}`} class="mixer-label-container" name={`control-${controlID}`}>
         {this.renderCustomStyleBlock()}
         <div class="mixer-label">{this.text}</div>
       </div>
