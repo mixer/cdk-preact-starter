@@ -1,0 +1,407 @@
+<html>
+<head>
+<style type="text/css">
+.controller-container {	
+    height: 340px;	
+    width: 340px;	
+    background: radial-gradient(at 70% 60%, #4d4b4d 0%, #0A0707 100%);
+    border-radius: 6px;
+}
+
+.button-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+}
+
+.buttons {
+    position: relative;
+    width: 50%;
+}
+
+.button-wrapper {
+    position: relative;
+    left: -20px;
+}
+
+.button {
+    position: absolute;
+}
+
+.button.y,
+.button.a {
+    left: 75px;
+}
+
+.button.x,
+.button.b {
+    top: 35px
+}
+
+.button.x {
+    left: 40px;
+}
+
+.button.b {
+    left: 110px;
+}
+
+.button.a {
+    top: 70px;
+}
+
+</style>
+</head>
+
+<body>
+
+
+
+
+<div class="controller-container">
+    <div class="button-row">
+        <div class="left-trigger">
+            <svg width="70px" height="77px" viewBox="0 0 70 77" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <defs>
+                    <radialGradient cx="142.94678%" cy="68.1168453%" fx="142.94678%" fy="68.1168453%" r="100%" gradientTransform="translate(1.429468,0.681168),scale(1.000000,0.899982),rotate(90.000000),translate(-1.429468,-0.681168)" id="ltRadialGradient">
+                        <stop stop-color="#3A383A" offset="0%"></stop>
+                        <stop stop-color="#171515" offset="100%"></stop>
+                    </radialGradient>
+                    <linearGradient x1="50%" y1="-22.015175%" x2="50%" y2="100%" id="ltLinearGradient">
+                        <stop stop-color="#68686A" offset="0%"></stop>
+                        <stop stop-color="#120F0F" offset="100%"></stop>
+                    </linearGradient>
+                    <path d="M6,0 L48,0 L48,-8.8817842e-15 C51.3137085,-6.5473382e-15 54,2.6862915 54,6 L54,25.5664801 L54,25.5664801 C54,27.5574666 53.0123644,29.418782 51.3636708,30.5349526 L9.3636708,58.9690789 L9.3636708,58.9690789 C6.61965922,60.8267829 2.88923161,60.1082888 1.03152753,57.3642772 C0.359292471,56.3713199 3.69956227e-15,55.1997161 3.55271368e-15,54.0006064 L0,6 L0,6 C-4.05812251e-16,2.6862915 2.6862915,-2.79460044e-16 6,-8.8817842e-16 Z" id="path-3"></path>
+                    <filter x="-29.6%" y="-23.3%" width="159.3%" height="153.3%" filterUnits="objectBoundingBox" id="ltFilter">
+                        <feMorphology radius="1.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+                        <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+                        <feGaussianBlur stdDeviation="3.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+                        <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+                        <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+                    </filter>
+                </defs>
+                <g id="leftTriggerAssets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <g id="LT">
+                        <g id="LT-(default)" transform="translate(8.000000, 8.000000)">
+                            <g id="ltRect">
+                                <use fill="black" fill-opacity="1" filter="url(#ltFilter)" xlink:href="#path-3"></use>
+                                <use fill="url(#ltRadialGradient)" fill-rule="evenodd" xlink:href="#path-3"></use>
+                                <path stroke="url(#ltLinearGradient)" stroke-width="1" d="M6,0.5 C2.96243388,0.5 0.5,2.96243388 0.5,6 L0.5,54.0006064 C0.5,55.0997903 0.829351432,56.1737605 1.4455669,57.0839713 C3.14846231,59.5993152 6.56802096,60.2579349 9.0833649,58.5550395 L51.0833649,30.1209132 C52.5946674,29.0977569 53.5,27.3915511 53.5,25.5664801 L53.5,6 C53.5,2.96243388 51.0375661,0.5 48,0.5 L6,0.5 Z"></path>
+                            </g>
+                            <text id="LT" opacity="0.403872283" font-family="Industry-Bold, Industry" font-size="18" font-weight="bold" fill="#FFFFFF">
+                                <tspan x="5.44589655" y="19">LT</tspan>
+                            </text>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </div>
+        <div class="left-bumper">
+            <svg width="101px" height="43px" viewBox="0 0 101 43" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <defs>
+                    <radialGradient cx="142.94678%" cy="68.1168453%" fx="142.94678%" fy="68.1168453%" r="100%" gradientTransform="translate(1.429468,0.681168),scale(0.317647,1.000000),rotate(90.000000),translate(-1.429468,-0.681168)" id="lbRadialGradient">
+                        <stop stop-color="#3A383A" offset="0%"></stop>
+                        <stop stop-color="#171515" offset="100%"></stop>
+                    </radialGradient>
+                    <linearGradient x1="50%" y1="-22.015175%" x2="50%" y2="100%" id="lbLinearGradient">
+                        <stop stop-color="#68686A" offset="0%"></stop>
+                        <stop stop-color="#120F0F" offset="100%"></stop>
+                    </linearGradient>
+                    <rect id="lbRect" x="0" y="0" width="85" height="27" rx="6"></rect>
+                    <filter x="-18.8%" y="-51.9%" width="137.6%" height="218.5%" filterUnits="objectBoundingBox" id="lbFilter">
+                        <feMorphology radius="1.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+                        <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+                        <feGaussianBlur stdDeviation="3.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+                        <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+                        <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+                    </filter>
+                </defs>
+                <g id="leftBumperAssets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <g id="LB">
+                        <g id="LB-(default)" transform="translate(8.000000, 8.000000)">
+                            <g id="lbRect2">
+                                <use fill="black" fill-opacity="1" filter="url(#lbFilter)" xlink:href="#lbRect"></use>
+                                <use fill="url(#lbRadialGradient)" fill-rule="evenodd" xlink:href="#lbRect"></use>
+                                <rect stroke="url(#lbLinearGradient)" stroke-width="1" x="0.5" y="0.5" width="84" height="26" rx="6"></rect>
+                            </g>
+                            <text id="LB" opacity="0.403872283" font-family="Industry-Bold, Industry" font-size="18" font-weight="bold" fill="#FFFFFF">
+                                <tspan x="5.718" y="19">LB</tspan>
+                            </text>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </div>
+        <div class="right-bumper">
+            <svg width="101px" height="43px" viewBox="0 0 101 43" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <defs>
+                    <radialGradient cx="142.94678%" cy="68.1168453%" fx="142.94678%" fy="68.1168453%" r="100%" gradientTransform="translate(1.429468,0.681168),scale(0.317647,1.000000),rotate(90.000000),translate(-1.429468,-0.681168)" id="rbRadialGradient">
+                        <stop stop-color="#3A383A" offset="0%"></stop>
+                        <stop stop-color="#171515" offset="100%"></stop>
+                    </radialGradient>
+                    <linearGradient x1="50%" y1="-22.015175%" x2="50%" y2="100%" id="rbLinearGradient">
+                        <stop stop-color="#68686A" offset="0%"></stop>
+                        <stop stop-color="#120F0F" offset="100%"></stop>
+                    </linearGradient>
+                    <rect id="rbRect" x="0" y="0" width="85" height="27" rx="6"></rect>
+                    <filter x="-18.8%" y="-51.9%" width="137.6%" height="218.5%" filterUnits="objectBoundingBox" id="rbFilter">
+                        <feMorphology radius="1.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+                        <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+                        <feGaussianBlur stdDeviation="3.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+                        <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+                        <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+                    </filter>
+                </defs>
+                <g id="rightBumperAssets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <g id="RB">
+                        <g id="RB-(default)" transform="translate(8.000000, 8.000000)">
+                            <g id="rbRect2">
+                                <use fill="black" fill-opacity="1" filter="url(#rbFilter)" xlink:href="#rbRect"></use>
+                                <use fill="url(#rbRadialGradient)" fill-rule="evenodd" xlink:href="#rbRect"></use>
+                                <rect stroke="url(#lbLinearGradient)" stroke-width="1" x="0.5" y="0.5" width="84" height="26" rx="6"></rect>
+                            </g>
+                            <text id="RB" opacity="0.403872283" font-family="Industry-Bold, Industry" font-size="18" font-weight="bold" fill="#FFFFFF">
+                                <tspan x="56.863" y="19">RB</tspan>
+                            </text>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </div>
+        <div class="right-trigger">
+            <svg width="70px" height="77px" viewBox="0 0 70 77" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <defs>
+                    <radialGradient cx="142.94678%" cy="68.1168453%" fx="142.94678%" fy="68.1168453%" r="100%" gradientTransform="translate(1.429468,0.681168),scale(1.000000,0.900000),rotate(90.000000),translate(-1.429468,-0.681168)" id="rtRadialGradient">
+                        <stop stop-color="#3A383A" offset="0%"></stop>
+                        <stop stop-color="#171515" offset="100%"></stop>
+                    </radialGradient>
+                    <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="rtLinearGradient">
+                        <stop stop-color="#000000" stop-opacity="0.5" offset="0%"></stop>
+                        <stop stop-color="#000000" stop-opacity="0.5" offset="100%"></stop>
+                    </linearGradient>
+                    <linearGradient x1="50%" y1="150.15191%" x2="50%" y2="-38.2740162%" id="rtLinearGradient2">
+                        <stop stop-color="#68686A" offset="0%"></stop>
+                        <stop stop-color="#120F0F" offset="100%"></stop>
+                    </linearGradient>
+                    <path d="M48.408144,0 L5.591856,0 C2.50355921,-5.97064116e-15 -7.10542736e-15,1.86448247 -7.10542736e-15,4.16443816 L3.9249187e-14,26.8778247 C3.9249187e-14,28.0518864 0.665457206,29.1714033 1.83251324,29.960712 L44.6488012,58.9184191 C46.935033,60.4646538 50.4715051,60.337869 52.5477328,58.6352374 C53.4822571,57.8688713 54,56.8707576 54,55.8355318 L54,4.16443816 C54,1.86448247 51.4964408,4.22495005e-16 48.408144,0 Z" id="rtPath"></path>
+                </defs>
+                <g id="rightTriggerAssets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <g id="RT-(pressed)">
+                        <g transform="translate(8.000000, 8.000000)">
+                            <g id="rtRect">
+                                <use fill="url(#rtRadialGradient)" fill-rule="evenodd" xlink:href="#rtPath"></use>
+                                <use fill="url(#rtLinearGradient)" fill-rule="evenodd" xlink:href="#rtPath"></use>
+                                <path stroke="url(#rtLinearGradient2)" stroke-width="1" d="M48.408144,0.5 L5.591856,0.5 C2.75309407,0.5 0.5,2.17795289 0.5,4.16443816 L0.5,26.8778247 C0.5,27.8760819 1.07634173,28.8456774 2.11262643,29.5465422 L44.9289144,58.5042493 C47.033616,59.9277107 50.3271346,59.8096359 52.2306791,58.2486149 C53.0541433,57.5733247 53.5,56.7137945 53.5,55.8355318 L53.5,4.16443816 C53.5,2.17795289 51.2469059,0.5 48.408144,0.5 Z"></path>
+                            </g>
+                            <text id="RT" opacity="0.3" font-family="Industry-Bold, Industry" font-size="18" font-weight="bold" fill="#FFFFFF">
+                                <tspan x="26.6429655" y="19">RT</tspan>
+                            </text>
+                        </g>
+                    </g>
+                </g>
+            </svg>            
+        </div>
+    </div>
+    <div class="button-row">
+        <div class="joystick left">
+            <svg width="104px" height="104px" viewBox="0 0 104 104" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <defs>
+                    <linearGradient x1="50%" y1="-22.015175%" x2="50%" y2="100%" id="jlLinearGradient">
+                        <stop stop-color="#68686A" offset="0%"></stop>
+                        <stop stop-color="#120F0F" offset="100%"></stop>
+                    </linearGradient>
+                    <circle id="jlCircle" cx="33.4521739" cy="33.4521739" r="32.5565217"></circle>
+                    <filter x="-43.0%" y="-30.7%" width="186.0%" height="186.0%" filterUnits="objectBoundingBox" id="jlFilter">
+                        <feOffset dx="0" dy="8" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+                        <feGaussianBlur stdDeviation="8" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+                        <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+                        <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+                    </filter>
+                    <circle id="jlCircle2" cx="33.4521739" cy="33.4521739" r="24.4173913"></circle>
+                    <filter x="-5.1%" y="-5.1%" width="110.2%" height="110.2%" filterUnits="objectBoundingBox" id="jlFilter2">
+                        <feGaussianBlur stdDeviation="1.5" in="SourceAlpha" result="shadowBlurInner1"></feGaussianBlur>
+                        <feOffset dx="0" dy="1" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+                        <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+                        <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+                    </filter>
+                </defs>
+                <g id="joystickLeftAssets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <g id="Thumbstick">
+                        <g transform="translate(19.000000, 19.000000)" id="Oval-2">
+                            <g>
+                                <use fill="black" fill-opacity="1" filter="url(#jlFilter)" xlink:href="#jlCircle"></use>
+                                <use fill="" fill-rule="evenodd" xlink:href="#jlCircle"></use>
+                                <circle stroke="url(#jlLinearGradient)" stroke-width="1" cx="33.4521739" cy="33.4521739" r="32.0565217"></circle>
+                            </g>
+                            <circle stroke="#2A2829" cx="33.4521739" cy="33.4521739" r="28.0347826"></circle>
+                            <g>
+                                <use fill="black" fill-opacity="1" filter="url(#jlFilter2)" xlink:href="#jlCircle2"></use>
+                                <use stroke="#1D1B1C" stroke-width="1" xlink:href="#jlCircle2"></use>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </svg>                
+        </div>
+        <div class="buttons">
+            <div class="button y">
+                <svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <title>Y</title>
+                    <defs>
+                        <radialGradient cx="188.951527%" cy="50%" fx="188.951527%" fy="50%" r="147.838246%" gradientTransform="translate(1.889515,0.500000),rotate(0.000000),scale(1.000000,0.847212),translate(-1.889515,-0.500000)" id="btnYRadialGradient">
+                            <stop stop-color="#FFFFFF" offset="0%"></stop>
+                            <stop stop-color="#000000" offset="100%"></stop>
+                        </radialGradient>
+                        <linearGradient x1="50%" y1="-22.015175%" x2="50%" y2="100%" id="btnYLinearGradient">
+                            <stop stop-color="#68686A" offset="0%"></stop>
+                            <stop stop-color="#120F0F" offset="100%"></stop>
+                        </linearGradient>
+                        <circle id="btnYCircle" cx="20" cy="20" r="20"></circle>
+                    </defs>
+                    <g id="btnYAssets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <g id="Y">
+                            <g id="Y-(default)">
+                                <g id="Oval-3-Copy-9">
+                                    <use fill="url(#btnYradialGradient)" fill-rule="evenodd" xlink:href="#btnYCircle"></use>
+                                    <circle stroke="url(#btnYLinearGradient)" stroke-width="1" cx="20" cy="20" r="19.5"></circle>
+                                </g>
+                                <text id="Y" font-family="Industry-Bold, Industry" font-size="34" font-weight="bold" fill="#F3CA00">
+                                    <tspan x="9.41418182" y="35">Y</tspan>
+                                </text>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <div class="button x">
+                <svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <title>Y</title>
+                    <defs>
+                        <radialGradient cx="188.951527%" cy="50%" fx="188.951527%" fy="50%" r="147.838246%" gradientTransform="translate(1.889515,0.500000),rotate(0.000000),scale(1.000000,0.847212),translate(-1.889515,-0.500000)" id="btnYRadialGradient">
+                            <stop stop-color="#FFFFFF" offset="0%"></stop>
+                            <stop stop-color="#000000" offset="100%"></stop>
+                        </radialGradient>
+                        <linearGradient x1="50%" y1="-22.015175%" x2="50%" y2="100%" id="btnYLinearGradient">
+                            <stop stop-color="#68686A" offset="0%"></stop>
+                            <stop stop-color="#120F0F" offset="100%"></stop>
+                        </linearGradient>
+                        <circle id="btnYCircle" cx="20" cy="20" r="20"></circle>
+                    </defs>
+                    <g id="btnYAssets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <g id="Y">
+                            <g id="Y-(default)">
+                                <g id="Oval-3-Copy-9">
+                                    <use fill="url(#btnYradialGradient)" fill-rule="evenodd" xlink:href="#btnYCircle"></use>
+                                    <circle stroke="url(#btnYLinearGradient)" stroke-width="1" cx="20" cy="20" r="19.5"></circle>
+                                </g>
+                                <text id="Y" font-family="Industry-Bold, Industry" font-size="34" font-weight="bold" fill="#F3CA00">
+                                    <tspan x="9.41418182" y="35">Y</tspan>
+                                </text>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <div class="button b">
+                <svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <title>Y</title>
+                    <defs>
+                        <radialGradient cx="188.951527%" cy="50%" fx="188.951527%" fy="50%" r="147.838246%" gradientTransform="translate(1.889515,0.500000),rotate(0.000000),scale(1.000000,0.847212),translate(-1.889515,-0.500000)" id="btnYRadialGradient">
+                            <stop stop-color="#FFFFFF" offset="0%"></stop>
+                            <stop stop-color="#000000" offset="100%"></stop>
+                        </radialGradient>
+                        <linearGradient x1="50%" y1="-22.015175%" x2="50%" y2="100%" id="btnYLinearGradient">
+                            <stop stop-color="#68686A" offset="0%"></stop>
+                            <stop stop-color="#120F0F" offset="100%"></stop>
+                        </linearGradient>
+                        <circle id="btnYCircle" cx="20" cy="20" r="20"></circle>
+                    </defs>
+                    <g id="btnYAssets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <g id="Y">
+                            <g id="Y-(default)">
+                                <g id="Oval-3-Copy-9">
+                                    <use fill="url(#btnYradialGradient)" fill-rule="evenodd" xlink:href="#btnYCircle"></use>
+                                    <circle stroke="url(#btnYLinearGradient)" stroke-width="1" cx="20" cy="20" r="19.5"></circle>
+                                </g>
+                                <text id="Y" font-family="Industry-Bold, Industry" font-size="34" font-weight="bold" fill="#F3CA00">
+                                    <tspan x="9.41418182" y="35">Y</tspan>
+                                </text>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <div class="button a">
+                <svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <title>Y</title>
+                    <defs>
+                        <radialGradient cx="188.951527%" cy="50%" fx="188.951527%" fy="50%" r="147.838246%" gradientTransform="translate(1.889515,0.500000),rotate(0.000000),scale(1.000000,0.847212),translate(-1.889515,-0.500000)" id="btnYRadialGradient">
+                            <stop stop-color="#FFFFFF" offset="0%"></stop>
+                            <stop stop-color="#000000" offset="100%"></stop>
+                        </radialGradient>
+                        <linearGradient x1="50%" y1="-22.015175%" x2="50%" y2="100%" id="btnYLinearGradient">
+                            <stop stop-color="#68686A" offset="0%"></stop>
+                            <stop stop-color="#120F0F" offset="100%"></stop>
+                        </linearGradient>
+                        <circle id="btnYCircle" cx="20" cy="20" r="20"></circle>
+                    </defs>
+                    <g id="btnYAssets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <g id="Y">
+                            <g id="Y-(default)">
+                                <g id="Oval-3-Copy-9">
+                                    <use fill="url(#btnYradialGradient)" fill-rule="evenodd" xlink:href="#btnYCircle"></use>
+                                    <circle stroke="url(#btnYLinearGradient)" stroke-width="1" cx="20" cy="20" r="19.5"></circle>
+                                </g>
+                                <text id="Y" font-family="Industry-Bold, Industry" font-size="34" font-weight="bold" fill="#F3CA00">
+                                    <tspan x="9.41418182" y="35">Y</tspan>
+                                </text>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+            </div>            
+        </div>
+    </div>
+    <div class="button-row">
+        <div class="dpad">
+            <?xml version="1.0" encoding="UTF-8"?>
+            <svg width="113px" height="113px" viewBox="0 0 113 113" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <defs>
+                    <radialGradient cx="142.94678%" cy="68.1168453%" fx="142.94678%" fy="68.1168453%" r="100%" id="radialGradient-1">
+                        <stop stop-color="#3A383A" offset="0%"></stop>
+                        <stop stop-color="#171515" offset="100%"></stop>
+                    </radialGradient>
+                    <linearGradient x1="50%" y1="-22.015175%" x2="50%" y2="100%" id="linearGradient-2">
+                        <stop stop-color="#68686A" offset="0%"></stop>
+                        <stop stop-color="#120F0F" offset="100%"></stop>
+                    </linearGradient>
+                    <path d="M73.775,39.76 L73.775,16 C73.775,12.6862915 71.0887085,10 67.775,10 L67.775,10 L47.225,10 L47.225,10 C43.9112915,10 41.225,12.6862915 41.225,16 L41.225,16 L41.225,39.76 L17,39.76 C13.6862915,39.76 11,42.4462915 11,45.76 L11,66.31 C11,69.6237085 13.6862915,72.31 17,72.31 L17,72.31 L41.225,72.31 L41.225,97 C41.225,100.313708 43.9112915,103 47.225,103 L47.225,103 L67.775,103 C71.0887085,103 73.775,100.313708 73.775,97 L73.775,97 L73.775,72.31 L98,72.31 C101.313708,72.31 104,69.6237085 104,66.31 L104,45.76 C104,42.4462915 101.313708,39.76 98,39.76 L98,39.76 L73.775,39.76 Z" id="path-3"></path>
+                    <filter x="-17.2%" y="-15.1%" width="134.4%" height="134.4%" filterUnits="objectBoundingBox" id="filter-4">
+                        <feMorphology radius="1.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+                        <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+                        <feGaussianBlur stdDeviation="3.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+                        <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+                        <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+                    </filter>
+                </defs>
+                <g id="Controller-Assets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <g id="D-pad">
+                        <g id="D-pad-(default)">
+                            <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                            <use fill="url(#radialGradient-1)" fill-rule="evenodd" xlink:href="#path-3"></use>
+                            <path stroke="url(#linearGradient-2)" stroke-width="1" d="M98,40.26 L73.275,40.26 L73.275,16 C73.275,12.9624339 70.8125661,10.5 67.775,10.5 L47.225,10.5 C44.1874339,10.5 41.725,12.9624339 41.725,16 L41.725,40.26 L17,40.26 C13.9624339,40.26 11.5,42.7224339 11.5,45.76 L11.5,66.31 C11.5,69.3475661 13.9624339,71.81 17,71.81 L41.725,71.81 L41.725,97 C41.725,100.037566 44.1874339,102.5 47.225,102.5 L67.775,102.5 C70.8125661,102.5 73.275,100.037566 73.275,97 L73.275,71.81 L98,71.81 C101.037566,71.81 103.5,69.3475661 103.5,66.31 L103.5,45.76 C103.5,42.7224339 101.037566,40.26 98,40.26 Z"></path>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </div>
+        <div class="joystick right"></div>
+    </div>
+    <div class="button-row">
+        <div class="view"></div>
+        <div class="menu"></div>
+    </div>
+</div>
+
+</body>
+</html>

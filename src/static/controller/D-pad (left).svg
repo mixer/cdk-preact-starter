@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="113px" height="113px" viewBox="0 0 113 113" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.1 (47250) - http://www.bohemiancoding.com/sketch -->
+    <title>D-pad (left)</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <radialGradient cx="50%" cy="100%" fx="50%" fy="100%" r="100%" gradientTransform="translate(0.500000,1.000000),scale(1.000000,0.982171),rotate(90.000000),translate(-0.500000,-1.000000)" id="radialGradient-1">
+            <stop stop-color="#585558" offset="0%"></stop>
+            <stop stop-color="#000000" offset="100%"></stop>
+        </radialGradient>
+        <linearGradient x1="50%" y1="106.692078%" x2="50%" y2="-7.60248656%" id="linearGradient-2">
+            <stop stop-color="#68686A" offset="0%"></stop>
+            <stop stop-color="#120F0F" offset="100%"></stop>
+        </linearGradient>
+        <path d="M73.0856288,15.1709509 C73.0593716,11.8572424 70.4734268,9.17095087 67.3097593,9.17095087 L47.6902407,9.17095087 C44.5265732,9.17095087 41.9406284,11.8572424 41.9143712,15.1709509 L41.7261016,38.9309509 L18.2469808,38.9309509 C15.0353003,38.9309509 12.3709026,41.6172424 12.2958821,44.9309509 L11.8306414,65.4809509 C11.7556208,68.7946594 14.3409575,71.4809509 17.6051525,71.4809509 L41.4681816,71.4809509 L41.2725428,96.1709509 C41.2462857,99.4846594 43.9112915,102.170951 47.225,102.170951 L67.775,102.170951 C71.0887085,102.170951 73.7537143,99.4846594 73.7274572,96.1709509 L73.5318184,71.4809509 L97.3948475,71.4809509 C100.659042,71.4809509 103.244379,68.7946594 103.169359,65.4809509 L102.704118,44.9309509 C102.629097,41.6172424 99.9646997,38.9309509 96.7530192,38.9309509 L73.2738984,38.9309509 L73.0856288,15.1709509 Z" id="path-3"></path>
+        <filter x="-18.1%" y="-14.5%" width="136.1%" height="135.5%" filterUnits="objectBoundingBox" id="filter-4">
+            <feMorphology radius="1.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="3" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Controller-Assets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="D-pad-(left)">
+            <g transform="translate(57.500000, 55.670951) rotate(-90.000000) translate(-57.500000, -55.670951) ">
+                <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                <use fill="url(#radialGradient-1)" fill-rule="evenodd" xlink:href="#path-3"></use>
+                <path stroke="url(#linearGradient-2)" stroke-width="1" d="M72.5856445,15.1749126 C72.5615235,12.1307932 70.1935687,9.67095087 67.3097593,9.67095087 L47.6902407,9.67095087 C44.8064313,9.67095087 42.4384765,12.1307932 42.4143555,15.1749126 L42.2221554,39.4309509 L18.2469808,39.4309509 C15.3105133,39.4309509 12.8647003,41.8968616 12.795754,44.9422677 L12.3305133,65.4922677 C12.2618035,68.5272272 14.6233126,70.9809509 17.6051525,70.9809509 L41.9721592,70.9809509 L41.7725271,96.1749126 C41.7484702,99.2109426 44.1889859,101.670951 47.225,101.670951 L67.775,101.670951 C70.8110141,101.670951 73.2515298,99.2109426 73.2274729,96.1749126 L73.0278408,70.9809509 L97.3948475,70.9809509 C100.376687,70.9809509 102.738197,68.5272272 102.669487,65.4922677 L102.204246,44.9422677 C102.1353,41.8968616 99.6894867,39.4309509 96.7530192,39.4309509 L72.7778446,39.4309509 L72.5856445,15.1749126 Z"></path>
+            </g>
+        </g>
+    </g>
+</svg>

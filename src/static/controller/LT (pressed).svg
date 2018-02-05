@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="70px" height="77px" viewBox="0 0 70 77" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.1 (47250) - http://www.bohemiancoding.com/sketch -->
+    <title>LT (pressed)</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <radialGradient cx="142.94678%" cy="68.1168453%" fx="142.94678%" fy="68.1168453%" r="100%" gradientTransform="translate(1.429468,0.681168),scale(1.000000,0.900000),rotate(90.000000),translate(-1.429468,-0.681168)" id="radialGradient-1">
+            <stop stop-color="#3A383A" offset="0%"></stop>
+            <stop stop-color="#171515" offset="100%"></stop>
+        </radialGradient>
+        <linearGradient x1="100%" y1="71.3758042%" x2="52.8559471%" y2="72.8067567%" id="linearGradient-2">
+            <stop stop-color="#000000" stop-opacity="0.5" offset="0%"></stop>
+            <stop stop-color="#0A0707" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="150.15191%" x2="50%" y2="-38.2740162%" id="linearGradient-3">
+            <stop stop-color="#68686A" offset="0%"></stop>
+            <stop stop-color="#120F0F" offset="100%"></stop>
+        </linearGradient>
+        <path d="M6,0 L48,-8.8817842e-15 C51.3137085,-6.5473382e-15 54,2.6862915 54,6 L54,25.5664801 C54,27.5574666 53.0123644,29.418782 51.3636708,30.5349526 L9.3636708,58.9690789 C6.61965922,60.8267829 2.88923161,60.1082888 1.03152753,57.3642772 C0.359292471,56.3713199 3.69956227e-15,55.1997161 3.55271368e-15,54.0006064 L0,6 C-4.05812251e-16,2.6862915 2.6862915,-2.79460044e-16 6,-8.8817842e-16 Z" id="path-4"></path>
+        <filter x="-11.1%" y="-10.0%" width="122.2%" height="120.0%" filterUnits="objectBoundingBox" id="filter-5">
+            <feMorphology radius="3" operator="erode" in="SourceAlpha" result="shadowSpreadInner1"></feMorphology>
+            <feGaussianBlur stdDeviation="3.5" in="shadowSpreadInner1" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="0" dy="2" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Controller-Assets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="LT-(pressed)">
+            <g transform="translate(8.000000, 8.000000)">
+                <g id="Rectangle-2">
+                    <use fill="url(#radialGradient-1)" fill-rule="evenodd" xlink:href="#path-4"></use>
+                    <use fill="url(#linearGradient-2)" fill-rule="evenodd" xlink:href="#path-4"></use>
+                    <use fill="black" fill-opacity="1" filter="url(#filter-5)" xlink:href="#path-4"></use>
+                    <path stroke="url(#linearGradient-3)" stroke-width="1" d="M6,0.5 C2.96243388,0.5 0.5,2.96243388 0.5,6 L0.5,54.0006064 C0.5,55.0997903 0.829351432,56.1737605 1.4455669,57.0839713 C3.14846231,59.5993152 6.56802096,60.2579349 9.0833649,58.5550395 L51.0833649,30.1209132 C52.5946674,29.0977569 53.5,27.3915511 53.5,25.5664801 L53.5,6 C53.5,2.96243388 51.0375661,0.5 48,0.5 L6,0.5 Z"></path>
+                </g>
+                <path d="M6.86789655,7.4 L9.45989655,7.4 L9.45989655,17.624 L14.8958966,17.624 L14.8958966,20 L6.86789655,20 L6.86789655,7.4 Z M23.5178966,9.74 L20.0978966,9.74 L20.0978966,20 L17.5058966,20 L17.5058966,9.74 L14.0858966,9.74 L14.0858966,7.4 L23.5178966,7.4 L23.5178966,9.74 Z" id="LT" fill="#FFFFFF" opacity="0.3"></path>
+            </g>
+        </g>
+    </g>
+</svg>

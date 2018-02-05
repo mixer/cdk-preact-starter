@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="101px" height="43px" viewBox="0 0 101 43" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.1 (47250) - http://www.bohemiancoding.com/sketch -->
+    <title>LB</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <radialGradient cx="142.94678%" cy="68.1168453%" fx="142.94678%" fy="68.1168453%" r="100%" gradientTransform="translate(1.429468,0.681168),scale(0.317647,1.000000),rotate(90.000000),translate(-1.429468,-0.681168)" id="radialGradient-1">
+            <stop stop-color="#3A383A" offset="0%"></stop>
+            <stop stop-color="#171515" offset="100%"></stop>
+        </radialGradient>
+        <linearGradient x1="50%" y1="-22.015175%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#68686A" offset="0%"></stop>
+            <stop stop-color="#120F0F" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-3" x="0" y="0" width="85" height="27" rx="6"></rect>
+        <filter x="-18.8%" y="-51.9%" width="137.6%" height="218.5%" filterUnits="objectBoundingBox" id="filter-4">
+            <feMorphology radius="1.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Controller-Assets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="LB">
+            <g id="LB-(default)" transform="translate(8.000000, 8.000000)">
+                <g id="Rectangle-3">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                    <use fill="url(#radialGradient-1)" fill-rule="evenodd" xlink:href="#path-3"></use>
+                    <rect stroke="url(#linearGradient-2)" stroke-width="1" x="0.5" y="0.5" width="84" height="26" rx="6"></rect>
+                </g>
+                <path d="M7.14,7.4 L9.732,7.4 L9.732,17.624 L15.168,17.624 L15.168,20 L7.14,20 L7.14,7.4 Z M17.13,7.4 L23.718,7.4 C25.428,7.4 26.238,8.21 26.238,10.766 C26.238,12.458 25.932,13.106 25.104,13.556 C26.004,13.952 26.382,14.654 26.382,16.49 C26.382,19.19 25.572,20 23.862,20 L17.13,20 L17.13,7.4 Z M19.722,12.44 L23.286,12.44 C23.556,12.44 23.646,12.35 23.646,11.09 C23.646,9.83 23.556,9.74 23.286,9.74 L19.722,9.74 L19.722,12.44 Z M19.722,17.66 L23.43,17.66 C23.7,17.66 23.79,17.57 23.79,16.166 C23.79,14.762 23.7,14.672 23.43,14.672 L19.722,14.672 L19.722,17.66 Z" id="LB" fill="#FFFFFF" opacity="0.403872283"></path>
+            </g>
+        </g>
+    </g>
+</svg>

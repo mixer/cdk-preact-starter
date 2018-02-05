@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="113px" height="113px" viewBox="0 0 113 113" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.1 (47250) - http://www.bohemiancoding.com/sketch -->
+    <title>D-pad</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <radialGradient cx="142.94678%" cy="68.1168453%" fx="142.94678%" fy="68.1168453%" r="100%" id="radialGradient-1">
+            <stop stop-color="#3A383A" offset="0%"></stop>
+            <stop stop-color="#171515" offset="100%"></stop>
+        </radialGradient>
+        <linearGradient x1="50%" y1="-22.015175%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#68686A" offset="0%"></stop>
+            <stop stop-color="#120F0F" offset="100%"></stop>
+        </linearGradient>
+        <path d="M73.775,39.76 L98,39.76 C101.313708,39.76 104,42.4462915 104,45.76 L104,66.31 C104,69.6237085 101.313708,72.31 98,72.31 L73.775,72.31 L73.775,97 C73.775,100.313708 71.0887085,103 67.775,103 L47.225,103 C43.9112915,103 41.225,100.313708 41.225,97 L41.225,72.31 L17,72.31 C13.6862915,72.31 11,69.6237085 11,66.31 L11,45.76 C11,42.4462915 13.6862915,39.76 17,39.76 L41.225,39.76 L41.225,16 C41.225,12.6862915 43.9112915,10 47.225,10 L67.775,10 C71.0887085,10 73.775,12.6862915 73.775,16 L73.775,39.76 Z" id="path-3"></path>
+        <filter x="-17.2%" y="-15.1%" width="134.4%" height="134.4%" filterUnits="objectBoundingBox" id="filter-4">
+            <feMorphology radius="1.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Controller-Assets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="D-pad">
+            <g id="D-pad-(default)">
+                <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                <use fill="url(#radialGradient-1)" fill-rule="evenodd" xlink:href="#path-3"></use>
+                <path stroke="url(#linearGradient-2)" stroke-width="1" d="M98,40.26 L73.275,40.26 L73.275,16 C73.275,12.9624339 70.8125661,10.5 67.775,10.5 L47.225,10.5 C44.1874339,10.5 41.725,12.9624339 41.725,16 L41.725,40.26 L17,40.26 C13.9624339,40.26 11.5,42.7224339 11.5,45.76 L11.5,66.31 C11.5,69.3475661 13.9624339,71.81 17,71.81 L41.725,71.81 L41.725,97 C41.725,100.037566 44.1874339,102.5 47.225,102.5 L67.775,102.5 C70.8125661,102.5 73.275,100.037566 73.275,97 L73.275,71.81 L98,71.81 C101.037566,71.81 103.5,69.3475661 103.5,66.31 L103.5,45.76 C103.5,42.7224339 101.037566,40.26 98,40.26 Z"></path>
+            </g>
+        </g>
+    </g>
+</svg>

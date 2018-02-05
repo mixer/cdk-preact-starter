@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="44px" height="44px" viewBox="0 0 44 44" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.1 (47250) - http://www.bohemiancoding.com/sketch -->
+    <title>View</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-92.9%" y="-78.6%" width="285.7%" height="285.7%" filterUnits="objectBoundingBox" id="filter-1">
+            <feMorphology radius="2" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <radialGradient cx="142.94678%" cy="68.1168453%" fx="142.94678%" fy="68.1168453%" r="100%" id="radialGradient-2">
+            <stop stop-color="#3A383A" offset="0%"></stop>
+            <stop stop-color="#171515" offset="100%"></stop>
+        </radialGradient>
+        <linearGradient x1="50%" y1="-22.015175%" x2="50%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#68686A" offset="0%"></stop>
+            <stop stop-color="#120F0F" offset="100%"></stop>
+        </linearGradient>
+        <circle id="path-4" cx="14" cy="14" r="14"></circle>
+        <filter x="-57.1%" y="-50.0%" width="214.3%" height="214.3%" filterUnits="objectBoundingBox" id="filter-5">
+            <feMorphology radius="1.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Controller-Assets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="View">
+            <g id="View-(default)" transform="translate(8.000000, 8.000000)">
+                <g id="Group-2-Copy-4" filter="url(#filter-1)">
+                    <g id="Oval-3">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-5)" xlink:href="#path-4"></use>
+                        <use fill="url(#radialGradient-2)" fill-rule="evenodd" xlink:href="#path-4"></use>
+                        <circle stroke="url(#linearGradient-3)" stroke-width="1" cx="14" cy="14" r="13.5"></circle>
+                    </g>
+                </g>
+                <g id="Group-22" transform="translate(7.000000, 9.000000)" stroke="#FFFFFF">
+                    <rect id="Rectangle-4" x="4.75925926" y="3.68518519" width="9.18518519" height="6.40740741"></rect>
+                    <path d="M1.05555556,0.907407407 L1.05555556,7.31481481 L10.2407407,7.31481481 L10.2407407,0.907407407 L1.05555556,0.907407407 Z" id="Rectangle-4-Copy"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

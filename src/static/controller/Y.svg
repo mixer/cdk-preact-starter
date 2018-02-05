@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.1 (47250) - http://www.bohemiancoding.com/sketch -->
+    <title>Y</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <radialGradient cx="188.951527%" cy="50%" fx="188.951527%" fy="50%" r="147.838246%" gradientTransform="translate(1.889515,0.500000),rotate(0.000000),scale(1.000000,0.847212),translate(-1.889515,-0.500000)" id="radialGradient-1">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#000000" offset="100%"></stop>
+        </radialGradient>
+        <linearGradient x1="50%" y1="-22.015175%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#68686A" offset="0%"></stop>
+            <stop stop-color="#120F0F" offset="100%"></stop>
+        </linearGradient>
+        <circle id="path-3" cx="20" cy="20" r="20"></circle>
+    </defs>
+    <g id="Controller-Assets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Y">
+            <g id="Y-(default)">
+                <g id="Oval-3-Copy-9">
+                    <use fill="url(#radialGradient-1)" fill-rule="evenodd" xlink:href="#path-3"></use>
+                    <circle stroke="url(#linearGradient-2)" stroke-width="1" cx="20" cy="20" r="19.5"></circle>
+                </g>
+                <polygon id="Y" fill="#F3CA00" points="22.2661818 32 17.3701818 32 17.3701818 23.874 9.61818182 8.2 14.9221818 8.2 19.8521818 18.808 24.7821818 8.2 30.0181818 8.2 22.2661818 23.874"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

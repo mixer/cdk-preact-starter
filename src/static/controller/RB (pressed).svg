@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="101px" height="43px" viewBox="0 0 101 43" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.1 (47250) - http://www.bohemiancoding.com/sketch -->
+    <title>RB (pressed)</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <radialGradient cx="142.94678%" cy="68.1168453%" fx="142.94678%" fy="68.1168453%" r="100%" gradientTransform="translate(1.429468,0.681168),scale(0.317647,1.000000),rotate(90.000000),translate(-1.429468,-0.681168)" id="radialGradient-1">
+            <stop stop-color="#3A383A" offset="0%"></stop>
+            <stop stop-color="#171515" offset="100%"></stop>
+        </radialGradient>
+        <linearGradient x1="100%" y1="71.3758042%" x2="52.8559471%" y2="72.8067567%" id="linearGradient-2">
+            <stop stop-color="#000000" stop-opacity="0.5" offset="0%"></stop>
+            <stop stop-color="#0A0707" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="150.15191%" x2="50%" y2="-38.2740162%" id="linearGradient-3">
+            <stop stop-color="#68686A" offset="0%"></stop>
+            <stop stop-color="#120F0F" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-4" x="0" y="0" width="85" height="27" rx="6"></rect>
+    </defs>
+    <g id="Controller-Assets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="RB-(pressed)">
+            <g transform="translate(8.000000, 8.000000)">
+                <g id="Rectangle-3">
+                    <use fill="url(#radialGradient-1)" fill-rule="evenodd" xlink:href="#path-4"></use>
+                    <use fill="url(#linearGradient-2)" fill-rule="evenodd" xlink:href="#path-4"></use>
+                    <rect stroke="url(#linearGradient-3)" stroke-width="1" x="0.5" y="0.5" width="84" height="26" rx="6"></rect>
+                </g>
+                <path d="M67.843,20 L65.053,20 L62.965,15.554 L60.877,15.554 L60.877,20 L58.285,20 L58.285,7.4 L64.927,7.4 C66.637,7.4 67.447,8.21 67.447,9.92 L67.447,12.962 C67.447,14.384 66.889,15.194 65.701,15.41 L67.843,20 Z M60.877,13.25 L64.495,13.25 C64.765,13.25 64.855,13.16 64.855,12.89 L64.855,10.1 C64.855,9.83 64.765,9.74 64.495,9.74 L60.877,9.74 L60.877,13.25 Z M69.985,7.4 L76.573,7.4 C78.283,7.4 79.093,8.21 79.093,10.766 C79.093,12.458 78.787,13.106 77.959,13.556 C78.859,13.952 79.237,14.654 79.237,16.49 C79.237,19.19 78.427,20 76.717,20 L69.985,20 L69.985,7.4 Z M72.577,12.44 L76.141,12.44 C76.411,12.44 76.501,12.35 76.501,11.09 C76.501,9.83 76.411,9.74 76.141,9.74 L72.577,9.74 L72.577,12.44 Z M72.577,17.66 L76.285,17.66 C76.555,17.66 76.645,17.57 76.645,16.166 C76.645,14.762 76.555,14.672 76.285,14.672 L72.577,14.672 L72.577,17.66 Z" id="RB" fill="#FFFFFF" opacity="0.3"></path>
+            </g>
+        </g>
+    </g>
+</svg>

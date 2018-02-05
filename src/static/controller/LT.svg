@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="70px" height="77px" viewBox="0 0 70 77" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.1 (47250) - http://www.bohemiancoding.com/sketch -->
+    <title>LT</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <radialGradient cx="142.94678%" cy="68.1168453%" fx="142.94678%" fy="68.1168453%" r="100%" gradientTransform="translate(1.429468,0.681168),scale(1.000000,0.900000),rotate(90.000000),translate(-1.429468,-0.681168)" id="radialGradient-1">
+            <stop stop-color="#3A383A" offset="0%"></stop>
+            <stop stop-color="#171515" offset="100%"></stop>
+        </radialGradient>
+        <linearGradient x1="50%" y1="-22.015175%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#68686A" offset="0%"></stop>
+            <stop stop-color="#120F0F" offset="100%"></stop>
+        </linearGradient>
+        <path d="M6,0 L48,-8.8817842e-15 C51.3137085,-6.5473382e-15 54,2.6862915 54,6 L54,25.5658669 C54,27.5568732 53.0123449,29.4182045 51.3636245,30.5343707 L9.36362448,58.967926 C6.61959559,60.8256045 2.88917467,60.1070755 1.03149617,57.3630466 C0.359281057,56.3700989 -6.95858111e-15,55.1985128 -7.10542736e-15,53.9994221 L8.8817842e-16,6 C4.82366169e-16,2.6862915 2.6862915,1.4968968e-15 6,8.8817842e-16 Z" id="path-3"></path>
+        <filter x="-29.6%" y="-23.3%" width="159.3%" height="153.3%" filterUnits="objectBoundingBox" id="filter-4">
+            <feMorphology radius="1.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Controller-Assets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="LT">
+            <g id="LT-(default)" transform="translate(8.000000, 8.000000)">
+                <g id="Rectangle-2">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                    <use fill="url(#radialGradient-1)" fill-rule="evenodd" xlink:href="#path-3"></use>
+                    <path stroke="url(#linearGradient-2)" stroke-width="1" d="M6,0.5 C2.96243388,0.5 0.5,2.96243388 0.5,6 L0.5,53.9994221 C0.5,55.0985886 0.829340969,56.1725425 1.44553815,57.0827446 C3.14841012,59.5981044 6.56796262,60.256756 9.08332244,58.553884 L51.0833224,30.1203287 C52.5946495,29.0971763 53.5,27.390956 53.5,25.5658669 L53.5,6 C53.5,2.96243388 51.0375661,0.5 48,0.5 L6,0.5 Z"></path>
+                </g>
+                <path d="M7,7 L9.64648649,7 L9.64648649,17.5485714 L15.1967568,17.5485714 L15.1967568,20 L7,20 L7,7 Z M24,9.41428571 L20.5081081,9.41428571 L20.5081081,20 L17.8616216,20 L17.8616216,9.41428571 L14.3697297,9.41428571 L14.3697297,7 L24,7 L24,9.41428571 Z" id="LT" fill="#FFFFFF" opacity="0.403872283"></path>
+            </g>
+        </g>
+    </g>
+</svg>

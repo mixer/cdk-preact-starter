@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="70px" height="77px" viewBox="0 0 70 77" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.1 (47250) - http://www.bohemiancoding.com/sketch -->
+    <title>RT</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <radialGradient cx="142.94678%" cy="68.1168453%" fx="142.94678%" fy="68.1168453%" r="100%" gradientTransform="translate(1.429468,0.681168),scale(1.000000,0.900000),rotate(90.000000),translate(-1.429468,-0.681168)" id="radialGradient-1">
+            <stop stop-color="#3A383A" offset="0%"></stop>
+            <stop stop-color="#171515" offset="100%"></stop>
+        </radialGradient>
+        <linearGradient x1="50%" y1="-22.015175%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#68686A" offset="0%"></stop>
+            <stop stop-color="#120F0F" offset="100%"></stop>
+        </linearGradient>
+        <path d="M48.408144,0 L5.591856,0 C2.50355921,-5.97064116e-15 0,1.86448247 0,4.16443816 L4.63546143e-14,26.8778247 C4.63546143e-14,28.0518864 0.665457206,29.1714033 1.83251324,29.960712 L44.6488012,58.9184191 C46.935033,60.4646538 50.4715051,60.337869 52.5477328,58.6352374 C53.4822571,57.8688713 54,56.8707576 54,55.8355318 L54,4.16443816 C54,1.86448247 51.4964408,4.22495005e-16 48.408144,0 Z" id="path-3"></path>
+        <filter x="-29.6%" y="-23.3%" width="159.3%" height="153.3%" filterUnits="objectBoundingBox" id="filter-4">
+            <feMorphology radius="1.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Controller-Assets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="RT">
+            <g id="RT-(default)" transform="translate(8.000000, 9.000000)">
+                <g id="Rectangle-2-Copy">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                    <use fill="url(#radialGradient-1)" fill-rule="evenodd" xlink:href="#path-3"></use>
+                    <path stroke="url(#linearGradient-2)" stroke-width="1" d="M48.408144,0.5 L5.591856,0.5 C2.75309407,0.5 0.5,2.17795289 0.5,4.16443816 L0.5,26.8778247 C0.5,27.8760819 1.07634173,28.8456774 2.11262643,29.5465422 L44.9289144,58.5042493 C47.033616,59.9277107 50.3271346,59.8096359 52.2306791,58.2486149 C53.0541433,57.5733247 53.5,56.7137945 53.5,55.8355318 L53.5,4.16443816 C53.5,2.17795289 51.2469059,0.5 48.408144,0.5 Z"></path>
+                </g>
+                <path d="M37.6229655,19 L34.8329655,19 L32.7449655,14.554 L30.6569655,14.554 L30.6569655,19 L28.0649655,19 L28.0649655,6.4 L34.7069655,6.4 C36.4169655,6.4 37.2269655,7.21 37.2269655,8.92 L37.2269655,11.962 C37.2269655,13.384 36.6689655,14.194 35.4809655,14.41 L37.6229655,19 Z M30.6569655,12.25 L34.2749655,12.25 C34.5449655,12.25 34.6349655,12.16 34.6349655,11.89 L34.6349655,9.1 C34.6349655,8.83 34.5449655,8.74 34.2749655,8.74 L30.6569655,8.74 L30.6569655,12.25 Z M48.0449655,8.74 L44.6249655,8.74 L44.6249655,19 L42.0329655,19 L42.0329655,8.74 L38.6129655,8.74 L38.6129655,6.4 L48.0449655,6.4 L48.0449655,8.74 Z" id="RT" fill="#FFFFFF" opacity="0.403872283"></path>
+            </g>
+        </g>
+    </g>
+</svg>
