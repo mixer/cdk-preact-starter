@@ -29,7 +29,7 @@ export abstract class PreactScene<T, S = {}> extends Component<
       .settings()
       .pipe(untilUnmount(this))
       .subscribe(settings => {
-        this.setState(Object.assign({}, this.state, { settings }));
+        this.setState((Object.assign({}, this.state), { settings }));
       });
   }
 

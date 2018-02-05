@@ -1,0 +1,107 @@
+#controller {
+    height: 100%;
+    width: 100%;
+}
+
+.thumbstick::hover,
+.gamepad-button::hover {
+    fill: rgb(196, 196, 196);
+}
+
+#controller text,
+.thumbstickRight-handle,
+.gamepad-button {
+    cursor: pointer;
+}
+
+.gamepad-hoverable:hover {
+    fill: rgb(197, 197, 197);
+}
+
+.gamepad-hoverable:active {
+    fill: rgb(235, 235, 235);
+}
+
+#interactiveCCCC-verticalslider {
+    width: 4px;
+    background-color: rgb(154, 154, 154);
+}
+
+#interactiveCCCC-mark {
+    position: fixed;
+    margin-left: -2px;
+    height: 8px;
+    width: 8px;
+    background-color: rgb(58, 58, 58);
+}
+
+.controller-container *:focus {
+  outline: none;
+}
+
+.controller-container {
+    height: 340px;
+    width: 340px;
+    background: radial-gradient(at 70% 60%, #4d4b4d 0%, #0A0707 100%);
+    border-radius: 6px;
+}
+
+.button-row {
+    display: flex;
+    position: relative;
+    justify-content: space-around;
+    align-items: flex-start;
+}
+
+.buttons {
+    position: relative;
+    width: 50%;
+}
+
+.button,
+.view,
+.menu {
+    position: absolute;
+}
+
+.button {
+    &.y,
+    &.a {
+        left: 75px;
+    }
+
+    &.x,
+    &.b {
+        top: 35px;
+    }
+
+    &.x {
+        left: 40px;
+    }
+
+    &.b {
+        left: 110px;
+    }
+
+    &.a {
+      top: 70px;
+    }
+}
+
+.view {
+    left: 0;
+}
+
+.menu {
+    right: 0;
+}
+
+.joystick {
+    background-image: url('./static/controller/thumbstick-bg.svg');
+    background-repeat: no-repeat;
+
+    &.right {
+        position: relative;
+        top: 20px;
+    }
+}
