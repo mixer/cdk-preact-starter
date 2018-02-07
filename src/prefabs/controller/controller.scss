@@ -40,8 +40,9 @@
 }
 
 .controller-container {
-    height: 340px;
-    width: 340px;
+    width: 100%;
+    height: 100%;
+    min-height: 240px;
     background: radial-gradient(at 70% 60%, #4d4b4d 0%, #0A0707 100%);
     border-radius: 6px;
 }
@@ -51,57 +52,169 @@
     position: relative;
     justify-content: space-around;
     align-items: flex-start;
+    pointer-events: none;
+
+    &:first-child {
+      justify-content: space-between;
+    }
+
+    &:nth-child(2) {
+      position: absolute;
+      top: 15%;
+      width: 100%;
+    }
+
+    &:nth-child(3) {
+      justify-content: center;
+      position: absolute;
+      bottom: 10%;
+      width: 100%;
+
+      & > div {
+        margin: 0 65px;
+      }
+    }
+
+    &:nth-child(4) {
+      position: absolute;
+      bottom: 15%;
+      width: 100%;
+    }
 }
 
 .buttons {
     position: relative;
-    width: 50%;
+    left: -35%;
+    width: 110px;
+    height: 110px;
+    pointer-events: all;
+}
+
+.dpad-container {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  left: -40px;
+  pointer-events: all;
+}
+
+.left-bumpers,
+.right-bumpers {
+  display: flex;
+  justify-content: space-around;
+  pointer-events: all;
 }
 
 .button,
 .view,
-.menu {
+.menu,
+.d-pad {
     position: absolute;
 }
 
-.button {
-    &.y,
-    &.a {
-        left: 75px;
-    }
-
-    &.x,
-    &.b {
-        top: 35px;
-    }
-
-    &.x {
-        left: 40px;
-    }
-
-    &.b {
-        left: 110px;
-    }
-
-    &.a {
-      top: 70px;
-    }
-}
-
 .view {
-    left: 0;
+  left: 0;
+  pointer-events: all;
+  background-image: url('./static/controller/view (pressed).svg');
 }
 
 .menu {
-    right: 0;
+  right: 0;
+  pointer-events: all;
+  background-image: url('./static/controller/app menu (pressed).svg');
+}
+
+.key,
+.button,
+.d-pad {
+  background-repeat: no-repeat;
+
+  &:active {
+    img { visibility: hidden; }
+  }
 }
 
 .joystick {
-    background-image: url('./static/controller/thumbstick-bg.svg');
-    background-repeat: no-repeat;
+  background-image: url('./static/controller/thumbstick-bg.svg');
+  background-repeat: no-repeat;
+  pointer-events: all;
 
-    &.right {
-        position: relative;
-        top: 20px;
-    }
+  &.right {
+      position: relative;
+      top: 20px;
+      left: 10px;
+  }
+}
+
+.left-bumper {
+  background-image: url('./static/controller/lb (pressed).svg');
+}
+
+.right-bumper {
+  background-image: url('./static/controller/rb (pressed).svg');
+}
+
+.left-trigger {
+  background-image: url('./static/controller/lt (pressed).svg');
+}
+
+.right-trigger {
+  background-image: url('./static/controller/rt (pressed).svg');
+}
+
+.button {
+  &.a {
+    left: 75px;
+    top: 70px;
+    background-image: url('./static/controller/a (pressed).svg');
+  }
+
+  &.b {
+    left: 110px;
+    top: 35px;
+    background-image: url('./static/controller/b (pressed).svg');
+  }
+
+  &.x {
+    left: 40px;
+    top: 35px;
+    background-image: url('./static/controller/x (pressed).svg');
+  }
+
+  &.y {
+    left: 75px;
+    background-image: url('./static/controller/y (pressed).svg');
+  }
+}
+
+.d-pad {
+  &.up {
+    left: 75px;
+    background-image: url('./static/controller/d-pad alt up (pressed).svg');
+  }
+
+  &.left {
+    top: 35px;
+    left: 30px;
+    background-image: url('./static/controller/d-pad alt left (pressed).svg');
+  }
+
+  &.right {
+    top: 35px;
+    left: 105px;
+    background-image: url('./static/controller/d-pad alt right (pressed).svg');
+  }
+
+  &.down {
+    left: 75px;
+    top: 55px;
+    background-image: url('./static/controller/d-pad alt down (pressed).svg');
+  }
+}
+
+@media (max-width: 400px) {
+  .controller-container {
+    height: 388px;
+
+  }
 }

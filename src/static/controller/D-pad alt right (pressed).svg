@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="68px" height="52px" viewBox="0 0 68 52" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.1 (47250) - http://www.bohemiancoding.com/sketch -->
+    <title>D-pad alt right (pressed)</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="80.7617188%" y1="100%" x2="80.7617188%" y2="0%" id="linearGradient-1">
+            <stop stop-color="#484648" offset="0%"></stop>
+            <stop stop-color="#171515" offset="100%"></stop>
+        </linearGradient>
+        <path d="M26,42 L10,26 L26,10 L52,10 C55.3137085,10 58,12.6862915 58,16 L58,36 C58,39.3137085 55.3137085,42 52,42 L26,42 Z" id="path-2"></path>
+    </defs>
+    <g id="Controller-Assets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="D-pad-alt-right-(pressed)">
+            <g id="Combined-Shape">
+                <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-2"></use>
+                <path stroke="#313444" stroke-width="1" d="M26.2071068,41.5 L52,41.5 C55.0375661,41.5 57.5,39.0375661 57.5,36 L57.5,16 C57.5,12.9624339 55.0375661,10.5 52,10.5 L26.2071068,10.5 L10.7071068,26 L26.2071068,41.5 Z"></path>
+            </g>
+        </g>
+    </g>
+</svg>

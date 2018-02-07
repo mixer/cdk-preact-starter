@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="52px" height="68px" viewBox="0 0 52 68" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.1 (47250) - http://www.bohemiancoding.com/sketch -->
+    <title>D-pad alt down</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#484648" offset="0%"></stop>
+            <stop stop-color="#171515" offset="100%"></stop>
+        </linearGradient>
+        <path d="M10,26 L26,10 L42,26 L42,52 C42,55.3137085 39.3137085,58 36,58 L16,58 C12.6862915,58 10,55.3137085 10,52 L10,26 Z" id="path-2"></path>
+        <filter x="-50.0%" y="-29.2%" width="200.0%" height="166.7%" filterUnits="objectBoundingBox" id="filter-3">
+            <feMorphology radius="1.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Controller-Assets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="D-pad-alt-down">
+            <g id="Combined-Shape">
+                <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-2"></use>
+                <path stroke="#313444" stroke-width="1" d="M10.5,26.2071068 L10.5,52 C10.5,55.0375661 12.9624339,57.5 16,57.5 L36,57.5 C39.0375661,57.5 41.5,55.0375661 41.5,52 L41.5,26.2071068 L26,10.7071068 L10.5,26.2071068 Z"></path>
+            </g>
+        </g>
+    </g>
+</svg>

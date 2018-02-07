@@ -2,7 +2,6 @@ import * as Mixer from '@mcph/miix-std';
 import { h } from 'preact';
 
 import { PreactControl } from '../../alchemy/preact/index';
-import { RuleSet } from '../../alchemy/Style';
 
 import './controller.scss';
 
@@ -188,51 +187,68 @@ export class Controller extends PreactControl<{}> {
             <div class="mixer-content">
                 <div class="controller-container">
                     <div class="button-row">
-                        <div id="gamepadTriggerLeft" class="left-trigger" tabIndex={0}>
-                          <img src="./static/controller/lt.svg" alt="btn" />
+                        <div class="left-bumpers">
+                          <div id="gamepadTriggerLeft" class="left-trigger key" tabIndex={0}>
+                            <img src="./static/controller/lt.svg" alt="btn" />
+                          </div>
+                          <div id="gamepadShoulderLeft" class="left-bumper key" tabIndex={0}>
+                              <img src="./static/controller/lb.svg" alt="btn" />
+                          </div>
                         </div>
-                        <div id="gamepadShoulderLeft" class="left-bumper" tabIndex={0}>
-                            <img src="./static/controller/lb.svg" alt="btn" />
-                        </div>
-                        <div id="gamepadShoulderRight" class="right-bumper" tabIndex={0}>
-                            <img src="./static/controller/rb.svg" alt="btn" />
-                        </div>
-                        <div id="gamepadTriggerRight" class="right-trigger" tabIndex={0}>
-                            <img src="./static/controller/rt.png" alt="btn" />
+                        <div class="right-bumpers">
+                          <div id="gamepadShoulderRight" class="right-bumper key" tabIndex={0}>
+                              <img src="./static/controller/rb.svg" alt="btn" />
+                          </div>
+                          <div id="gamepadTriggerRight" class="right-trigger key" tabIndex={0}>
+                              <img src="./static/controller/rt.png" alt="btn" />
+                          </div>
                         </div>
                     </div>
                     <div class="button-row">
                         <div id="joystickLeft" class="joystick left" tabIndex={0}>
                             <img src="./static/controller/thumbstick.svg" alt="btn" />
                         </div>
-                        <div class="buttons">
-                            <div id="gamepadY" class="button y" tabIndex={0}>
-                                <img src="./static/controller/y.svg" alt="btn" />
-                            </div>
-                            <div id="gamepadX" class="button x" tabIndex={0}>
-                                <img src="./static/controller/x.svg" alt="btn" />
-                            </div>
-                            <div id="gamepadB" class="button b" tabIndex={0}>
-                                <img src="./static/controller/b.svg" alt="btn" />
-                            </div>
-                            <div id="gamepadA" class="button a" tabIndex={0}>
-                                <img src="./static/controller/a.svg" alt="btn" />
-                            </div>
+                        <div>
+                          <div class="buttons">
+                              <div id="gamepadY" class="button y" tabIndex={0}>
+                                  <img src="./static/controller/y.svg" alt="btn" />
+                              </div>
+                              <div id="gamepadX" class="button x" tabIndex={0}>
+                                  <img src="./static/controller/x.svg" alt="btn" />
+                              </div>
+                              <div id="gamepadB" class="button b" tabIndex={0}>
+                                  <img src="./static/controller/b.svg" alt="btn" />
+                              </div>
+                              <div id="gamepadA" class="button a" tabIndex={0}>
+                                  <img src="./static/controller/a.svg" alt="btn" />
+                              </div>
+                          </div>
                         </div>
                     </div>
                     <div class="button-row">
-                        <div class="dpad" tabIndex={0}>
-                            <img src="./static/controller/D-pad.svg" alt="btn" />
+                        <div class="dpad-container">
+                            <div id="gamepadDPadUp" class="d-pad up" tabIndex={0}>
+                                <img src="./static/controller/D-pad alt up.svg" alt="btn" />
+                            </div>
+                            <div id="gamepadDPadLeft" class="d-pad left" tabIndex={0}>
+                                <img src="./static/controller/D-pad alt left.svg" alt="btn" />
+                            </div>
+                            <div id="gamepadDPadRight" class="d-pad right" tabIndex={0}>
+                                <img src="./static/controller/D-pad alt right.svg" alt="btn" />
+                            </div>
+                            <div id="gamepadDPadDown" class="d-pad down" tabIndex={0}>
+                                <img src="./static/controller/D-pad alt down.svg" alt="btn" />
+                            </div>
                         </div>
                         <div id="joystickRight" class="joystick right" tabIndex={0}>
                             <img src="./static/controller/thumbstick.svg" alt="btn" />
                         </div>
                     </div>
                     <div class="button-row">
-                        <div id="gamepadView" class="view" tabIndex={0}>
+                        <div id="gamepadView" class="view key" tabIndex={0}>
                             <img src="./static/controller/view.svg" alt="btn" />
                         </div>
-                        <div id="gamepadMenu" class="menu" tabIndex={0}>
+                        <div id="gamepadMenu" class="menu key" tabIndex={0}>
                             <img src="./static/controller/app-menu.svg" alt="btn" />
                         </div>
                     </div>
@@ -961,6 +977,10 @@ export class Controller extends PreactControl<{}> {
             leftJoystickY !== -1) {
             this._sendGiveInputJoystickMessage("LStick", leftJoystickX, leftJoystickY);
         }
+        if (rightJoystickX !== -1 &&
+          rightJoystickY !== -1) {
+          this._sendGiveInputJoystickMessage("RStick", rightJoystickX, rightJoystickY);
+      }
     };
     /* tslint:enable */
 // tslint:disable-next-line:max-file-line-count

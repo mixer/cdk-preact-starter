@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="68px" height="52px" viewBox="0 0 68 52" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.1 (47250) - http://www.bohemiancoding.com/sketch -->
+    <title>D-pad alt left</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#484648" offset="0%"></stop>
+            <stop stop-color="#171515" offset="100%"></stop>
+        </linearGradient>
+        <path d="M42,10 L58,26 L42,42 L16,42 C12.6862915,42 10,39.3137085 10,36 L10,16 C10,12.6862915 12.6862915,10 16,10 L42,10 Z" id="path-2"></path>
+        <filter x="-33.3%" y="-43.8%" width="166.7%" height="200.0%" filterUnits="objectBoundingBox" id="filter-3">
+            <feMorphology radius="1.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Controller-Assets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="D-pad-alt-left">
+            <g id="Combined-Shape">
+                <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-2"></use>
+                <path stroke="#313444" stroke-width="1" d="M41.7928932,10.5 L16,10.5 C12.9624339,10.5 10.5,12.9624339 10.5,16 L10.5,36 C10.5,39.0375661 12.9624339,41.5 16,41.5 L41.7928932,41.5 L57.2928932,26 L41.7928932,10.5 Z"></path>
+            </g>
+        </g>
+    </g>
+</svg>
