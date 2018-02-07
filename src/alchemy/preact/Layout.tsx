@@ -207,15 +207,20 @@ class FixedGridControl extends Component<{ resource: MControl; grid: number }, {
     // tslint:disable-next-line
     const Control = this.props.resource.descriptor().ctor as typeof PreactControl;
     const grid = this.getRelevantGrid();
+    let _position = 'absolute';
     if (!grid) {
       return;
+    }
+
+    if (this.props.resource.get('kind') === "controller") {
+      _position = 'initial';
     }
 
     return (
       <div
         class="control-container"
         style={new RuleSet({
-          position: 'absolute',
+          position: _position,
           left: grid.x * FixedGridLayout.gridScale,
           top: grid.y * FixedGridLayout.gridScale,
           width: grid.width * FixedGridLayout.gridScale,
