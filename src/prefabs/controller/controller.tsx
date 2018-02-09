@@ -6,6 +6,20 @@ import { PreactControl } from '../../alchemy/preact/index';
 import './controller.scss';
 
 /**
+ * capMagnitude caps the magnitude (distance) of the given x/y vector.
+ */
+function capMagnitude(x: number, y: number, magnitude: number = 1): [number, number] {
+  const d2 = x * x + y * y;
+  if (d2 < magnitude * magnitude) {
+    return [x, y];
+  }
+
+  const multiplier = magnitude / Math.sqrt(d2);
+  return [x * multiplier, y * multiplier];
+}
+
+
+/**
  * Controller control.
  */
 @Mixer.Control({ kind: 'controller' })
@@ -205,8 +219,8 @@ export class Controller extends PreactControl<{}> {
                         </div>
                     </div>
                     <div class="button-row">
-                        <div id="joystickLeft" class="joystick left" tabIndex={0}>
-                            <img src="./static/controller/thumbstick.svg" alt="btn" />
+                        <div id="joystickLeft" class="joystick left">
+                            <div id="joystickLeft-handle" class="joystick-handle" tabIndex={0}></div>
                         </div>
                         <div>
                           <div class="buttons">
@@ -241,7 +255,7 @@ export class Controller extends PreactControl<{}> {
                             </div>
                         </div>
                         <div id="joystickRight" class="joystick right" tabIndex={0}>
-                            <img src="./static/controller/thumbstick.svg" alt="btn" />
+                          <div id="joystickRight-handle" class="joystick-handle" tabIndex={0}></div>
                         </div>
                     </div>
                     <div class="button-row">
