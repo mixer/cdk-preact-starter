@@ -21,20 +21,19 @@ export class PreactStage extends Component<{ registry: Mixer.Registry }, { scene
   }
 
   public render() {
-    if (this.interactive) {
-
-      if (!!this.interactive.isReady) {
-        return <div class="stage"><p style="text-align:center; color: white">Waiting for game client</p></div>;
-      }
-
-      if (!this.state.scene) {
-        return;
-      }
-
-      return <div class="stage">{this.getSceneComponent(this.state.scene)}</div>;
+    if (!this.interactive) {
+      return <div class="stage"><p style="text-align:center; color: white">Loading...</p></div>;
     }
 
-    return <div class="stage"><p style="text-align:center; color: white">Loading...</p></div>;
+    if (!!this.interactive.isReady) {
+      return <div class="stage"><p style="text-align:center; color: white">Waiting for game client</p></div>;
+    }
+
+    if (!this.state.scene) {
+      return;
+    }
+
+    return <div class="stage">{this.getSceneComponent(this.state.scene)}</div>;
   }
 
   /**
