@@ -29,7 +29,7 @@ export class Controller extends PreactControl<{}> {
 
   // No units because the joystick is an SVG so it can
   // be resized and units are relative to overall size.
-  private static _MAX_GAMEPAD_JOYSTICK_MOVEMENT: number = 16;
+  private static _MAX_GAMEPAD_JOYSTICK_MOVEMENT: number = 26;
 
   private static buttonNames: string[] = [
       "gamepadA",
@@ -143,6 +143,7 @@ export class Controller extends PreactControl<{}> {
     private _holdingDownLeftStick: boolean = false;
     private _initialLeftStickXPosition: number = 0;
     private _initialLeftStickYPosition: number = 0;
+    private thumbstickDefaultCoordinates: any = {x: 0, y: 0};
     private _deltaMovementForCancelHoldingTimer: number = 1;
 
     private _gamepadTriggerLeftButton: HTMLElement;
@@ -205,8 +206,8 @@ export class Controller extends PreactControl<{}> {
                         </div>
                     </div>
                     <div class="button-row">
-                        <div id="joystickLeft" class="joystick left" tabIndex={0}>
-                            <img src="./static/controller/thumbstick.svg" alt="btn" />
+                        <div id="joystickLeft" class="joystick left thumbstick">
+                          <div id="joystickLeft-handle" class="gamepad-hoverable" tabIndex={0}></div>
                         </div>
                         <div>
                           <div class="buttons">
@@ -228,20 +229,20 @@ export class Controller extends PreactControl<{}> {
                     <div class="button-row">
                         <div class="dpad-container">
                             <div id="gamepadDPadUp" class="d-pad up" tabIndex={0}>
-                                <img src="./static/controller/D-pad alt up.svg" alt="btn" />
+                                <img src="./static/controller/d-pad_alt_up.svg" alt="btn" />
                             </div>
                             <div id="gamepadDPadLeft" class="d-pad left" tabIndex={0}>
-                                <img src="./static/controller/D-pad alt left.svg" alt="btn" />
+                                <img src="./static/controller/d-pad_alt_left.svg" alt="btn" />
                             </div>
                             <div id="gamepadDPadRight" class="d-pad right" tabIndex={0}>
-                                <img src="./static/controller/D-pad alt right.svg" alt="btn" />
+                                <img src="./static/controller/d-pad_alt_right.svg" alt="btn" />
                             </div>
                             <div id="gamepadDPadDown" class="d-pad down" tabIndex={0}>
-                                <img src="./static/controller/D-pad alt down.svg" alt="btn" />
+                                <img src="./static/controller/d-pad_alt_down.svg" alt="btn" />
                             </div>
                         </div>
-                        <div id="joystickRight" class="joystick right" tabIndex={0}>
-                            <img src="./static/controller/thumbstick.svg" alt="btn" />
+                        <div id="joystickRight" class="joystick right thumbstick">
+                            <div id="joystickRight-handle" class="gamepad-hoverable" tabIndex={0}></div>
                         </div>
                     </div>
                     <div class="button-row">
@@ -385,8 +386,8 @@ export class Controller extends PreactControl<{}> {
         const gamepadShoulderRightButton = document.getElementById("gamepadShoulderRight");
         const gamepadJoystickLeft = document.getElementById("joystickLeft");
         const gamepadJoystickRight = document.getElementById("joystickRight");
-        this._leftThumbstickHandle = gamepadJoystickLeft;
-        this._rightThumbstickHandle = gamepadJoystickRight;
+        this._leftThumbstickHandle = document.getElementById("joystickLeft-handle");
+        this._rightThumbstickHandle = document.getElementById("joystickRight-handle");
         this._gamepadTriggerLeftButton = document.getElementById("gamepadTriggerLeft");
         this._gamepadTriggerRightButton = document.getElementById("gamepadTriggerRight");
 
@@ -633,7 +634,7 @@ export class Controller extends PreactControl<{}> {
         if (this._leftStickPossibleHoldStart &&
             Math.abs(this._initialLeftStickXPosition - ev.x) > this._deltaMovementForCancelHoldingTimer ||
             Math.abs(this._initialLeftStickYPosition - ev.y) > this._deltaMovementForCancelHoldingTimer) {
-            this._leftStickPossibleHoldStart = false;
+              this._leftStickPossibleHoldStart = false;
             clearTimeout(this._pressAndHoldLeftStickTimerCookie);
         }
     };
@@ -790,6 +791,8 @@ export class Controller extends PreactControl<{}> {
         handle.setAttribute("cx", deltaX.toString());
         handle.setAttribute("cy", deltaY.toString());
 
+        handle.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+
         const normalizedX = deltaX / Controller._MAX_GAMEPAD_JOYSTICK_MOVEMENT;
         const normalizedY = deltaY / Controller._MAX_GAMEPAD_JOYSTICK_MOVEMENT;
 
@@ -829,6 +832,8 @@ export class Controller extends PreactControl<{}> {
         handle.setAttribute("cx", "0");
         handle.setAttribute("cy", "0");
 
+        handle.style.transform = `translate(${this.thumbstickDefaultCoordinates.x}px, ${this.thumbstickDefaultCoordinates.y}px)`;
+
         // Send a 0, 0 update message when drag is finished
         const stickControlName = leftStick ? "LStick" : "RStick";
         this._sendGiveInputJoystickMessage(stickControlName, 0, 0);
@@ -852,6 +857,8 @@ export class Controller extends PreactControl<{}> {
             this._initialXDragRightStick = ev.x;
             this._initialYDragRightStick = ev.y;
         }
+
+        this._leftThumbstickHandle.addEventListener("pointermove", this._moveLeftThumbstickHandle.bind(this), false);
     }
 
     // Code to handle keyboard support

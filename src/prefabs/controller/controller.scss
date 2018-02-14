@@ -1,3 +1,7 @@
+* {
+  user-select: none;
+}
+
 #controller {
     height: 100%;
     width: 100%;
@@ -40,6 +44,7 @@
 }
 
 .controller-container {
+    position: absolute;
     width: 100%;
     height: 100%;
     min-height: 240px;
@@ -73,10 +78,6 @@
       position: absolute;
       bottom: 10%;
       width: 100%;
-
-      & > div {
-        margin: 0 65px;
-      }
     }
 
     &:nth-child(4) {
@@ -119,13 +120,13 @@
 .view {
   left: 0;
   pointer-events: all;
-  background-image: url('./static/controller/view (pressed).svg');
+  background-image: url('./static/controller/view_pressed.svg');
 }
 
 .menu {
   right: 0;
   pointer-events: all;
-  background-image: url('./static/controller/app menu (pressed).svg');
+  background-image: url('./static/controller/app-menu_pressed.svg');
 }
 
 .key,
@@ -139,86 +140,102 @@
 }
 
 .joystick {
+  position: relative;
+  z-index: 10;
+  width: 110px;
+  height: 110px;
+  pointer-events: all;
   background-image: url('./static/controller/thumbstick-bg.svg');
   background-repeat: no-repeat;
-  pointer-events: all;
 
   &.right {
-      position: relative;
       top: 20px;
       left: 10px;
+  }
+
+  div[id$="-handle"] {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    background: url('./static/controller/thumbstick.svg') 70px 70px;
+    width: 70px;
+    height: 70px;
+  }
+
+  img {
+    width: 70px;
+    height: 70px;
   }
 }
 
 .left-bumper {
-  background-image: url('./static/controller/lb (pressed).svg');
+  background-image: url('./static/controller/lb_pressed.svg');
 }
 
 .right-bumper {
-  background-image: url('./static/controller/rb (pressed).svg');
+  background-image: url('./static/controller/rb_pressed.svg');
 }
 
 .left-trigger {
-  background-image: url('./static/controller/lt (pressed).svg');
+  background-image: url('./static/controller/lt_pressed.svg');
 }
 
 .right-trigger {
-  background-image: url('./static/controller/rt (pressed).svg');
+  background-image: url('./static/controller/rt_pressed.svg');
 }
 
 .button {
   &.a {
     left: 75px;
     top: 70px;
-    background-image: url('./static/controller/a (pressed).svg');
+    background-image: url('./static/controller/a_pressed.svg');
   }
 
   &.b {
     left: 110px;
     top: 35px;
-    background-image: url('./static/controller/b (pressed).svg');
+    background-image: url('./static/controller/b_pressed.svg');
   }
 
   &.x {
     left: 40px;
     top: 35px;
-    background-image: url('./static/controller/x (pressed).svg');
+    background-image: url('./static/controller/x_pressed.svg');
   }
 
   &.y {
     left: 75px;
-    background-image: url('./static/controller/y (pressed).svg');
+    background-image: url('./static/controller/y_pressed.svg');
   }
 }
 
 .d-pad {
   &.up {
     left: 75px;
-    background-image: url('./static/controller/d-pad alt up (pressed).svg');
+    background-image: url('./static/controller/d-pad_alt_up_pressed.svg');
   }
 
   &.left {
     top: 35px;
     left: 30px;
-    background-image: url('./static/controller/d-pad alt left (pressed).svg');
+    background-image: url('./static/controller/d-pad_alt_left_pressed.svg');
   }
 
   &.right {
     top: 35px;
     left: 105px;
-    background-image: url('./static/controller/d-pad alt right (pressed).svg');
+    background-image: url('./static/controller/d-pad_alt_right_pressed.svg');
   }
 
   &.down {
     left: 75px;
     top: 55px;
-    background-image: url('./static/controller/d-pad alt down (pressed).svg');
+    background-image: url('./static/controller/d-pad_alt_down_pressed.svg');
   }
 }
 
 @media (max-width: 400px) {
   .controller-container {
     height: 388px;
-
   }
 }
