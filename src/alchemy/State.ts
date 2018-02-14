@@ -473,7 +473,7 @@ export class MControl<T extends Mixer.IControl = Mixer.IControl> extends Resourc
   public readonly state: State;
 
   /**
-   * The grid this control is showing on.
+   * The Grid this control shows on.
    */
   public grid: number;
 
@@ -504,7 +504,6 @@ export class MControl<T extends Mixer.IControl = Mixer.IControl> extends Resourc
    * and back down to the game client.
    */
   public giveInput<I extends Partial<Mixer.IInput>>(input: I) {
-    console.log(input.event, input.value);
     input.controlID = this.props.controlID;
     Mixer.socket.call('giveInput', input, false);
   }

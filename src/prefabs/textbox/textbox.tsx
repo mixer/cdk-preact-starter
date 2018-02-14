@@ -7,23 +7,34 @@ import { PreactControl } from '../../alchemy/preact';
 import { classes } from '../../alchemy/Style';
 
 import '../button/button.scss';
-import '../label/label.scss';
 import './textbox.scss';
 
-@Mixer.Control({ kind: 'textbox' })
+@Mixer.Control({ kind: 'textbox', dimensions: [{ property: 'height', minimum: 4 }] })
 export class TextBox extends PreactControl {
   /**
-   * Size of the textbox.
+   * Whether the input and/or submit button is disabled on the textbox.
    */
-  @Mixer.Input() public dimensions: Mixer.IDimensions;
+  @Mixer.Input() public disabled: boolean;
 
-  @Mixer.Input() public multiline: boolean = false;
+  /**
+   * Whether the input allows for one line or multiple lines of text.
+   */
+  @Mixer.Input() public multiline: boolean;
 
-  @Mixer.Input() public defaultText: string;
+  /**
+   * The placeholder (text hint) for the textbox.
+   */
+  @Mixer.Input() public placeholder: string;
 
-  @Mixer.Input() public label: string = "";
+  /**
+   * Whether the input has a submit button or not.
+   */
+  @Mixer.Input() public hasSubmit: boolean;
 
-  @Mixer.Input() public hasSubmit: boolean = false;
+  /**
+   * The text of the optional submit button.
+   */
+  @Mixer.Input() public submitText: string;
 
   private hasFocus: boolean;
   private refInput: Input;
@@ -34,18 +45,21 @@ export class TextBox extends PreactControl {
 
   public render() {
     const { controlID } = this.props;
+    const classContainer = classes({
+      mixerTextboxContainer: true,
+      compact: this.isCompactMode()
+    })
     const classNames = `mixer-textbox${this.hasFocus ? " mixer-has-focus" : ""}`;
     return (
-        <div class="mixer-textbox-container" name={`control-${controlID}`}>
-          <Label text={this.label} />
+        <div key={`control-${controlID}`} class={classContainer} name={`control-${controlID}`}>
           <Input class={classNames}
             ref={this.setReference}
-            placeholder={this.defaultText}
+            placeholder={this.placeholder}
             multiline={this.multiline}
             onClick={this.handleClick}
             onKeyPress={this.handleKeyPress}
             onBlur={this.handleBlur} />
-          <Button onClick={this.sendText} />
+          <Button submitText={this.submitText} hasSubmit={this.hasSubmit} onClick={this.sendText}  disabled={this.disabled} />
         </div>
       );
   };
@@ -68,30 +82,27 @@ export class TextBox extends PreactControl {
     // Do we send both events on Enter?
     if (!this.hasSubmit) {
       const target = evt.target as HTMLInputElement;
-      this.control.giveInput({ event: 'keypress', value: target.value })
+      console.log('change:', target.value);
+      this.control.giveInput({ event: 'change', value: target.value })
     }
     if (evt.keyCode === 13 && !this.multiline) {
       this.sendText();
     }
   }
 
-  private sendText = () => {
-    const target = this.refInput.base as HTMLInputElement;
-    this.control.giveInput({ event: 'submit', value: target.value });
-  };
-}
-
-class Label extends Component<any, any> {
-  public render() {
-    if (this.props.text) {
-      return (
-        <div class="mixer-label-container">
-          <div class="mixer-label">{this.props.text}</div>
-        </div>
-      )
-    } else {
-      return null
+  private sendText = (evt?: MouseEvent) => {
+    if (evt && !this.hasSubmit) {
+      return;
     }
+    const target = this.refInput.base as HTMLInputElement;
+    console.log('submit:', target.value);
+    this.control.giveInput({ event: 'submit', value: target.value });
+  }
+
+  private isCompactMode = (): boolean => {
+    const grid = Mixer.Layout.gridLayouts[this.props.resource.grid].size;
+    const gridPlacement = this.props.position.find(gplace => gplace.size === grid);
+    return !(!gridPlacement || gridPlacement.height >= 7);
   }
 }
 
@@ -107,15 +118,19 @@ class Input extends Component<any, any> {
 
 class Button extends Component<any, any> {
   public render() {
-    return (
-      <div
-        class={classes({ mixerButton: true, active: this.state.active })}
-        disabled={this.props.disabled}
-        role="button"
-        onClick={this.props.onClick}
-      >
-        <div class="mixer-content">Submit</div>
-    </div>
-    )
+    if (this.props.hasSubmit) {
+      return (
+        <div
+          class={classes({ mixerButton: true })}
+          disabled={this.props.disabled}
+          role="button"
+          onClick={this.props.onClick}
+        >
+          <div class="mixer-content">{this.props.submitText || 'Submit'}</div>
+      </div>
+      )
+    } else {
+      return null;
+    }
   }
 }

@@ -137,6 +137,10 @@ $button-z-tooltip: $button-z-cost + 1;
       height: unset;
     }
   }
+
+  &.hidden {
+    opacity: 0;
+  }
 }
 
 .tippy-tooltip {
