@@ -1,0 +1,17 @@
+@import '../../variables.scss';
+
+.ready-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2em;
+  background: radial-gradient(
+    farthest-side at 50% 100%,
+    rgba($base-color-primary, 0.4),
+    rgba($base-color-primary, 0));
+}
