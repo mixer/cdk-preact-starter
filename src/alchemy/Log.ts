@@ -39,7 +39,7 @@ export function assert(value: any, message: string) {
 /**
  * Guard wraps the provided function and catches and logs assertionerrors.
  */
-export function guard<T, R>(fn: (arg: T) => R): (arg: T) => R | undefined {
+export function guard<R, T = undefined>(fn: (arg: T) => R): (arg: T) => R | undefined {
   return function() {
     try {
       // tslint:disable-next-line

@@ -1,5 +1,6 @@
 import * as Mixer from '@mcph/miix-std';
 import { EventEmitter } from 'eventemitter3';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { assert, guard, remap } from './Log';
 
@@ -19,6 +20,11 @@ export class State extends EventEmitter {
   public readonly groups: { [id: string]: Group } = Object.create(null);
 
   /**
+   * Current state of the top-level "world".
+   */
+  public readonly world = new BehaviorSubject<any>({});
+
+  /**
    * The current user connected to interactive. Note that
    */
   public readonly participant = new Participant(this);
@@ -27,7 +33,7 @@ export class State extends EventEmitter {
    * Whether the game client is ready to accept input. The `ready` event will
    * fire when this changes.
    */
-  public readonly isReady = false;
+  public readonly isReady = new BehaviorSubject(false);
 
   constructor(public readonly registry: Mixer.Registry) {
     super();
@@ -202,8 +208,12 @@ export class State extends EventEmitter {
       }),
     );
     Mixer.socket.on('onReady', ev => {
-      (<any>this).isReady = ev.isReady;
+      this.isReady.next(ev.isReady);
       this.emit('ready', ev.isReady);
+    });
+    Mixer.socket.on('onWorldUpdate', ({ ...packet }) => {
+      delete packet.scenes;
+      this.world.next(packet);
     });
   }
 }

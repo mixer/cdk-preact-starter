@@ -49,13 +49,13 @@ export class Locales extends EventEmitter {
    */
   public loadLocale(locale: string): Promise<void> {
     if (this.loadedLocale === locale) {
-      return;
+      return Promise.resolve();
     }
     this.loadedLocale = locale;
 
     if (Mixer.locales.length === 0) {
       this.localesPromise = Promise.resolve({});
-      return;
+      return Promise.resolve();
     }
 
     const current = splitLocale(locale.toLowerCase());
