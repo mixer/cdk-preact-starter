@@ -1,0 +1,41 @@
+@import './variables';
+
+/**
+ * Webkit native scrollbars
+ */
+/* stylelint-disable */
+
+// Main scrollbar container
+::-webkit-scrollbar {
+  width: $scrollbars-size;
+}
+
+// Outer buttons
+::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+}
+
+// Track in which button runs
+::-webkit-scrollbar-track {
+  background: $scrollbars-track-bg;
+  -webkit-border-radius: $scrollbars-border-radius;
+}
+
+// Draggable inner element
+::-webkit-scrollbar-thumb {
+  background: rgba($scrollbars-thumb-bg, $scrollbars-opacity);
+  transition: all .3s ease-in-out;
+}
+
+// Different orientations of the thumb
+::-webkit-scrollbar-thumb:vertical {
+  -webkit-border-radius: $scrollbars-border-radius;
+}
+
+// Different orientations of the thumb
+::-webkit-scrollbar-thumb:horizontal {
+  -webkit-border-radius: $scrollbars-border-radius;
+}
+
+/* stylelint-enable */

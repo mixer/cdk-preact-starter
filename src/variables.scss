@@ -18,6 +18,13 @@ $easing-scene-ease-to-scale: -1.1 !default;
 $font-family-sans-serif: 'Titillium', sans-serif !default;
 $control-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
+$scrollbars-size: 6px;
+$scrollbars-border-radius: 3em;
+$scrollbars-thumb-bg: white;
+$scrollbars-opacity: 0.2;
+$scrollbars-track-bg: transparent;
+
+
 @mixin layout-center-contents() {
     display: flex;
     justify-content: center;

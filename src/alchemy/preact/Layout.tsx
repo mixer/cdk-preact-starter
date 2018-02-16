@@ -231,23 +231,25 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
  * have not been met.
  */
 function verifyControlSizes(mControl: MControl, descriptor: IControlDescriptor, grids: Layout.IGridPlacement[]): Layout.IGridPlacement[] {
-  descriptor.dimensions.forEach(dimension => {
-    grids.forEach((grid: Layout.IGridPlacement) => {
-      if (dimension.property === 'height') {
-        if (grid.height > dimension.maximum) {
-          grid.height = dimension.maximum;
-        } else if (grid.height < dimension.minimum) {
-          grid.height = dimension.minimum;
+  if (descriptor.dimensions && descriptor.dimensions.length && grids && grids.length) {
+    descriptor.dimensions.forEach(dimension => {
+      grids.forEach((grid: Layout.IGridPlacement) => {
+        if (dimension.property === 'height') {
+          if (grid.height > dimension.maximum) {
+            grid.height = dimension.maximum;
+          } else if (grid.height < dimension.minimum) {
+            grid.height = dimension.minimum;
+          }
+        } else if (dimension.property === 'width') {
+          if (grid.width > dimension.maximum) {
+            grid.width = dimension.maximum;
+          } else if (grid.width < dimension.minimum) {
+            grid.width = dimension.minimum;
+          }
         }
-      } else if (dimension.property === 'width') {
-        if (grid.width > dimension.maximum) {
-          grid.width = dimension.maximum;
-        } else if (grid.width < dimension.minimum) {
-          grid.width = dimension.minimum;
-        }
-      }
+      })
     })
-  })
+  }
 
   return grids;
 }

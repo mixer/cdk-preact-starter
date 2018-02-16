@@ -2,53 +2,10 @@ import * as Mixer from '@mcph/miix-std';
 import { Component, h } from 'preact';
 
 import { gamepad } from '../../alchemy/Gamepad';
-import { PreactControl } from '../../alchemy/preact/index';
+import { CoolDown, PreactControl, SparkPill } from '../../alchemy/preact/index';
 import { blockRule, classes, css } from '../../alchemy/Style';
 
 import './button.scss';
-
-function prettyTime(secs: number): string {
-  const seconds: number = Math.floor(secs) % 60;
-  const minutes: number = Math.floor(secs / 60) % 60;
-  const hours: number = Math.floor(secs / 3600) % 24;
-  const days: number = Math.floor(secs / 86400);
-  let sTime: string = `${seconds}s`;
-
-  if (days) {
-    sTime = `${days}d ${hours}h`;
-  } else if (hours) {
-    sTime = `${hours}h ${minutes}m`;
-  } else if (minutes) {
-    sTime = `${minutes}m ${sTime}`;
-  }
-
-  return sTime;
-}
-
-/**
- * SparkPill is the component that shows the spark cost above a button.
- */
-export class SparkPill extends Component<
-  { cost: number; available: number },
-  {}
-> {
-  public render() {
-    if (!this.props.cost) {
-      return;
-    }
-
-    return (
-      <div
-        class={classes({
-          mixerSparkPill: true,
-          unaffordable: this.props.cost > this.props.available,
-        })}
-      >
-        {this.props.cost}
-      </div>
-    );
-  }
-}
 
 /**
  * ProgressBar is the bar underneat the buttons that appears when the progress
@@ -71,102 +28,6 @@ export class ProgressBar extends Component<{ value: number }, {}> {
         />
       </div>
     );
-  }
-}
-
-/**
- * When the cooldown is active, Cooldown shows the
- * cooldown timer and text on the button.
- */
-export class CoolDown extends Component<
-  {
-    cooldown: number;
-    onCooldownEnd: Function;
-    progress?: number;
-    hideTime?: boolean;
-  },
-  { ttl: number }
-> {
-  public componentDidMount() {
-    this.handleCooldown(this.props.cooldown);
-  }
-
-  public componentWillReceiveProps(nextProps: { cooldown: number }) {
-    this.handleCooldown(nextProps.cooldown);
-  }
-
-  public componentWillUnmount() {
-    this.cancel();
-  }
-
-  public render() {
-    return (
-      <div
-        class={classes({
-          mixerCooldown: true,
-          cActive: this.state.ttl >= 0,
-          progress: !!this.props.progress,
-        })}
-      >
-        <div class={classes({
-            hidden: this.props.hideTime
-          })}>
-          <div class="time">
-            {prettyTime(this.state.ttl + 1)}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  private cancel: () => void = () => undefined;
-
-  private setCountdown(delta: number) {
-    // Make sure to set the timeout/interval on a leading edge of the
-    // second. This keeps the timeout from "flickering" and make sure it
-    // counts perfectly down to 1. (Intervals will fire later, but never
-    // earlier, than the specified time.)
-    let remaining = Math.floor(delta / 1000);
-    const timeout = setTimeout(() => {
-      const interval = setInterval(() => {
-        if (remaining < 0) {
-          clearInterval(interval);
-        }
-        this.updateTtl(remaining--);
-      }, 1000);
-      this.updateTtl(remaining--);
-      this.cancel = () => clearInterval(interval);
-    }, delta % 1000);
-    this.updateTtl(remaining--);
-    this.cancel = () => clearTimeout(timeout);
-  }
-
-  private handleCooldown(cooldown: number) {
-    this.cancel();
-    Mixer.clock.remoteToLocal(cooldown).then(date => {
-      const delta = date - Date.now();
-      if (delta < 0) {
-        return;
-      }
-
-      this.setCountdown(delta);
-    });
-  }
-
-  private updateTtl(ttl: number) {
-    if (ttl !== this.state.ttl) {
-      this.setState(
-        {
-          ...this.state,
-          ttl,
-        },
-        () => {
-          if (this.state.ttl === -1) {
-            this.props.onCooldownEnd();
-          }
-        },
-      );
-    }
   }
 }
 

@@ -3,31 +3,35 @@
  * *****************/
 import * as Mixer from '@mcph/miix-std';
 import { Component, h } from 'preact';
-import { PreactControl } from '../../alchemy/preact';
+import { CoolDown, PreactControl, SparkPill } from '../../alchemy/preact';
 import { classes } from '../../alchemy/Style';
 
 import '../button/button.scss';
 import './textbox.scss';
 
 @Mixer.Control({ kind: 'textbox', dimensions: [{ property: 'height', minimum: 4 }] })
-export class TextBox extends PreactControl {
+export class TextBox extends PreactControl<{
+  availableSparks: number;
+  active: boolean;
+  cooldown: boolean;
+}> {
   /**
    * Whether the input and/or submit button is disabled on the textbox.
    */
   @Mixer.Input() public disabled: boolean;
 
   /**
-   * Whether the input allows for one line or multiple lines of text.
+   * Whether the text input is multiline.
    */
   @Mixer.Input() public multiline: boolean;
 
   /**
-   * The placeholder (text hint) for the textbox.
+   * The placeholder (hint) text for the textbox.
    */
   @Mixer.Input() public placeholder: string;
 
   /**
-   * Whether the input has a submit button or not.
+   * Whether the textbox has a submit button.
    */
   @Mixer.Input() public hasSubmit: boolean;
 
@@ -36,13 +40,35 @@ export class TextBox extends PreactControl {
    */
   @Mixer.Input() public submitText: string;
 
+  /**
+   * The spark cost to submit the text.
+   */
+  @Mixer.Input() public cost: number;
+
+  /**
+   * A unix milliseconds timestamp until which this button should be
+   * in a "cooldown" state.
+   */
+  @Mixer.Input() public cooldown: number;
+
   private hasFocus: boolean;
   private refInput: Input;
 
-  public constructor(props: any) {
-    super(props);
-  };
+  public componentWillMount() {
+    this.updateAvailableSparks();
+    this.control.state.participant.on('update', this.updateAvailableSparks);
+  }
 
+  public componentWillReceiveProps() {
+    this.setState({
+      ...this.state,
+      cooldown: this.cooldown - Date.now() > 0,
+    });
+  }
+
+  public componentWillUnmount() {
+    this.control.state.participant.removeListener('update', this.updateAvailableSparks);
+  }
   public render() {
     const { controlID } = this.props;
     const classContainer = classes({
@@ -59,7 +85,9 @@ export class TextBox extends PreactControl {
             onClick={this.handleClick}
             onKeyPress={this.handleKeyPress}
             onBlur={this.handleBlur} />
+          <SparkPill cost={this.cost} available={this.state.availableSparks} />
           <Button submitText={this.submitText} hasSubmit={this.hasSubmit} onClick={this.sendText}  disabled={this.disabled} />
+          <CoolDown cooldown={this.cooldown} onCooldownEnd={this.endCooldown} />
         </div>
       );
   };
@@ -80,17 +108,17 @@ export class TextBox extends PreactControl {
 
   protected handleKeyPress = (evt: KeyboardEvent) => {
     // Do we send both events on Enter?
-    if (!this.hasSubmit) {
+    if (!this.multiline && !this.hasSubmit) {
       const target = evt.target as HTMLInputElement;
       console.log('change:', target.value);
       this.control.giveInput({ event: 'change', value: target.value })
     }
-    if (evt.keyCode === 13 && !this.multiline) {
+    if (evt.keyCode === 13 && !this.multiline || evt.keyCode === 10) {
       this.sendText();
     }
   }
 
-  private sendText = (evt?: MouseEvent) => {
+  protected sendText = (evt?: MouseEvent) => {
     if (evt && !this.hasSubmit) {
       return;
     }
@@ -98,6 +126,20 @@ export class TextBox extends PreactControl {
     console.log('submit:', target.value);
     this.control.giveInput({ event: 'submit', value: target.value });
   }
+
+  private updateAvailableSparks = () => {
+    this.setState({
+      ...this.state,
+      availableSparks: this.control.state.participant.props.sparks,
+    });
+  };
+
+  private endCooldown = () => {
+    this.setState({
+      ...this.state,
+      cooldown: false,
+    });
+  };
 
   private isCompactMode = (): boolean => {
     const grid = Mixer.Layout.gridLayouts[this.props.resource.grid].size;

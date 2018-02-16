@@ -1,13 +1,15 @@
 @import '../../variables';
+@import '../../scrollbar';
 
 $textbox-margin: 4px;
 $textbox-padding: 18px;
 $textbox-border-size: 2px;
 
 .mixer-textbox-container {
-  height: 100%;
+  height: calc(100% - (#{$textbox-margin} * 2));
   display: flex;
   flex-direction: column;
+  margin: $textbox-margin;
 
   &.compact {
     flex-direction: row;
@@ -37,6 +39,10 @@ $textbox-border-size: 2px;
   flex: 1;
 }
 
+textarea.mixer-textbox {
+  padding: 10px $textbox-padding;
+}
+
 .mixer-textbox-label-container {
   height: auto;
   margin-bottom: 5px;
@@ -48,13 +54,14 @@ $textbox-border-size: 2px;
   }
 }
 
-.mixer-button {
+.mixer-textbox-container .mixer-button {
   position: relative;
-  flex: 0.75;
+  max-height: 40px;
+  flex: 0.5;
   top: unset;
   left: unset;
   right: unset;
   bottom: unset;
-  margin-top: 5px;
+  margin-top: 8px;
   color: white;
 }
