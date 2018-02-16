@@ -2,13 +2,13 @@
 
 // Button styling variables
 $button-margin: 4px;
-$button-bolt-color: $base-color-bolt !default;
+$button-bolt-color: $base-color-accent !default;
 $button-background-color: $base-color-default !default;
 $button-border-color: $base-color-border !default;
 $button-active-border-color: $base-color-primary !default;
 $button-progress-height: 5px !default;
 $button-border-radius: 3px !default;
-$button-progress-foreground: $base-color-primary !default;
+$button-progress-foreground: $base-color-accent !default;
 $button-progress-background: #232b47 !default;
 // todo(connor4312): ripples
 $button-text-color: #f3f5fd !default;
@@ -16,14 +16,15 @@ $button-cost-default-color: #a2a5b0 !default;
 $button-cost-unaffordable-color: #fe5353 !default;
 $button-cost-background-color: $base-color-default !default;
 $button-cost-border-color: $base-color-border !default;
-$button-cost-bolt-color: $base-color-bolt !default;
+$button-cost-bolt-color: $base-color-accent !default;
 $button-cost-bolt-size: 13px !default;
 $button-tooltip-background: #2e354b !default;
 $button-tooltip-arrow-size: 8px;
-$button-font-size: 15px !default;
-$button-font-weight: bold !default;
+$button-font-size: 14px !default;
+$button-font-weight: 500 !default;
 $button-font-shadow: 0 1px 2px rgba(#000, 0.2) !default;
 $button-cooldown-spinner-size: 12px !default;
+$button-hover-gradient: linear-gradient(to right, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.1));
 
 $button-z-base: 0 !default;
 $button-z-progress: $button-z-base + 1;
@@ -36,7 +37,7 @@ $button-z-tooltip: $button-z-cost + 1;
 @mixin button-like() {
     border-radius: $button-border-radius;
     background: $button-background-color;
-    border: $base-border-width solid $base-color-border;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
     transition: border-color $easing-default-duration $easing-default-curve;
 }
 
@@ -67,10 +68,16 @@ $button-z-tooltip: $button-z-cost + 1;
     &:hover,
     &:focus {
         z-index: $button-z-base + 1;
-        border-color: $button-active-border-color;
+
+        .hover {
+          @include absolute-cover();
+          z-index: $button-z-base - 1;
+          border-radius: $button-border-radius;
+          background: $button-hover-gradient;
+        }
 
         .mixer-spark-pill:not(.unaffordable) {
-            color: $base-color-bolt;
+            color: $base-color-accent;
         }
     }
 
@@ -104,8 +111,8 @@ $button-z-tooltip: $button-z-cost + 1;
       white-space: pre;
       text-overflow: ellipsis;
       &.cooldown {
-        margin-bottom: 18px;
-        transition: margin-bottom $easing-default-duration;
+        margin-top: 18px;
+        transition: margin-top $easing-default-duration;
       }
   }
 
@@ -148,19 +155,16 @@ $button-z-tooltip: $button-z-cost + 1;
     @include layout-center-contents();
     @include absolute-cover();
 
+    bottom: auto;
     min-height: $button-cooldown-spinner-size;
     border-radius: $button-border-radius;
-    background: linear-gradient(
-        rgba($button-background-color, 0.8),
-        rgba(darken($button-background-color, 3%), 1)
-    );
+    background: $button-hover-gradient;
     opacity: 0;
     transition: opacity $easing-default-duration $easing-default-curve;
     pointer-events: none;
     z-index: $button-z-cooldown;
 
     > div {
-        margin-top: 18px;
         text-align: center;
         min-height: $button-cooldown-spinner-size;
         padding-left: $button-cooldown-spinner-size + $base-border-width * 2 + 6px;
@@ -196,26 +200,24 @@ $button-z-tooltip: $button-z-cost + 1;
         opacity: 1;
         pointer-events: auto;
     }
+
+    &.progress {
+      margin-top: 5px;
+    }
 }
 
 // Styling for the button's cost that pops up.
 .mixer-spark-pill {
     @include layout-center-contents();
-    @include button-like();
-
-    position: absolute;
-    left: 50%;
-    top: -0.75em;
-    transform: translateX(-50%);
     font-weight: $button-font-weight;
     color: $button-cost-default-color;
-    line-height: 1.5em;
-    font-size: 0.8em;
-    padding: 0 8px 0 5px;
+    font-size: 0.9em;
     z-index: $button-z-cost;
+    margin-top: 2px;
 
     &:before {
         content: '';
+        margin-bottom: -2px;
         width: $button-cost-bolt-size;
         height: $button-cost-bolt-size;
         background: url('./static/spark.svg') center center no-repeat;
@@ -234,7 +236,7 @@ $button-z-tooltip: $button-z-cost + 1;
     @include absolute-cover();
     height: $button-progress-height;
     overflow: hidden;
-    top: auto;
+    bottom: auto;
     z-index: $button-z-progress;
     border-bottom-left-radius: $button-border-radius - 1;
     border-bottom-right-radius: $button-border-radius - 1;
@@ -247,7 +249,7 @@ $button-z-tooltip: $button-z-cost + 1;
 
     &::before {
         content: '';
-        background: $button-progress-background;
+        background: rgba(255, 255, 255, 0.1);
         transform: translateY(100%);
         transition: transform $easing-default-duration;
     }

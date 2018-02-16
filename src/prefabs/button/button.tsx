@@ -28,7 +28,10 @@ function prettyTime(secs: number): string {
 /**
  * SparkPill is the component that shows the spark cost above a button.
  */
-export class SparkPill extends Component<{ cost: number; available: number }, {}> {
+export class SparkPill extends Component<
+  { cost: number; available: number },
+  {}
+> {
   public render() {
     if (!this.props.cost) {
       return;
@@ -76,7 +79,7 @@ export class ProgressBar extends Component<{ value: number }, {}> {
  * cooldown timer and text on the button.
  */
 export class CoolDown extends Component<
-  { cooldown: number; onCooldownEnd: Function },
+  { cooldown: number; onCooldownEnd: Function; progress?: number },
   { ttl: number }
 > {
   public componentDidMount() {
@@ -93,7 +96,13 @@ export class CoolDown extends Component<
 
   public render() {
     return (
-      <div class={classes({ mixerCooldown: true, cActive: this.state.ttl >= 0 })}>
+      <div
+        class={classes({
+          mixerCooldown: true,
+          cActive: this.state.ttl >= 0,
+          progress: !!this.props.progress,
+        })}
+      >
         <div>{prettyTime(this.state.ttl + 1)}</div>
       </div>
     );
@@ -272,7 +281,10 @@ export class Button extends PreactControl<{
   }
 
   public componentWillUnmount() {
-    this.control.state.participant.removeListener('update', this.updateAvailableSparks);
+    this.control.state.participant.removeListener(
+      'update',
+      this.updateAvailableSparks,
+    );
     window.removeEventListener('keydown', this.keyDown);
     window.removeEventListener('keyup', this.keyUp);
   }
@@ -291,13 +303,30 @@ export class Button extends PreactControl<{
           onMouseUp={this.mouseup}
           onMouseLeave={this.mouseleave}
         >
-          <div class={classes({ mixerButtonContent: true, cooldown: this.state.cooldown })}>
+          <div class="hover" />
+          <div
+            class={classes({
+              mixerButtonContent: true,
+              cooldown: this.state.cooldown,
+            })}
+          >
             {this.text}
+            <SparkPill
+              cost={this.cost}
+              available={this.state.availableSparks}
+            />
           </div>
-          <SparkPill cost={this.cost} available={this.state.availableSparks} />
-          <CoolDown cooldown={this.cooldown} onCooldownEnd={this.endCooldown} />
+          <CoolDown
+            cooldown={this.cooldown}
+            onCooldownEnd={this.endCooldown}
+            progress={this.progress}
+          />
           <ProgressBar value={this.progress} />
-          {this.tooltip ? <div class="mixer-button-tooltip">{this.tooltip}</div> : undefined}
+          {this.tooltip ? (
+            <div class="mixer-button-tooltip">{this.tooltip}</div>
+          ) : (
+            undefined
+          )}
         </div>
       </div>
     );
@@ -307,7 +336,10 @@ export class Button extends PreactControl<{
     if (this.disabled) {
       this.gamepad.unregisterButtonListener(this.gamepadButtonPress);
     } else if (typeof this.gamepadButton === 'number') {
-      this.gamepad.registerButtonListener(this.gamepadButton, this.gamepadButtonPress);
+      this.gamepad.registerButtonListener(
+        this.gamepadButton,
+        this.gamepadButtonPress,
+      );
     }
   }
 
@@ -348,7 +380,11 @@ export class Button extends PreactControl<{
     ) {
       this.control.giveInput({ event: 'keydown' });
       const newKeysPressed = [...this.state.keysPressed, ev.keyCode];
-      this.setState({ ...this.state, active: true, keysPressed: newKeysPressed });
+      this.setState({
+        ...this.state,
+        active: true,
+        keysPressed: newKeysPressed,
+      });
     }
   };
 
@@ -359,9 +395,15 @@ export class Button extends PreactControl<{
       ev.keyCode === this.keyCode &&
       this.state.keysPressed.indexOf(ev.keyCode) >= 0
     ) {
-      const newKeysPressed = this.state.keysPressed.filter(i => i !== ev.keyCode);
+      const newKeysPressed = this.state.keysPressed.filter(
+        i => i !== ev.keyCode,
+      );
       this.control.giveInput({ event: 'keyup' });
-      this.setState({ ...this.state, active: false, keysPressed: newKeysPressed });
+      this.setState({
+        ...this.state,
+        active: false,
+        keysPressed: newKeysPressed,
+      });
     }
   };
 
@@ -387,7 +429,9 @@ export class Button extends PreactControl<{
         blockRule(controlID, '.mixer-button', {
           borderColor: this.borderColor,
           backgroundColor: this.backgroundColor,
-          backgroundImage: this.backgroundImage ? `url(${this.backgroundImage})` : null,
+          backgroundImage: this.backgroundImage
+            ? `url(${this.backgroundImage})`
+            : null,
         })}
         {// Custom border color on hover for the button.
         blockRule(controlID, '.mixer-button:hover', {
