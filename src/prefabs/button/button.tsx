@@ -327,7 +327,14 @@ export class Button extends PreactControl<{
           />
           <ProgressBar value={this.progress} />
           {this.tooltip ? (
-            <div class="mixer-button-tooltip">{this.tooltip}</div>
+            <div
+              class={classes({
+                mixerButtonTooltip: true,
+                top: this.tooltipPosition(),
+              })}
+            >
+              {this.tooltip}
+            </div>
           ) : (
             undefined
           )}
@@ -431,6 +438,16 @@ export class Button extends PreactControl<{
       gplace => gplace.size === grid,
     );
     return !(!gridPlacement || gridPlacement.height >= 7);
+  };
+
+  private tooltipPosition = (): boolean => {
+    const TOOLTIP_SIZE = 6;
+    const grid = Mixer.Layout.gridLayouts[this.props.resource.grid];
+    const gridPlacement = this.props.position.find(
+      gplace => gplace.size === grid.size,
+    );
+
+    return gridPlacement.y + gridPlacement.height > grid.height - TOOLTIP_SIZE;
   };
 
   private renderCustomStyleBlock = () => {

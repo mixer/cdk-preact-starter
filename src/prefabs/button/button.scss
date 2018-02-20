@@ -163,10 +163,24 @@ $button-z-tooltip: $button-z-cost + 1;
       margin-left: -$button-tooltip-arrow-size;
     }
 
+    &.top {
+      top: unset;
+      bottom: 100%;
+
+      &::before {
+        top: calc(100% - 1px);
+        transform: rotate(180deg);
+      }
+    }
+
     .mixer-button:focus &,
     .mixer-button:hover & {
       opacity: 1;
       transform: translateY(calc(0% + 15px));
+
+      &.top {
+        transform: translateY(calc(0% - 15px));
+      }
     }
   }
 }
