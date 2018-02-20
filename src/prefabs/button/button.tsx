@@ -10,8 +10,8 @@ import './button.scss';
 function prettyTime(secs: number): string {
   const seconds: number = Math.floor(secs) % 60;
   const minutes: number = Math.floor(secs / 60) % 60;
-  const hours: number = Math.floor(secs / 3600) % 60;
-  const days: number = Math.floor(secs / 86400) % 60;
+  const hours: number = Math.floor(secs / 3600) % 24;
+  const days: number = Math.floor(secs / 86400);
   let sTime: string = `${seconds}s`;
 
   if (days) {
