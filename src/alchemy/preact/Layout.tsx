@@ -146,13 +146,15 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
       >
         {this.props.scene
           .listControls()
-          .map(control => (
-            <ResourceHolder
-              resource={control}
-              component={FixedGridControl as typeof Component}
-              nest={{ grid: this.state.activeGrid, multiplier }}
-            />
-          ))}
+          .map(control => {
+            control.grid = this.state.activeGrid;
+            return (
+              <ResourceHolder
+                resource={control}
+                component={FixedGridControl as typeof Component}
+                nest={{ grid: this.state.activeGrid, multiplier }}
+              />)
+          })}
       </div>
     );
   }

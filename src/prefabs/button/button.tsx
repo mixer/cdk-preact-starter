@@ -296,14 +296,18 @@ export class Button extends PreactControl<{
         {this.renderCustomStyleBlock()}
         <div
           tabIndex={0}
-          class={classes({ mixerButton: true, active: this.state.active })}
+          class={classes({
+            mixerButton: true,
+            active: this.state.active,
+            compact: this.isCompactMode(),
+          })}
           disabled={this.disabled || this.state.cooldown}
           role="button"
           onMouseDown={this.mousedown}
           onMouseUp={this.mouseup}
           onMouseLeave={this.mouseleave}
         >
-          <div class="hover" />
+          <div class="state" />
           <div
             class={classes({
               mixerButtonContent: true,
@@ -421,13 +425,21 @@ export class Button extends PreactControl<{
     });
   };
 
+  private isCompactMode = (): boolean => {
+    const grid = Mixer.Layout.gridLayouts[this.props.resource.grid].size;
+    const gridPlacement = this.props.position.find(
+      gplace => gplace.size === grid,
+    );
+    return !(!gridPlacement || gridPlacement.height >= 7);
+  };
+
   private renderCustomStyleBlock = () => {
     const { controlID } = this.props;
     return (
       <style>
         {// Custom border color for the button.
         blockRule(controlID, '.mixer-button', {
-          borderColor: this.borderColor,
+          border: this.borderColor ? `2px solid ${this.borderColor}` : null,
           backgroundColor: this.backgroundColor,
           backgroundImage: this.backgroundImage
             ? `url(${this.backgroundImage})`
@@ -438,9 +450,14 @@ export class Button extends PreactControl<{
           borderColor: this.focusColor,
         })}
         {// Custom border color on focus for the button.
-        blockRule(controlID, '.mixer-button:focus', {
-          borderColor: this.focusColor,
-        })}
+        blockRule(
+          controlID,
+          ' .mixer-button:focus',
+          {
+            borderColor: this.focusColor,
+          },
+          'xbox',
+        )}
         {// Custom border color on active for the button.
         blockRule(controlID, '.mixer-button:active', {
           borderColor: this.focusColor,
