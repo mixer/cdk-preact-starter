@@ -79,7 +79,12 @@ export class ProgressBar extends Component<{ value: number }, {}> {
  * cooldown timer and text on the button.
  */
 export class CoolDown extends Component<
-  { cooldown: number; onCooldownEnd: Function; progress?: number },
+  {
+    cooldown: number;
+    onCooldownEnd: Function;
+    progress?: number;
+    hideTime?: boolean;
+  },
   { ttl: number }
 > {
   public componentDidMount() {
@@ -103,7 +108,13 @@ export class CoolDown extends Component<
           progress: !!this.props.progress,
         })}
       >
-        <div>{prettyTime(this.state.ttl + 1)}</div>
+        <div class={classes({
+            hidden: this.props.hideTime
+          })}>
+          <div class="time">
+            {prettyTime(this.state.ttl + 1)}
+          </div>
+        </div>
       </div>
     );
   }
@@ -299,13 +310,15 @@ export class Button extends PreactControl<{
           class={classes({
             mixerButton: true,
             active: this.state.active,
-            compact: this.isCompactMode(),
+            compact: this.isCompactHeight(),
           })}
           disabled={this.disabled || this.state.cooldown}
           role="button"
           onMouseDown={this.mousedown}
           onMouseUp={this.mouseup}
           onMouseLeave={this.mouseleave}
+          title={this.tooltip || ''}
+          data-tippy-arrow
         >
           <div class="state" />
           <div
@@ -324,20 +337,9 @@ export class Button extends PreactControl<{
             cooldown={this.cooldown}
             onCooldownEnd={this.endCooldown}
             progress={this.progress}
+            hideTime={this.isCompactWidth()}
           />
           <ProgressBar value={this.progress} />
-          {this.tooltip ? (
-            <div
-              class={classes({
-                mixerButtonTooltip: true,
-                top: this.tooltipPosition(),
-              })}
-            >
-              {this.tooltip}
-            </div>
-          ) : (
-            undefined
-          )}
         </div>
       </div>
     );
@@ -432,7 +434,7 @@ export class Button extends PreactControl<{
     });
   };
 
-  private isCompactMode = (): boolean => {
+  private isCompactHeight = (): boolean => {
     const grid = Mixer.Layout.gridLayouts[this.props.resource.grid].size;
     const gridPlacement = this.props.position.find(
       gplace => gplace.size === grid,
@@ -440,14 +442,12 @@ export class Button extends PreactControl<{
     return !(!gridPlacement || gridPlacement.height >= 7);
   };
 
-  private tooltipPosition = (): boolean => {
-    const TOOLTIP_SIZE = 6;
-    const grid = Mixer.Layout.gridLayouts[this.props.resource.grid];
+  private isCompactWidth = (): boolean => {
+    const grid = Mixer.Layout.gridLayouts[this.props.resource.grid].size;
     const gridPlacement = this.props.position.find(
-      gplace => gplace.size === grid.size,
+      gplace => gplace.size === grid,
     );
-
-    return gridPlacement.y + gridPlacement.height > grid.height - TOOLTIP_SIZE;
+    return !(!gridPlacement || gridPlacement.width >= 8);
   };
 
   private renderCustomStyleBlock = () => {

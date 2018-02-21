@@ -136,52 +136,22 @@ $button-z-tooltip: $button-z-cost + 1;
       bottom: 0;
     }
   }
+}
 
-  &-tooltip {
-    position: absolute;
-    top: 100%;
-    z-index: $button-z-tooltip;
-    background: $button-tooltip-background;
-    font-weight: normal;
-    color: #fff;
-    padding: 3px 8px;
-    border-radius: 3px;
-    font-size: 0.9em;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    transition: opacity $easing-default-duration $easing-default-curve, transform $easing-default-duration $easing-default-curve;
-    transform: translateY(100%);
-    opacity: 0;
-    pointer-events: none;
+.tippy-tooltip {
+  background: $button-tooltip-background;
+  font-weight: normal;
+  color: #fff;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-size: 0.9em;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
 
-    &::before {
-      content: '';
-      position: absolute;
-      left: 50%;
-      border: $button-tooltip-arrow-size solid transparent;
-      border-bottom-color: $button-tooltip-background;
-      bottom: calc(100% - 1px);
-      margin-left: -$button-tooltip-arrow-size;
-    }
-
-    &.top {
-      top: unset;
-      bottom: 100%;
-
-      &::before {
-        top: calc(100% - 1px);
-        transform: rotate(180deg);
-      }
-    }
-
-    .mixer-button:focus &,
-    .mixer-button:hover & {
-      opacity: 1;
-      transform: translateY(calc(0% + 15px));
-
-      &.top {
-        transform: translateY(calc(0% - 15px));
-      }
-    }
+$positions: top bottom;
+@each $pos in $positions {
+  .tippy-popper[x-placement^=#{$pos}] .tippy-arrow {
+    border-#{$pos}: 7px solid $button-tooltip-background;
   }
 }
 
@@ -228,6 +198,30 @@ $button-z-tooltip: $button-z-cost + 1;
     &::after {
       border-color: rgba(#fff, 0.2);
       z-index: 1;
+    }
+
+    &.hidden {
+      padding-left: $button-cooldown-spinner-size;
+
+      .time {
+        width: 0;
+        opacity: 0;
+      }
+    }
+  }
+
+  &:hover > div.hidden {
+    padding-left: 0;
+
+    &::before,
+    &::after {
+      display: none;
+    }
+
+    .time {
+      width: auto;
+      opacity: 1;
+      transition: opacity .25s ease-in-out;
     }
   }
 

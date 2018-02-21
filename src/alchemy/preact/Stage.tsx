@@ -35,7 +35,7 @@ export class PreactStage extends Component<
       return;
     }
 
-    const platform = 'xbox' || Mixer.display.getSettings().platform;
+    const platform = Mixer.display.getSettings().platform;
 
     return <div class={`stage platform-${platform}`}>{this.getSceneComponent(this.state.scene)}</div>;
   }
