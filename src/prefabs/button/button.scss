@@ -322,4 +322,25 @@ $positions: top bottom;
       }
     }
   }
+
+  &-mobile {
+    @media screen and (max-width: 320px) {
+      .mixer-button {
+        border-width: 1px !important;
+
+        &-content {
+          line-height: 1;
+          font-size: 0.75em;
+        }
+      }
+
+      .mixer-progress-bar {
+        height: 3px;
+      }
+
+      .mixer-cooldown.progress {
+        margin-top: 3px;
+      }
+    }
+  }
 }
