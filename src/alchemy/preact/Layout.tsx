@@ -129,7 +129,7 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
   }
 
   public render() {
-    const { width, height } = this.getGridPixelSize();
+    const { width, height, multiplier } = this.getGridPixelSize();
 
     return (
       <div
@@ -150,7 +150,7 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
             <ResourceHolder
               resource={control}
               component={FixedGridControl as typeof Component}
-              nest={{ grid: this.state.activeGrid }}
+              nest={{ grid: this.state.activeGrid, multiplier }}
             />
           ))}
       </div>
@@ -176,7 +176,7 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
       width = window.innerWidth;
     }
 
-    return { width: width * multiplier, height: height * multiplier };
+    return { width: width * multiplier, height: height * multiplier, multiplier };
   }
 
   /**
@@ -202,7 +202,7 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
  * FixedGridControl is the container for individual controls in the fixed grid.
  * It renders a nested <Control /> component and passes in the correct styles.
  */
-class FixedGridControl extends Component<{ resource: MControl; grid: number }, {}> {
+class FixedGridControl extends Component<{ resource: MControl; grid: number, multiplier: number }, {}> {
   public render() {
     // tslint:disable-next-line
     const Control = this.props.resource.descriptor().ctor as typeof PreactControl;
@@ -211,15 +211,17 @@ class FixedGridControl extends Component<{ resource: MControl; grid: number }, {
       return;
     }
 
+    const { multiplier } = this.props;
+
     return (
       <div
         class="control-container"
         style={new RuleSet({
           position: 'absolute',
-          left: grid.x * FixedGridLayout.gridScale,
-          top: grid.y * FixedGridLayout.gridScale,
-          width: grid.width * FixedGridLayout.gridScale,
-          height: grid.height * FixedGridLayout.gridScale,
+          left: grid.x * FixedGridLayout.gridScale * multiplier,
+          top: grid.y * FixedGridLayout.gridScale * multiplier,
+          width: grid.width * FixedGridLayout.gridScale * multiplier,
+          height: grid.height * FixedGridLayout.gridScale * multiplier,
         }).compile()}
       >
         <Control resource={this.props.resource} {...this.props.resource.toObject()} />
