@@ -66,7 +66,7 @@ export class ProgressBar extends Component<{ value: number }, {}> {
       >
         <div
           style={css({
-            transform: `translateX(${width * 100}%)`,
+            transform: `translateX(calc(${width * 100}% - 1px))`,
           })}
         />
       </div>

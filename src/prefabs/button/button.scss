@@ -118,7 +118,6 @@ $button-z-tooltip: $button-z-cost + 1;
     padding: 0 5px;
     // max-height: 100%; // This was commented out in order to support current styling on prod.
     // This will be changed after we have a label prefab for people to use.
-    white-space: pre;
     text-overflow: ellipsis;
 
     &.cooldown {
@@ -285,12 +284,12 @@ $positions: top bottom;
 
   &::before {
     content: '';
-    background: rgba(255, 255, 255, 0.1);
     transform: translateY(100%);
     transition: transform $easing-default-duration;
   }
 
   &.enabled::before {
+    background: rgba(255, 255, 255, 0.1);
     transform: translateY(0%);
   }
 
@@ -325,21 +324,19 @@ $positions: top bottom;
 
   &-mobile {
     @media screen and (max-width: 320px) {
-      .mixer-button {
-        border-width: 1px !important;
-
-        &-content {
+      .mixer-button.compact {
+        .mixer-button-content {
           line-height: 1;
           font-size: 0.75em;
         }
-      }
 
-      .mixer-progress-bar {
-        height: 3px;
-      }
+        .mixer-progress-bar {
+          height: 3px;
+        }
 
-      .mixer-cooldown.progress {
-        margin-top: 3px;
+        .mixer-cooldown.progress {
+          margin-top: 3px;
+        }
       }
     }
   }
