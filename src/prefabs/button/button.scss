@@ -274,32 +274,19 @@ $positions: top bottom;
   &::before,
   > div {
     @include absolute-cover();
-    height: $button-progress-height;
-    overflow: hidden;
-    bottom: auto;
-    z-index: $button-z-progress;
-    border-bottom-left-radius: $button-border-radius - 1;
-    border-bottom-right-radius: $button-border-radius - 1;
-    display: none;
+  }
 
   &::before {
     content: '';
+    background: rgba(255, 255, 255, 0.1);
     transform: translateY(100%);
     transition: transform $easing-default-duration;
   }
 
   &.enabled::before {
-    background: rgba(255, 255, 255, 0.1);
     transform: translateY(0%);
   }
 
-    &.enabled {
-      display: block;
-    }
-
-    &.enabled::before {
-        transform: translateY(0%);
-    }
   > div {
     background: $button-progress-foreground;
     transition: transform $easing-default-duration;
