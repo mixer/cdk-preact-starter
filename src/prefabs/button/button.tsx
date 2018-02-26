@@ -327,7 +327,7 @@ export class Button extends PreactControl<{
               cooldown: this.state.cooldown,
             })}
           >
-            {this.text}
+            <div class="mixer-button-text">{this.text}</div>
             <SparkPill
               cost={this.cost}
               available={this.state.availableSparks}
@@ -484,7 +484,7 @@ export class Button extends PreactControl<{
           borderColor: this.focusColor,
         })}
         {// Custom text size for the button.
-        blockRule(controlID, '.mixer-button-content', {
+        blockRule(controlID, '.mixer-button-content .mixer-button-text', {
           fontSize: this.textSize,
           color: this.textColor,
         })}
