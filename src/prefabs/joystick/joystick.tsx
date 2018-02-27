@@ -280,6 +280,8 @@ export class Joystick extends PreactControl {
         this.handle.style.transition = 'none';
       }
     }, 300);
+
+    this.sendInputToInteractive(0, 0);
   };
 
   /**
