@@ -25,7 +25,12 @@ function prettyTime(secs: number): string {
  * cooldown timer and text on the button.
  */
 export class CoolDown extends Component<
-  { cooldown: number; onCooldownEnd: Function },
+  {
+    cooldown: number;
+    onCooldownEnd: Function;
+    progress?: number;
+    hideTime?: boolean;
+  },
   { ttl: number }
 > {
   public componentDidMount() {
@@ -42,8 +47,20 @@ export class CoolDown extends Component<
 
   public render() {
     return (
-      <div class={classes({ mixerCooldown: true, cActive: this.state.ttl >= 0 })}>
-        <div>{prettyTime(this.state.ttl + 1)}</div>
+      <div
+        class={classes({
+          mixerCooldown: true,
+          cActive: this.state.ttl >= 0,
+          progress: !!this.props.progress,
+        })}
+      >
+        <div class={classes({
+            hidden: this.props.hideTime
+          })}>
+          <div class="time">
+            {prettyTime(this.state.ttl + 1)}
+          </div>
+        </div>
       </div>
     );
   }
