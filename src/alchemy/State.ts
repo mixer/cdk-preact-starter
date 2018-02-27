@@ -473,6 +473,11 @@ export class MControl<T extends Mixer.IControl = Mixer.IControl> extends Resourc
   public readonly state: State;
 
   /**
+   * The grid this control is showing on.
+   */
+  public grid: number;
+
+  /**
    * The control's unique ID in the scene.
    */
   public get id() {

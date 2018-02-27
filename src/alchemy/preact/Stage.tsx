@@ -35,7 +35,9 @@ export class PreactStage extends Component<
       return;
     }
 
-    return <div class="stage">{this.getSceneComponent(this.state.scene)}</div>;
+    const platform = Mixer.display.getSettings().platform;
+
+    return <div class={`stage platform-${platform}`}>{this.getSceneComponent(this.state.scene)}</div>;
   }
 
   /**

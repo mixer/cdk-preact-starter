@@ -28,7 +28,10 @@ function prettyTime(secs: number): string {
 /**
  * SparkPill is the component that shows the spark cost above a button.
  */
-export class SparkPill extends Component<{ cost: number; available: number }, {}> {
+export class SparkPill extends Component<
+  { cost: number; available: number },
+  {}
+> {
   public render() {
     if (!this.props.cost) {
       return;
@@ -63,7 +66,7 @@ export class ProgressBar extends Component<{ value: number }, {}> {
       >
         <div
           style={css({
-            transform: `translateX(${width * 100}%)`,
+            transform: `translateX(calc(${width * 100}% - 1px))`,
           })}
         />
       </div>
@@ -76,7 +79,12 @@ export class ProgressBar extends Component<{ value: number }, {}> {
  * cooldown timer and text on the button.
  */
 export class CoolDown extends Component<
-  { cooldown: number; onCooldownEnd: Function },
+  {
+    cooldown: number;
+    onCooldownEnd: Function;
+    progress?: number;
+    hideTime?: boolean;
+  },
   { ttl: number }
 > {
   public componentDidMount() {
@@ -93,8 +101,20 @@ export class CoolDown extends Component<
 
   public render() {
     return (
-      <div class={classes({ mixerCooldown: true, cActive: this.state.ttl >= 0 })}>
-        <div>{prettyTime(this.state.ttl + 1)}</div>
+      <div
+        class={classes({
+          mixerCooldown: true,
+          cActive: this.state.ttl >= 0,
+          progress: !!this.props.progress,
+        })}
+      >
+        <div class={classes({
+            hidden: this.props.hideTime
+          })}>
+          <div class="time">
+            {prettyTime(this.state.ttl + 1)}
+          </div>
+        </div>
       </div>
     );
   }
@@ -272,7 +292,10 @@ export class Button extends PreactControl<{
   }
 
   public componentWillUnmount() {
-    this.control.state.participant.removeListener('update', this.updateAvailableSparks);
+    this.control.state.participant.removeListener(
+      'update',
+      this.updateAvailableSparks,
+    );
     window.removeEventListener('keydown', this.keyDown);
     window.removeEventListener('keyup', this.keyUp);
   }
@@ -284,20 +307,39 @@ export class Button extends PreactControl<{
         {this.renderCustomStyleBlock()}
         <div
           tabIndex={0}
-          class={classes({ mixerButton: true, active: this.state.active })}
+          class={classes({
+            mixerButton: true,
+            active: this.state.active,
+            compact: this.isCompactHeight(),
+          })}
           disabled={this.disabled || this.state.cooldown}
           role="button"
           onMouseDown={this.mousedown}
           onMouseUp={this.mouseup}
           onMouseLeave={this.mouseleave}
+          title={this.tooltip || ''}
+          data-tippy-arrow
         >
-          <div class={classes({ mixerButtonContent: true, cooldown: this.state.cooldown })}>
-            {this.text}
+          <div class="state" />
+          <div
+            class={classes({
+              mixerButtonContent: true,
+              cooldown: this.state.cooldown,
+            })}
+          >
+            <div class="mixer-button-text">{this.text}</div>
+            <SparkPill
+              cost={this.cost}
+              available={this.state.availableSparks}
+            />
           </div>
-          <SparkPill cost={this.cost} available={this.state.availableSparks} />
-          <CoolDown cooldown={this.cooldown} onCooldownEnd={this.endCooldown} />
+          <CoolDown
+            cooldown={this.cooldown}
+            onCooldownEnd={this.endCooldown}
+            progress={this.progress}
+            hideTime={this.isCompactWidth()}
+          />
           <ProgressBar value={this.progress} />
-          {this.tooltip ? <div class="mixer-button-tooltip">{this.tooltip}</div> : undefined}
         </div>
       </div>
     );
@@ -307,7 +349,10 @@ export class Button extends PreactControl<{
     if (this.disabled) {
       this.gamepad.unregisterButtonListener(this.gamepadButtonPress);
     } else if (typeof this.gamepadButton === 'number') {
-      this.gamepad.registerButtonListener(this.gamepadButton, this.gamepadButtonPress);
+      this.gamepad.registerButtonListener(
+        this.gamepadButton,
+        this.gamepadButtonPress,
+      );
     }
   }
 
@@ -348,7 +393,11 @@ export class Button extends PreactControl<{
     ) {
       this.control.giveInput({ event: 'keydown' });
       const newKeysPressed = [...this.state.keysPressed, ev.keyCode];
-      this.setState({ ...this.state, active: true, keysPressed: newKeysPressed });
+      this.setState({
+        ...this.state,
+        active: true,
+        keysPressed: newKeysPressed,
+      });
     }
   };
 
@@ -359,9 +408,15 @@ export class Button extends PreactControl<{
       ev.keyCode === this.keyCode &&
       this.state.keysPressed.indexOf(ev.keyCode) >= 0
     ) {
-      const newKeysPressed = this.state.keysPressed.filter(i => i !== ev.keyCode);
+      const newKeysPressed = this.state.keysPressed.filter(
+        i => i !== ev.keyCode,
+      );
       this.control.giveInput({ event: 'keyup' });
-      this.setState({ ...this.state, active: false, keysPressed: newKeysPressed });
+      this.setState({
+        ...this.state,
+        active: false,
+        keysPressed: newKeysPressed,
+      });
     }
   };
 
@@ -379,24 +434,47 @@ export class Button extends PreactControl<{
     });
   };
 
+  private isCompactHeight = (): boolean => {
+    const grid = Mixer.Layout.gridLayouts[this.props.resource.grid].size;
+    const gridPlacement = this.props.position.find(
+      gplace => gplace.size === grid,
+    );
+    return !(!gridPlacement || gridPlacement.height >= 7);
+  };
+
+  private isCompactWidth = (): boolean => {
+    const grid = Mixer.Layout.gridLayouts[this.props.resource.grid].size;
+    const gridPlacement = this.props.position.find(
+      gplace => gplace.size === grid,
+    );
+    return !(!gridPlacement || gridPlacement.width >= 8);
+  };
+
   private renderCustomStyleBlock = () => {
     const { controlID } = this.props;
     return (
       <style>
         {// Custom border color for the button.
         blockRule(controlID, '.mixer-button', {
-          borderColor: this.borderColor,
+          border: this.borderColor ? `2px solid ${this.borderColor}` : null,
           backgroundColor: this.backgroundColor,
-          backgroundImage: this.backgroundImage ? `url(${this.backgroundImage})` : null,
+          backgroundImage: this.backgroundImage
+            ? `url(${this.backgroundImage})`
+            : null,
         })}
         {// Custom border color on hover for the button.
         blockRule(controlID, '.mixer-button:hover', {
           borderColor: this.focusColor,
         })}
         {// Custom border color on focus for the button.
-        blockRule(controlID, '.mixer-button:focus', {
-          borderColor: this.focusColor,
-        })}
+        blockRule(
+          controlID,
+          ' .mixer-button:focus',
+          {
+            borderColor: this.focusColor,
+          },
+          'xbox',
+        )}
         {// Custom border color on active for the button.
         blockRule(controlID, '.mixer-button:active', {
           borderColor: this.focusColor,
@@ -406,7 +484,7 @@ export class Button extends PreactControl<{
           borderColor: this.focusColor,
         })}
         {// Custom text size for the button.
-        blockRule(controlID, '.mixer-button-content', {
+        blockRule(controlID, '.mixer-button-content .mixer-button-text', {
           fontSize: this.textSize,
           color: this.textColor,
         })}

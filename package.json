@@ -22,10 +22,11 @@
     "eventemitter3": "^2.0.3",
     "intl-messageformat": "^2.1.0",
     "preact": "^8.2.1",
-    "rxjs": "^5.5.6"
+    "rxjs": "^5.5.6",
+    "tippy.js": "^2.2.3"
   },
   "devDependencies": {
-    "@mcph/miix-cli": "^0.2.0",
+    "@mcph/miix-cli": "^0.2.3",
     "@mcph/miix-std": "^0.2.9",
     "@types/node": "^8.0.24",
     "awesome-typescript-loader": "^3.2.2",

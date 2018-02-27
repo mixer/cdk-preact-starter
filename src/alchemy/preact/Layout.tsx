@@ -7,6 +7,7 @@ import { display, ISettings, Layout } from '@mcph/miix-std';
 import { Component, h } from 'preact';
 import { fromEvent } from 'rxjs/observable/fromEvent';
 import { debounceTime, startWith } from 'rxjs/operators';
+import * as tippy from 'tippy.js';
 
 import { log } from '../Log';
 import { MControl, MScene } from '../State';
@@ -126,6 +127,7 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
       right: padding,
       bottom: height + padding,
     });
+    this.renderTippy();
   }
 
   public render() {
@@ -146,13 +148,15 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
       >
         {this.props.scene
           .listControls()
-          .map(control => (
-            <ResourceHolder
-              resource={control}
-              component={FixedGridControl as typeof Component}
-              nest={{ grid: this.state.activeGrid, multiplier }}
-            />
-          ))}
+          .map(control => {
+            control.grid = this.state.activeGrid;
+            return (
+              <ResourceHolder
+                resource={control}
+                component={FixedGridControl as typeof Component}
+                nest={{ grid: this.state.activeGrid, multiplier }}
+              />)
+          })}
       </div>
     );
   }
@@ -191,6 +195,27 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
     }
 
     this.setState({ ...this.state, activeGrid: nextActiveGrid });
+  }
+
+  private renderTippy = (): void => {
+    tippy(`[name^="control"] > div`,
+    {
+      appendTo: document.querySelector('.alchemy-grid-layout'),
+      placement: 'bottom',
+      hideOnClick: false,
+      dynamicTitle: true,
+      popperOptions: {
+        modifiers: {
+          preventOverflow: {
+            enabled: true,
+            boundariesElement: document.querySelector('.alchemy-grid-layout'),
+          },
+          hide: {
+            enabled: false
+          }
+        }
+      }
+    });
   }
 }
 
