@@ -163,17 +163,13 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
   private getGridPixelSize() {
     const grid = Layout.gridLayouts[this.state.activeGrid];
 
-    let width = grid.width * FixedGridLayout.gridScale;
+    const width = grid.width * FixedGridLayout.gridScale;
     const height = grid.height * FixedGridLayout.gridScale;
 
     // On mobile, fill the available window.
     let multiplier = 1;
-    if (!this.props.settings.placesVideo) {
+    if (this.props.settings.platform === 'xbox' || !this.props.settings.placesVideo) {
       multiplier = Math.min(window.innerWidth / width, window.innerHeight / height);
-    }
-
-    if (this.props.settings.platform === 'xbox') {
-      width = window.innerWidth;
     }
 
     return { width: width * multiplier, height: height * multiplier, multiplier };
