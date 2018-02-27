@@ -176,6 +176,11 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
       multiplier = Math.min(window.innerWidth / width, window.innerHeight / height);
     }
 
+    // Something went wrong on Xbox. Abort multiplier.
+    if (multiplier < 0.1) {
+      multiplier = 1;
+    }
+
     return { width: width * multiplier, height: height * multiplier, multiplier };
   }
 
