@@ -173,6 +173,7 @@ $positions: top bottom;
   > div {
     text-align: center;
     min-height: $button-cooldown-spinner-size;
+    height: $Button-cooldown-height;
     padding-left: $button-cooldown-spinner-size + $base-border-width * 2 + 6px;
     position: relative;
     color: #fff;
