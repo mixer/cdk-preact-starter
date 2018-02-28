@@ -300,7 +300,7 @@ export class Button extends PreactControl<{
     const gridPlacement = this.props.position.find(
       gplace => gplace.size === grid,
     );
-    return !(!gridPlacement || gridPlacement.height >= 7);
+    return !(!gridPlacement || gridPlacement.height >= 6);
   };
 
   private isCompactWidth = (): boolean => {

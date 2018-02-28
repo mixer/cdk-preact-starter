@@ -18,6 +18,39 @@ $textbox-border-size: 2px;
       margin-top: 0;
       margin-left: 5px;
       text-align: center;
+      max-height: unset;
+    }
+  }
+
+  > .mixer-spark-pill {
+    position: absolute;
+    right: 6px;
+  }
+
+  > .mixer-cooldown {
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
+  }
+
+  .mixer-button {
+    position: relative;
+    max-height: 40px;
+    min-height: 35px;
+    flex: 0.5;
+    top: unset;
+    left: unset;
+    right: unset;
+    bottom: unset;
+    margin-top: 8px;
+    color: white;
+    flex-direction: column;
+    border-style: unset;
+    font-family: $font-family-sans-serif;
+
+    .mixer-spark-pill {
+      font-size: 1em;
     }
   }
 }
@@ -37,6 +70,10 @@ $textbox-border-size: 2px;
   padding: 0 $textbox-padding;
   vertical-align: middle;
   flex: 1;
+
+  &:disabled {
+    opacity: 0.2;
+  }
 }
 
 textarea.mixer-textbox {
@@ -52,16 +89,4 @@ textarea.mixer-textbox {
     overflow: hidden;
     text-overflow: ellipsis;
   }
-}
-
-.mixer-textbox-container .mixer-button {
-  position: relative;
-  max-height: 40px;
-  flex: 0.5;
-  top: unset;
-  left: unset;
-  right: unset;
-  bottom: unset;
-  margin-top: 8px;
-  color: white;
 }

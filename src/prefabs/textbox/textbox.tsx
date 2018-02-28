@@ -9,7 +9,10 @@ import { classes } from '../../alchemy/Style';
 import '../button/button.scss';
 import './textbox.scss';
 
-@Mixer.Control({ kind: 'textbox', dimensions: [{ property: 'height', minimum: 4 }] })
+@Mixer.Control({
+  kind: 'textbox',
+  dimensions: [{ property: 'height', minimum: 4 }],
+})
 export class TextBox extends PreactControl<{
   availableSparks: number;
   active: boolean;
@@ -57,6 +60,10 @@ export class TextBox extends PreactControl<{
   public componentWillMount() {
     this.updateAvailableSparks();
     this.control.state.participant.on('update', this.updateAvailableSparks);
+    this.setState({
+      ...this.state,
+      cooldown: this.cooldown - Date.now() > 0,
+    });
   }
 
   public componentWillReceiveProps() {
@@ -67,34 +74,69 @@ export class TextBox extends PreactControl<{
   }
 
   public componentWillUnmount() {
-    this.control.state.participant.removeListener('update', this.updateAvailableSparks);
+    this.control.state.participant.removeListener(
+      'update',
+      this.updateAvailableSparks,
+    );
   }
   public render() {
     const { controlID } = this.props;
     const classContainer = classes({
       mixerTextboxContainer: true,
-      compact: this.isCompactMode()
-    })
-    const classNames = `mixer-textbox${this.hasFocus ? " mixer-has-focus" : ""}`;
+      compact: this.isCompactHeight(),
+      hasCost: !!this.cost,
+    });
+    const textboxClasses = classes({
+      mixerTextbox: true,
+      mixerHasFocus: this.hasFocus,
+    });
     return (
-        <div key={`control-${controlID}`} class={classContainer} name={`control-${controlID}`}>
-          <Input class={classNames}
-            ref={this.setReference}
-            placeholder={this.placeholder}
-            multiline={this.multiline}
-            onClick={this.handleClick}
-            onKeyPress={this.handleKeyPress}
-            onBlur={this.handleBlur} />
-          <SparkPill cost={this.cost} available={this.state.availableSparks} />
-          <Button submitText={this.submitText} hasSubmit={this.hasSubmit} onClick={this.sendText}  disabled={this.disabled} />
-          <CoolDown cooldown={this.cooldown} onCooldownEnd={this.endCooldown} />
-        </div>
-      );
-  };
+      <div
+        key={`control-${controlID}`}
+        class={classContainer}
+        name={`control-${controlID}`}
+      >
+        <Input
+          class={textboxClasses}
+          ref={this.setReference}
+          placeholder={this.placeholder}
+          multiline={this.multiline}
+          onClick={this.handleClick}
+          onKeyPress={this.handleKeyPress}
+          onBlur={this.handleBlur}
+          disabled={this.disabled || this.state.cooldown}
+        />
+        {!this.hasSubmit
+          ? [
+              <SparkPill
+                cost={this.cost}
+                available={this.state.availableSparks}
+              />,
+              <CoolDown
+                cooldown={this.cooldown}
+                onCooldownEnd={this.endCooldown}
+              />,
+            ]
+          : null}
+        <Button
+          submitText={this.submitText}
+          hasSubmit={this.hasSubmit}
+          onClick={this.sendText}
+          disabled={this.disabled || this.state.cooldown}
+          cooldown={this.cooldown}
+          endCooldown={this.endCooldown}
+          cost={this.cost}
+          availableSparks={this.state.availableSparks}
+          compact={this.isCompactHeight()}
+          isCompactWidth={this.isCompactWidth}
+        />
+      </div>
+    );
+  }
 
   protected setReference = (input: Input) => {
     this.refInput = input;
-  }
+  };
 
   protected handleClick = (evt: PointerEvent) => {
     this.hasFocus = true;
@@ -107,16 +149,15 @@ export class TextBox extends PreactControl<{
   };
 
   protected handleKeyPress = (evt: KeyboardEvent) => {
-    // Do we send both events on Enter?
+    const target = evt.target as HTMLInputElement;
     if (!this.multiline && !this.hasSubmit) {
-      const target = evt.target as HTMLInputElement;
       console.log('change:', target.value);
-      this.control.giveInput({ event: 'change', value: target.value })
+      this.control.giveInput({ event: 'change', value: target.value });
     }
-    if (evt.keyCode === 13 && !this.multiline || evt.keyCode === 10) {
+    if ((evt.keyCode === 13 && !this.multiline) || evt.keyCode === 10) {
       this.sendText();
     }
-  }
+  };
 
   protected sendText = (evt?: MouseEvent) => {
     if (evt && !this.hasSubmit) {
@@ -125,7 +166,7 @@ export class TextBox extends PreactControl<{
     const target = this.refInput.base as HTMLInputElement;
     console.log('submit:', target.value);
     this.control.giveInput({ event: 'submit', value: target.value });
-  }
+  };
 
   private updateAvailableSparks = () => {
     this.setState({
@@ -141,19 +182,29 @@ export class TextBox extends PreactControl<{
     });
   };
 
-  private isCompactMode = (): boolean => {
+  private isCompactHeight = (): boolean => {
     const grid = Mixer.Layout.gridLayouts[this.props.resource.grid].size;
-    const gridPlacement = this.props.position.find(gplace => gplace.size === grid);
+    const gridPlacement = this.props.position.find(
+      gplace => gplace.size === grid,
+    );
     return !(!gridPlacement || gridPlacement.height >= 7);
-  }
+  };
+
+  private isCompactWidth = (): boolean => {
+    const grid = Mixer.Layout.gridLayouts[this.props.resource.grid].size;
+    const gridPlacement = this.props.position.find(
+      gplace => gplace.size === grid,
+    );
+    return !(!gridPlacement || gridPlacement.width >= 8);
+  };
 }
 
 class Input extends Component<any, any> {
   public render() {
     if (this.props.multiline) {
-      return <textarea {...this.props} />
+      return <textarea {...this.props} />;
     } else {
-      return <input type='text' {...this.props} />
+      return <input type="text" {...this.props} />;
     }
   }
 }
@@ -162,15 +213,34 @@ class Button extends Component<any, any> {
   public render() {
     if (this.props.hasSubmit) {
       return (
-        <div
-          class={classes({ mixerButton: true })}
+        <button
+          class={classes({ mixerButton: true, compact: this.props.compact })}
           disabled={this.props.disabled}
           role="button"
           onClick={this.props.onClick}
         >
-          <div class="mixer-content">{this.props.submitText || 'Submit'}</div>
-      </div>
-      )
+          <div class="state" />
+          <div
+            class={classes({
+              mixerButtonContent: true,
+              cooldown: this.props.cooldown,
+            })}
+          >
+            <div class="mixer-button-text">
+              {this.props.submitText || 'Submit'}
+            </div>
+          <SparkPill
+            cost={this.props.cost}
+            available={this.props.availableSparks}
+          />
+          </div>
+          <CoolDown
+            cooldown={this.props.cooldown}
+            onCooldownEnd={this.props.endCooldown}
+            hideTime={this.props.isCompactWidth}
+          />
+        </button>
+      );
     } else {
       return null;
     }
