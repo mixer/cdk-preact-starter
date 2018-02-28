@@ -24,6 +24,7 @@ $button-font-size: 14px !default;
 $button-font-weight: 500 !default;
 $button-font-shadow: 0 1px 2px rgba(#000, 0.2) !default;
 $button-cooldown-spinner-size: 12px !default;
+$Button-cooldown-height: 22px !default;
 $button-hover-gradient: linear-gradient(to right, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.1));
 $button-active-gradient: linear-gradient(to left, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.1));
 
@@ -161,6 +162,7 @@ $positions: top bottom;
 
   bottom: auto;
   min-height: $button-cooldown-spinner-size;
+  height: $Button-cooldown-height;
   border-radius: $button-border-radius;
   background: $button-hover-gradient;
   opacity: 0;
