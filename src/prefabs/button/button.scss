@@ -205,6 +205,7 @@ $positions: top bottom;
 
     &.hidden {
       padding-left: $button-cooldown-spinner-size;
+      pointer-events: none;
 
       .time {
         width: 0;
@@ -219,6 +220,7 @@ $positions: top bottom;
     &::before,
     &::after {
       display: none;
+      transition: display .25s ease-in-out;
     }
 
     .time {
