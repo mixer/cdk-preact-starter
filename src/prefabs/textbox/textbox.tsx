@@ -9,6 +9,8 @@ import { classes } from '../../alchemy/Style';
 import '../button/button.scss';
 import './textbox.scss';
 
+declare const window: any;
+
 @Mixer.Control({
   kind: 'textbox',
   dimensions: [{ property: 'height', minimum: 4 }],
@@ -95,6 +97,8 @@ export class TextBox extends PreactControl<{
         key={`control-${controlID}`}
         class={classContainer}
         name={`control-${controlID}`}
+        onFocus={this.focus}
+        onBlur={this.blur}
       >
         <Input
           class={textboxClasses}
@@ -103,15 +107,13 @@ export class TextBox extends PreactControl<{
           multiline={this.multiline}
           onClick={this.handleClick}
           onKeyPress={this.handleKeyPress}
+          onFocus={this.focus}
           onBlur={this.handleBlur}
           disabled={this.disabled || this.state.cooldown}
+          tabIndex={-1}
         />
-        {!this.hasSubmit
+        {!this.hasSubmit && !this.cost
           ? [
-              <SparkPill
-                cost={this.cost}
-                available={this.state.availableSparks}
-              />,
               <CoolDown
                 cooldown={this.cooldown}
                 onCooldownEnd={this.endCooldown}
@@ -134,6 +136,16 @@ export class TextBox extends PreactControl<{
     );
   }
 
+  protected focus = () => {
+    window.TVJS.DirectionalNavigation.enabled = false;
+  };
+
+  protected blur = () => {
+    setTimeout(() => {
+      window.TVJS.DirectionalNavigation.enabled = true;
+    });
+  };
+
   protected setReference = (input: Input) => {
     this.refInput = input;
   };
@@ -150,7 +162,7 @@ export class TextBox extends PreactControl<{
 
   protected handleKeyPress = (evt: KeyboardEvent) => {
     const target = evt.target as HTMLInputElement;
-    if (!this.multiline && !this.hasSubmit) {
+    if (!this.multiline && !this.hasSubmit && !this.cost) {
       console.log('change:', target.value);
       this.control.giveInput({ event: 'change', value: target.value });
     }
@@ -160,7 +172,7 @@ export class TextBox extends PreactControl<{
   };
 
   protected sendText = (evt?: MouseEvent) => {
-    if (evt && !this.hasSubmit) {
+    if (evt && !this.hasSubmit && !this.cost) {
       return;
     }
     const target = this.refInput.base as HTMLInputElement;
@@ -211,13 +223,14 @@ class Input extends Component<any, any> {
 
 class Button extends Component<any, any> {
   public render() {
-    if (this.props.hasSubmit) {
+    if (this.props.hasSubmit || this.props.cost) {
       return (
-        <button
+        <div
           class={classes({ mixerButton: true, compact: this.props.compact })}
           disabled={this.props.disabled}
           role="button"
           onClick={this.props.onClick}
+          tabIndex={0}
         >
           <div class="state" />
           <div
@@ -229,17 +242,17 @@ class Button extends Component<any, any> {
             <div class="mixer-button-text">
               {this.props.submitText || 'Submit'}
             </div>
-          <SparkPill
-            cost={this.props.cost}
-            available={this.props.availableSparks}
-          />
+            <SparkPill
+              cost={this.props.cost}
+              available={this.props.availableSparks}
+            />
           </div>
           <CoolDown
             cooldown={this.props.cooldown}
             onCooldownEnd={this.props.endCooldown}
             hideTime={this.props.isCompactWidth}
           />
-        </button>
+        </div>
       );
     } else {
       return null;

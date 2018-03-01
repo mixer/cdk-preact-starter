@@ -32,6 +32,7 @@ $textbox-border-size: 2px;
     left: 4px;
     right: 4px;
     bottom: 4px;
+    height: unset;
   }
 
   .mixer-button {
@@ -49,9 +50,23 @@ $textbox-border-size: 2px;
     border-style: unset;
     font-family: $font-family-sans-serif;
 
+    &-content {
+      overflow: unset;
+
+      .cooldown {
+        display: none;
+      }
+    }
+
     .mixer-spark-pill {
       font-size: 1em;
     }
+
+    .mixer-cooldown {
+      height: unset;
+      bottom: 0;
+    }
+
   }
 }
 
