@@ -134,6 +134,7 @@ $button-z-tooltip: $button-z-cost + 1;
 
     .mixer-cooldown {
       bottom: 0;
+      height: unset;
     }
   }
 }
