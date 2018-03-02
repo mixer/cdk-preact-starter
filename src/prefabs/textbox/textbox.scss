@@ -47,7 +47,6 @@ $textbox-border-size: 2px;
     margin-top: 8px;
     color: white;
     flex-direction: column;
-    border-style: unset;
     font-family: $font-family-sans-serif;
 
     &-content {
@@ -103,5 +102,15 @@ textarea.mixer-textbox {
     @include control-font();
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+}
+
+.platform {
+  &-mobile {
+    @media screen and (max-width: 320px) {
+      .mixer-button.compact {
+        min-height: unset;
+      }
+    }
   }
 }

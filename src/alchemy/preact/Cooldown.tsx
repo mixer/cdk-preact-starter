@@ -48,6 +48,7 @@ export class CoolDown extends Component<
   public render() {
     return (
       <div
+        key={`cooldown=${this.props.cooldown}`}
         class={classes({
           mixerCooldown: true,
           cActive: this.state.ttl >= 0,

@@ -110,7 +110,7 @@ export class TextBox extends PreactControl<{
           onFocus={this.focus}
           onBlur={this.handleBlur}
           disabled={this.disabled || this.state.cooldown}
-          tabIndex={-1}
+          tabIndex={0}
         />
         {!this.hasSubmit && !this.cost
           ? [
@@ -231,6 +231,7 @@ class Button extends Component<any, any> {
           role="button"
           onClick={this.props.onClick}
           tabIndex={0}
+          onKeyDown={this.keydown}
         >
           <div class="state" />
           <div
@@ -256,6 +257,12 @@ class Button extends Component<any, any> {
       );
     } else {
       return null;
+    }
+  }
+
+  protected keydown = (evt: KeyboardEvent) => {
+    if (evt.keyCode === 13) {
+      this.props.onClick();
     }
   }
 }

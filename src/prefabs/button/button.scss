@@ -27,6 +27,7 @@ $button-cooldown-spinner-size: 12px !default;
 $Button-cooldown-height: 22px !default;
 $button-hover-gradient: linear-gradient(to right, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.1));
 $button-active-gradient: linear-gradient(to left, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.1));
+$button-focus-gradient: linear-gradient(to right, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.15));
 
 $button-z-base: 0 !default;
 $button-z-progress: $button-z-base + 1;
@@ -65,6 +66,16 @@ $button-z-tooltip: $button-z-cost + 1;
   }
 }
 
+@mixin default-focus() {
+  z-index: $button-z-base + 1;
+
+  .state {
+    @include absolute-cover();
+    border-radius: $button-border-radius;
+    background: $button-focus-gradient;
+  }
+}
+
 @keyframes loader-spin {
   0%   { transform: translate(-50%, -50%) rotate(0deg) }
   100% { transform: translate(-50%, -50%) rotate(360deg) }
@@ -91,6 +102,10 @@ $button-z-tooltip: $button-z-cost + 1;
 
   &:hover {
     @include default-hover();
+  }
+
+  &:focus {
+    @include default-focus();
   }
 
   &:active,
