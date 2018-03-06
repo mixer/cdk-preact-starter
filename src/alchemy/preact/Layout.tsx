@@ -233,25 +233,22 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
 function verifyControlSizes(mControl: MControl, descriptor: IControlDescriptor, grids: Layout.IGridPlacement[]): Layout.IGridPlacement[] {
   if (descriptor.dimensions && descriptor.dimensions.length && grids && grids.length) {
     descriptor.dimensions.forEach(dimension => {
-      grids.forEach((grid: Layout.IGridPlacement) => {
-        if (dimension.property === 'height') {
-          if (grid.height > dimension.maximum) {
-            grid.height = dimension.maximum;
-          } else if (grid.height < dimension.minimum) {
-            grid.height = dimension.minimum;
-          }
-        } else if (dimension.property === 'width') {
-          if (grid.width > dimension.maximum) {
-            grid.width = dimension.maximum;
-          } else if (grid.width < dimension.minimum) {
-            grid.width = dimension.minimum;
-          }
-        }
-      })
+      grids.forEach((grid: Layout.IGridPlacement) => verifyDimension(dimension, grid))
     })
   }
 
   return grids;
+}
+
+/**
+ * verifyDimension sets the property to the minimum or maximum value respectively.
+ */
+function verifyDimension (dimension: any, grid: any) {
+  if (grid[dimension.property] > dimension.maximum) {
+    grid[dimension.property] = dimension.maximum;
+  } else if (grid[dimension.property] < dimension.minimum) {
+    grid[dimension.property] = dimension.minimum;
+  }
 }
 
 /**
