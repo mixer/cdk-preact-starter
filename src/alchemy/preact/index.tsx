@@ -8,6 +8,8 @@
  * drag and drop editor might not work if you get rid of them.
  */
 
+export * from './Cooldown';
 export * from './Control';
 export * from './Scene';
+export * from './SparkPill';
 export * from './Stage';

@@ -31,8 +31,6 @@ $label-default-border-style: solid;
   justify-content: center;
 
   .mixer-label {
-    font-size: 14pt;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #ffffff;
+    @include control-font();
   }
 }

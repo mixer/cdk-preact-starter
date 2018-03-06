@@ -1,0 +1,116 @@
+@import '../../variables';
+@import '../../scrollbar';
+
+$textbox-margin: 4px;
+$textbox-padding: 18px;
+$textbox-border-size: 2px;
+
+.mixer-textbox-container {
+  height: calc(100% - (#{$textbox-margin} * 2));
+  display: flex;
+  flex-direction: column;
+  margin: $textbox-margin;
+
+  &.compact {
+    flex-direction: row;
+
+    .mixer-button {
+      margin-top: 0;
+      margin-left: 5px;
+      text-align: center;
+      max-height: unset;
+    }
+  }
+
+  > .mixer-spark-pill {
+    position: absolute;
+    right: 6px;
+  }
+
+  > .mixer-cooldown {
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
+    height: unset;
+  }
+
+  .mixer-button {
+    position: relative;
+    max-height: 40px;
+    min-height: 35px;
+    flex: 0.5;
+    top: unset;
+    left: unset;
+    right: unset;
+    bottom: unset;
+    margin-top: 8px;
+    color: white;
+    flex-direction: column;
+    font-family: $font-family-sans-serif;
+
+    &-content {
+      overflow: unset;
+
+      .cooldown {
+        display: none;
+      }
+    }
+
+    .mixer-spark-pill {
+      font-size: 1em;
+    }
+
+    .mixer-cooldown {
+      height: unset;
+      bottom: 0;
+    }
+
+  }
+}
+
+.mixer-textbox.mixer-has-focus {
+    border-color: rgb(0, 117, 213);
+}
+
+.mixer-textbox {
+  resize: none;
+  border: $textbox-border-size solid rgba(228, 238, 242, 0.22);
+  background: transparent;
+  width: calc(100% - #{$textbox-padding * 2} - #{$textbox-border-size * 2});
+  font-family: 'Segoe UI';
+  font-size: 17px;
+  color: #FFFFFF;
+  padding: 0 $textbox-padding;
+  vertical-align: middle;
+  flex: 1;
+
+  &:disabled {
+    opacity: 0.2;
+  }
+}
+
+textarea.mixer-textbox {
+  padding: 10px $textbox-padding;
+}
+
+.mixer-textbox-label-container {
+  height: auto;
+  margin-bottom: 5px;
+
+  .mixer-label {
+    @include control-font();
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.platform {
+  &-mobile {
+    @media screen and (max-width: 320px) {
+      .mixer-button.compact {
+        min-height: unset;
+      }
+    }
+  }
+}

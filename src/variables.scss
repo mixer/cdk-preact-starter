@@ -16,6 +16,13 @@ $easing-default-curve: cubic-bezier(0.455, 0.03, 0.515, 0.955) !default; // quad
 $easing-scene-ease-to-scale: -1.1 !default;
 
 $font-family-sans-serif: 'Titillium', sans-serif !default;
+$control-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+$scrollbars-size: 6px;
+$scrollbars-border-radius: 3em;
+$scrollbars-thumb-bg: white;
+$scrollbars-opacity: 0.2;
+$scrollbars-track-bg: transparent;
 
 
 @mixin layout-center-contents() {
@@ -30,4 +37,10 @@ $font-family-sans-serif: 'Titillium', sans-serif !default;
     left: 0;
     right: 0;
     bottom: 0;
+}
+
+@mixin control-font() {
+    font-size: 14pt;
+    font-family: $control-font-family;
+    color: #ffffff;
 }

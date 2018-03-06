@@ -3,7 +3,7 @@
  * Preact components. See the documentation on each class for further details.
  */
 
-import { display, ISettings, Layout } from '@mcph/miix-std';
+import { display, IControlDescriptor, ISettings, Layout } from '@mcph/miix-std';
 import { Component, h } from 'preact';
 import { fromEvent } from 'rxjs/observable/fromEvent';
 import { debounceTime, startWith } from 'rxjs/operators';
@@ -225,6 +225,33 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
 }
 
 /**
+ * verifyControlSizes enforces the minimum height and width a prefab control
+ * can be on a grid. This will override any height and width that are below
+ * the minimum value as well as throw an error to notify that the minimum values
+ * have not been met.
+ */
+function verifyControlSizes(mControl: MControl, descriptor: IControlDescriptor, grids: Layout.IGridPlacement[]): Layout.IGridPlacement[] {
+  if (descriptor.dimensions && descriptor.dimensions.length && grids && grids.length) {
+    descriptor.dimensions.forEach(dimension => {
+      grids.forEach((grid: Layout.IGridPlacement) => verifyDimension(dimension, grid))
+    })
+  }
+
+  return grids;
+}
+
+/**
+ * verifyDimension sets the property to the minimum or maximum value respectively.
+ */
+function verifyDimension (dimension: any, grid: any) {
+  if (grid[dimension.property] > dimension.maximum) {
+    grid[dimension.property] = dimension.maximum;
+  } else if (grid[dimension.property] < dimension.minimum) {
+    grid[dimension.property] = dimension.minimum;
+  }
+}
+
+/**
  * FixedGridControl is the container for individual controls in the fixed grid.
  * It renders a nested <Control /> component and passes in the correct styles.
  */
@@ -259,17 +286,19 @@ class FixedGridControl extends Component<{ resource: MControl; grid: number, mul
    * Returns the currently active grid for the control, if any can be found;
    */
   private getRelevantGrid(): Layout.IGridPlacement | undefined {
+    const descriptor = this.props.resource.descriptor();
     const activeGrid = Layout.gridLayouts[this.props.grid].size;
-    const control = this.props.resource as MControl;
-    const configuredGrids = control.get('position', []);
+    const mControl = this.props.resource as MControl;
+    let configuredGrids = mControl.get('position', []);
     if (configuredGrids.length === 0) {
       log.error(
-        `A control in scene "${control.scene.props.sceneID}" is ` +
+        `A control in scene "${mControl.scene.props.sceneID}" is ` +
           `missing a list of positions, we won't display it`,
-        control.toObject(),
+        mControl.toObject(),
       );
       return;
     }
+    configuredGrids = verifyControlSizes(mControl, descriptor, configuredGrids);
     return configuredGrids.find(g => g.size === activeGrid);
   }
 }

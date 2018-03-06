@@ -473,7 +473,7 @@ export class MControl<T extends Mixer.IControl = Mixer.IControl> extends Resourc
   public readonly state: State;
 
   /**
-   * The grid this control is showing on.
+   * The Grid this control shows on.
    */
   public grid: number;
 
