@@ -3,17 +3,16 @@
  * *****************/
 import * as Mixer from '@mcph/miix-std';
 import { Component, h } from 'preact';
+
 import { CoolDown, PreactControl, SparkPill } from '../../alchemy/preact';
 import { classes } from '../../alchemy/Style';
 
 import '../button/button.scss';
 import './textbox.scss';
 
-declare const window: any;
-
 @Mixer.Control({
   kind: 'textbox',
-  dimensions: [{ property: 'height', minimum: 4 }],
+  dimensions: [{ property: 'height', minimum: 4 }, { property: 'width', minimum: 10}],
 })
 export class TextBox extends PreactControl<{
   availableSparks: number;
@@ -97,8 +96,7 @@ export class TextBox extends PreactControl<{
         key={`control-${controlID}`}
         class={classContainer}
         name={`control-${controlID}`}
-        onFocus={this.focus}
-        onBlur={this.blur}
+        tabIndex={-1}
       >
         <Input
           class={textboxClasses}
@@ -106,8 +104,7 @@ export class TextBox extends PreactControl<{
           placeholder={this.placeholder}
           multiline={this.multiline}
           onClick={this.handleClick}
-          onKeyPress={this.handleKeyPress}
-          onFocus={this.focus}
+          onInput={this.handleChange}
           onBlur={this.handleBlur}
           disabled={this.disabled || this.state.cooldown}
           tabIndex={0}
@@ -136,16 +133,6 @@ export class TextBox extends PreactControl<{
     );
   }
 
-  protected focus = () => {
-    window.TVJS.DirectionalNavigation.enabled = false;
-  };
-
-  protected blur = () => {
-    setTimeout(() => {
-      window.TVJS.DirectionalNavigation.enabled = true;
-    });
-  };
-
   protected setReference = (input: Input) => {
     this.refInput = input;
   };
@@ -160,11 +147,11 @@ export class TextBox extends PreactControl<{
     this.forceUpdate();
   };
 
-  protected handleKeyPress = (evt: KeyboardEvent) => {
+  protected handleChange = (evt: any) => {
     const target = evt.target as HTMLInputElement;
     if (!this.multiline && !this.hasSubmit && !this.cost) {
-      console.log('change:', target.value);
-      this.control.giveInput({ event: 'change', value: target.value });
+      const value = target.value;
+      this.control.giveInput({ event: 'change', value });
     }
     if ((evt.keyCode === 13 && !this.multiline) || evt.keyCode === 10) {
       this.sendText();
@@ -176,7 +163,6 @@ export class TextBox extends PreactControl<{
       return;
     }
     const target = this.refInput.base as HTMLInputElement;
-    console.log('submit:', target.value);
     this.control.giveInput({ event: 'submit', value: target.value });
   };
 
