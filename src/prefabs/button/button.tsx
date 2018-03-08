@@ -8,6 +8,9 @@ import { blockRule, classes, css } from '../../alchemy/Style';
 import './button.scss';
 
 function sanitizeCSS (styles: string) {
+  if (!styles) {
+    return;
+  }
   const index = styles.indexOf(';');
   if (index >= 0) {
     styles = styles.substr(0, index);
