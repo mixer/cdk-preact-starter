@@ -7,6 +7,14 @@ import { blockRule, classes, css } from '../../alchemy/Style';
 
 import './button.scss';
 
+function sanitizeCSS (styles: string) {
+  const index = styles.indexOf(';');
+  if (index >= 0) {
+    styles = styles.substr(0, index);
+  }
+  return styles;
+}
+
 /**
  * ProgressBar is the bar underneat the buttons that appears when the progress
  * is greater than 0.
@@ -317,45 +325,45 @@ export class Button extends PreactControl<{
       <style>
         {// Custom border color for the button.
         blockRule(controlID, '.mixer-button', {
-          border: this.borderColor ? `2px solid ${this.borderColor}` : null,
-          backgroundColor: this.backgroundColor,
+          border: this.borderColor ? `2px solid ${sanitizeCSS(this.borderColor)}` : null,
+          backgroundColor: sanitizeCSS(this.backgroundColor),
           backgroundImage: this.backgroundImage
             ? `url(${this.backgroundImage})`
             : null,
         })}
         {// Custom border color on hover for the button.
         blockRule(controlID, '.mixer-button:hover', {
-          borderColor: this.focusColor,
+          borderColor: sanitizeCSS(this.focusColor),
         })}
         {// Custom border color on focus for the button.
         blockRule(
           controlID,
           ' .mixer-button:focus',
           {
-            borderColor: this.focusColor,
+            borderColor: sanitizeCSS(this.focusColor),
           },
           'xbox',
         )}
         {// Custom border color on active for the button.
         blockRule(controlID, '.mixer-button:active', {
-          borderColor: this.focusColor,
+          borderColor: sanitizeCSS(this.focusColor),
         })}
         {// Custom border color on active for the button.
         blockRule(controlID, '.mixer-button.active', {
-          borderColor: this.focusColor,
+          borderColor: sanitizeCSS(this.focusColor),
         })}
         {// Custom text size for the button.
         blockRule(controlID, '.mixer-button-content .mixer-button-text', {
-          fontSize: this.textSize,
-          color: this.textColor,
+          fontSize: sanitizeCSS(this.textSize),
+          color: sanitizeCSS(this.textColor),
         })}
         {// Custom accent color for the progress bar of the button.
         blockRule(controlID, '.mixer-progress-bar > div', {
-          background: this.accentColor,
+          background: sanitizeCSS(this.accentColor),
         })}
         {// Custom accent color for the cooldown spinner of the button.
         blockRule(controlID, '.mixer-cooldown > div::before', {
-          borderLeftColor: this.accentColor,
+          borderLeftColor: sanitizeCSS(this.accentColor),
         })}
       </style>
     );
