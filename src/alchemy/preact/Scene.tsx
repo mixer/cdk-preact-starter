@@ -28,7 +28,7 @@ export abstract class PreactScene<T, S = {}> extends Component<
     Mixer.display
       .settings()
       .pipe(untilUnmount(this))
-      .subscribe(settings => {
+      .subscribe((settings: Mixer.ISettings) => {
         this.setState(Object.assign({}, this.state, { settings }));
       });
   }
