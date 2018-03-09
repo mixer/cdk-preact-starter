@@ -107,6 +107,7 @@ export class TextBox extends PreactControl<{
           onInput={this.handleChange}
           onBlur={this.handleBlur}
           disabled={this.disabled || this.state.cooldown}
+          onKeyPress={this.keypress}
           tabIndex={0}
         />
         {!this.hasSubmit && !this.cost
@@ -153,10 +154,13 @@ export class TextBox extends PreactControl<{
       const value = target.value;
       this.control.giveInput({ event: 'change', value });
     }
+  };
+
+  protected keypress = (evt: KeyboardEvent) => {
     if ((evt.keyCode === 13 && !this.multiline) || evt.keyCode === 10) {
       this.sendText();
     }
-  };
+  }
 
   protected sendText = (evt?: MouseEvent) => {
     if (evt && !this.hasSubmit && !this.cost) {
