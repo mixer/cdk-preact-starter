@@ -1,0 +1,28 @@
+module.exports = [
+  {
+    paths: ['src', 'locales', 'readme.md', 'webpack.config.js', '.editorconfig', '.gitignore'],
+    action: 'include',
+  },
+  {
+    path: 'tsconfig.json',
+    action: 'rewrite',
+    fn: data => {
+      const contents = JSON.parse(data);
+      delete contents.compilerOptions.noImplicitAny;
+      delete contents.compilerOptions.noUnusedLocals;
+      return JSON.stringify(contents, null, 2);
+    },
+  },
+  {
+    path: 'package.json',
+    action: 'rewrite',
+    fn: data => {
+      const contents = JSON.parse(data);
+      ['tslint', 'tslint-microsoft-contrib'].forEach(dep => {
+        delete contents.devDependencies[dep];
+      });
+
+      return JSON.stringify(contents, null, 2);
+    },
+  },
+];
