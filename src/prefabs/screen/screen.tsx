@@ -143,9 +143,6 @@ export class Screen extends PreactControl<any, IScreenState> {
   };
 
   private sendCoords = (event: string, x: number, y: number) => {
-    const sx = x.toFixed(2);
-    const sy = y.toFixed(2);
-    console.log('event', event, 'x:', sx, 'y:', sy);
     this.control.giveInput({ event, x, y });
   };
 
