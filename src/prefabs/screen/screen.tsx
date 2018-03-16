@@ -149,7 +149,7 @@ export class Screen extends PreactControl<any, IScreenState> {
   private setMouseDown = (isDown: boolean) => {
     this.setState({
       ...this.state,
-      isMoving: isDown
+      isMoving: isDown,
     });
   };
 }
