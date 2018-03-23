@@ -10,7 +10,7 @@ const webpack = require('webpack');
 const path = require('path');
 
 const { CheckerPlugin } = require('awesome-typescript-loader');
-const { MixerPlugin } = require('@mcph/miix-cli');
+const { MixerPlugin } = require('@mcph/miix-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const CleanPlugin = require('clean-webpack-plugin');
 
