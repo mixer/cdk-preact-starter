@@ -33,6 +33,14 @@ const plugins = [
   new CheckerPlugin(),
   // Mixer dev server, handles standard library injection and locale building.
   new MixerPlugin({ homepage: 'src/index.html', locales: 'locales/*.json' }),
+  // The CopyPlugin copies your static assets into the build directory.
+  new CopyPlugin([
+    {
+      context: 'src/static',
+      from: '**/*',
+      to: path.resolve(__dirname, 'build/static'),
+    },
+  ]),
 ];
 
 if (isProduction) {
@@ -40,6 +48,19 @@ if (isProduction) {
     // CleanPlugin wipes the "build" directory before bundling to make sure
     // there aren't unnecessary files lying around and using up your quota.
     new CleanPlugin('build'),
+    // Uglify compresses JavaScript code to make download sizes smaller.
+    new webpack.optimize.UglifyJsPlugin({
+      warningsFilter: () => false,
+      sourceMap: false,
+      comments: false,
+      mangle: {
+        screw_ie8: true,
+        keep_fnames: true,
+      },
+      compress: {
+        screw_ie8: true,
+      },
+    }),
   );
 }
 
