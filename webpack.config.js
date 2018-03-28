@@ -25,6 +25,14 @@ const plugins = [
   new CheckerPlugin(),
   // Mixer dev server, handles standard library injection and locale building.
   new MixerPlugin({ homepage: 'src/index.html', locales: 'locales/*.json' }),
+  // The CopyPlugin copies your static assets into the build directory.
+  new CopyPlugin([
+    {
+      context: 'src/static',
+      from: '**/*',
+      to: path.resolve(__dirname, 'build/static'),
+    },
+  ]),
 ];
 
 if (isProduction) {
@@ -45,14 +53,6 @@ if (isProduction) {
         screw_ie8: true,
       },
     }),
-    // The CopyPlugin copies your static assets into the build directory.
-    new CopyPlugin([
-      {
-        context: 'src/static',
-        from: '**/*',
-        to: path.resolve(__dirname, 'build/static'),
-      },
-    ])
   );
 }
 
