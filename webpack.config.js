@@ -21,10 +21,6 @@ const CleanPlugin = require('clean-webpack-plugin');
 const isProduction = process.env.ENV === 'production';
 
 const plugins = [
-  // TypeScript checking, needed for `miix serve`.
-  new CheckerPlugin(),
-  // Mixer dev server, handles standard library injection and locale building.
-  new MixerPlugin({ homepage: 'src/index.html', locales: 'locales/*.json' }),
   // The CopyPlugin copies your static assets into the build directory.
   new CopyPlugin([
     {
@@ -33,6 +29,10 @@ const plugins = [
       to: path.resolve(__dirname, 'build/static'),
     },
   ]),
+  // TypeScript checking, needed for `miix serve`.
+  new CheckerPlugin(),
+  // Mixer dev server, handles standard library injection and locale building.
+  new MixerPlugin({ homepage: 'src/index.html', locales: 'locales/*.json' }),
 ];
 
 if (isProduction) {
@@ -76,20 +76,20 @@ module.exports = {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   module: {
-    loaders: [
+    rules: [
       // Load TypeScript files using the awesome-typescript-loader, to
       // transform them into plain JavaScript.
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
-        loaders: ['awesome-typescript-loader'],
+        use: ['awesome-typescript-loader'],
       },
       // Compile `scss` files using the sass loader, then pipe it through the
       // css-loader and style-loader to have it injected automatically into the
       // page when you `require('some-style-sheet.scss');`
       {
         test: /\.scss$/,
-        loaders: [
+        use: [
           'style-loader',
           {
             loader: 'css-loader',
@@ -102,7 +102,7 @@ module.exports = {
       // See the docs and examples in the HtmlControl for more info!
       {
         test: /\.(html|svg)$/,
-        loaders: [
+        use: [
           'file-loader',
         ],
       },
