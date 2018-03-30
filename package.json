@@ -1,5 +1,5 @@
 {
-  "name": "interactive-launchpad",
+  "name": "interactive-launchpad-screen",
   "version": "1.0.0",
   "description": "Standard kit for Mixer interactive",
   "scripts": {
@@ -10,8 +10,7 @@
     "fmt:style": "prettier --single-quote --trailing-comma all --parser typescript --print-width 100 --write \"src/**/*.{ts,tsx}\"",
     "publish:azure": "node bin/upload-to-azure.js"
   },
-  "interactive": {
-  },
+  "interactive": {},
   "author": "Connor Peet <connor@peet.io>",
   "license": "MIT",
   "dependencies": {
@@ -24,7 +23,6 @@
   },
   "devDependencies": {
     "@mcph/miix-cli": "^0.2.3",
-    "@mcph/miix-std": "^0.2.11",
     "@types/node": "^8.0.24",
     "awesome-typescript-loader": "^3.2.2",
     "clean-webpack-plugin": "^0.1.16",
