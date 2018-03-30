@@ -30,7 +30,6 @@ export class PreactStage extends Component<
     if (!this.interactive || !this.state.isReady) {
       return <ReadyOverlayComponent config={this.state.world.readyOverlay} />;
     }
-
     if (!this.state.scene) {
       return;
     }

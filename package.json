@@ -1,5 +1,5 @@
 {
-  "name": "interactive-launchpad",
+  "name": "interactive-launchpad-screen",
   "version": "1.0.0",
   "description": "Standard kit for Mixer interactive",
   "scripts": {
@@ -10,8 +10,7 @@
     "fmt:style": "prettier --single-quote --trailing-comma all --parser typescript --print-width 100 --write \"src/**/*.{ts,tsx}\"",
     "publish:azure": "node bin/upload-to-azure.js"
   },
-  "interactive": {
-  },
+  "interactive": {},
   "author": "Connor Peet <connor@peet.io>",
   "license": "MIT",
   "dependencies": {

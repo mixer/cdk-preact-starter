@@ -6,17 +6,33 @@ import { h } from 'preact';
 import { PreactControl } from '../../alchemy/preact';
 
 @Mixer.Control({ kind: 'screen' })
-export class Screen extends PreactControl {
-
+export class Screen extends PreactControl<any, any> {
   @Mixer.Input() public sendOnMove: boolean = false;
 
-  @Mixer.Input() public moveDebounce: number = 200;
+  @Mixer.Input() public moveDebounce: number = 50;
 
   private screenElement: HTMLDivElement;
   private debounceMove: any;
 
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      player: {
+        top: 0,
+        left: 0,
+        width: 0,
+        height: 0,
+      },
+    };
+  }
+
+  public componentWillMount() {
+    Mixer.display.position().subscribe(this.handleVideoResize);
+  }
+
   public render() {
     const { controlID } = this.props;
+    const { player: { top, left, width, height } } = this.state;
     return (
       <div
         ref={this.setReference}
@@ -26,47 +42,90 @@ export class Screen extends PreactControl {
         name={`control-${controlID}`}
         onMouseMove={this.mousemove}
         onMouseEnter={this.mousemove}
-        onMouseLeave={this.mousemove}
+        onMouseLeave={this.mouseup}
         onMouseDown={this.mousedown}
         onMouseUp={this.mouseup}
+        onTouchStart={this.touchstart}
+        onTouchMove={this.touchmove}
+        onTouchEnd={this.touchend}
+        onTouchCancel={this.touchend}
         style={{
           position: 'absolute',
-          height: '100px',
-          width: '100px',
-          border: '2px solid red'
+          top,
+          left,
+          width,
+          height,
         }}
-        >
-      </div>
+      />
     );
   }
+
+  protected handleVideoResize = (position: any) => {
+    const player = position.connectedPlayer;
+    this.setState({
+      ...this.state,
+      player,
+    });
+  };
 
   protected setReference = (div: HTMLDivElement) => {
     this.screenElement = div;
   };
 
+  private touchstart = (evt: TouchEvent) => {
+    this.sendTouchCoords('mousedown', evt);
+  };
+
+  private touchmove = (evt: TouchEvent) => {
+    this.sendTouchCoords('mousemove', evt);
+  };
+
+  private touchend = (evt: TouchEvent) => {
+    this.sendTouchCoords('mouseup', evt);
+  };
+
   private mousemove = (evt: MouseEvent) => {
     clearTimeout(this.debounceMove);
     this.debounceMove = setTimeout(() => {
-      this.sendCoords('mousemove', evt);
+      this.sendMouseCoords('mousemove', evt);
     }, this.moveDebounce);
-  }
+  };
 
   private mousedown = (evt: MouseEvent) => {
-    this.sendCoords('mousedown', evt);
-  }
+    this.sendMouseCoords('mousedown', evt);
+  };
 
   private mouseup = (evt: MouseEvent) => {
-    this.sendCoords('mouseup', evt);
-  }
+    this.sendMouseCoords('mouseup', evt);
+  };
 
-  private sendCoords = (event: string, evt: MouseEvent) => {
+  private sendTouchCoords = (event: string, evt: TouchEvent) => {
     const height = this.screenElement.clientHeight;
     const width = this.screenElement.clientWidth;
-    const relX = 2 * (evt.offsetX - 0) / width + -1;
-    const relY = 2 * (evt.offsetY - 0) / height + -1;
-    const x = relX.toFixed(2);
-    const y = relY.toFixed(2);
-    console.log('event', event, 'x:', x, 'y:', y);
+    let x;
+    let y;
+    if (event === 'mouseup') {
+      x = width - evt.changedTouches[0].pageX;
+      y = (height - evt.changedTouches[0].pageY) / height;
+    } else {
+      x = width - evt.targetTouches[0].pageX;
+      y = (height - evt.targetTouches[0].pageY) / height;
+    }
+    this.sendCoords(event, x, y);
+  };
+
+  private sendMouseCoords = (event: string, evt: MouseEvent) => {
+    const height = this.screenElement.clientHeight;
+    const width = this.screenElement.clientWidth;
+    const relX = evt.offsetX / width;
+    const relY = (height - evt.offsetY) / height;
+    this.sendCoords(event, relX, relY);
+  };
+
+  private sendCoords = (event: string, x: number, y: number) => {
+    const sx = x.toFixed(2);
+    const sy = y.toFixed(2);
+    console.log('event', event, 'x:', sx, 'y:', sy);
     this.control.giveInput({ event, x, y });
-  }
+  };
 }
