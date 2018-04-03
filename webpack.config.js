@@ -40,19 +40,6 @@ if (isProduction) {
     // CleanPlugin wipes the "build" directory before bundling to make sure
     // there aren't unnecessary files lying around and using up your quota.
     new CleanPlugin('build'),
-    // Uglify compresses JavaScript code to make download sizes smaller.
-    new webpack.optimize.UglifyJsPlugin({
-      warningsFilter: () => false,
-      sourceMap: false,
-      comments: false,
-      mangle: {
-        screw_ie8: true,
-        keep_fnames: true,
-      },
-      compress: {
-        screw_ie8: true,
-      },
-    }),
   );
 }
 
