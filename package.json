@@ -22,10 +22,10 @@
     "tippy.js": "^2.2.3"
   },
   "devDependencies": {
-    "@mcph/miix-webpack-plugin": "^0.1.2",
     "@mcph/miix-std": "^0.2.11",
+    "@mcph/miix-webpack-plugin": "^0.1.2",
     "@types/node": "^8.0.24",
-    "awesome-typescript-loader": "^3.2.2",
+    "awesome-typescript-loader": "^5.0.0-1",
     "clean-webpack-plugin": "^0.1.16",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.5",

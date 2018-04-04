@@ -7,6 +7,25 @@ import * as Mixer from '@mcph/miix-std';
  */
 export const log = Mixer.log;
 
+/**
+ * Intercept console.log/error/debug to send them to the Mixer logger too.
+ */
+function interceptLogs(consoleMethod: keyof typeof console, logMethod: keyof typeof Mixer.log) {
+  const originalFn = console[consoleMethod];
+  console[consoleMethod] = (...args: any[]) => {
+    Mixer.log[logMethod](...args);
+    return originalFn.apply(console, args);
+  };
+}
+
+interceptLogs('error', 'error');
+interceptLogs('log', 'info');
+interceptLogs('info', 'info');
+interceptLogs('debug', 'debug');
+interceptLogs('warn', 'warn');
+
+console.error('wut');
+
 const compactWhitespace = (str: string) => str.replace(/[ \n\r\t]+/g, ' ');
 
 /**
