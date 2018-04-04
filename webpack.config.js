@@ -62,6 +62,9 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
+  // The build mode so that Webpack knows whether to compress
+  // our assets for faster loading.
+  mode: isProduction ? 'production' : 'development',
   module: {
     rules: [
       // Load TypeScript files using the awesome-typescript-loader, to
