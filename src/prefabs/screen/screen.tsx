@@ -5,9 +5,23 @@ import * as Mixer from '@mcph/miix-std';
 import { h } from 'preact';
 import { PreactControl } from '../../alchemy/preact';
 
+interface IPlayer {
+  x: number;
+  y: number;
+  height: number;
+  width: number;
+}
+
+interface IScreenState {
+  player: IPlayer;
+  isMoving: boolean;
+}
+
 @Mixer.Control({ kind: 'screen' })
-export class Screen extends PreactControl<any, any> {
+export class Screen extends PreactControl<any, IScreenState> {
   @Mixer.Input() public sendOnMove: boolean = false;
+
+  @Mixer.Input() public sendMoveOnMouseDown: boolean = true;
 
   @Mixer.Input() public moveDebounce: number = 50;
 
@@ -73,6 +87,7 @@ export class Screen extends PreactControl<any, any> {
   };
 
   private touchstart = (evt: TouchEvent) => {
+    this.setMouseDown(true);
     this.sendTouchCoords('mousedown', evt);
   };
 
@@ -81,21 +96,26 @@ export class Screen extends PreactControl<any, any> {
   };
 
   private touchend = (evt: TouchEvent) => {
+    this.setMouseDown(false);
     this.sendTouchCoords('mouseup', evt);
   };
 
   private mousemove = (evt: MouseEvent) => {
-    clearTimeout(this.debounceMove);
-    this.debounceMove = setTimeout(() => {
-      this.sendMouseCoords('mousemove', evt);
-    }, this.moveDebounce);
+    if (!this.sendMoveOnMouseDown || this.state.isMoving) {
+      clearTimeout(this.debounceMove);
+      this.debounceMove = setTimeout(() => {
+        this.sendMouseCoords('mousemove', evt);
+      }, this.moveDebounce);
+    }
   };
 
   private mousedown = (evt: MouseEvent) => {
+    this.setMouseDown(true);
     this.sendMouseCoords('mousedown', evt);
   };
 
   private mouseup = (evt: MouseEvent) => {
+    this.setMouseDown(false);
     this.sendMouseCoords('mouseup', evt);
   };
 
@@ -127,5 +147,12 @@ export class Screen extends PreactControl<any, any> {
     const sy = y.toFixed(2);
     console.log('event', event, 'x:', sx, 'y:', sy);
     this.control.giveInput({ event, x, y });
+  };
+
+  private setMouseDown = (isDown: boolean) => {
+    this.setState({
+      ...this.state,
+      isMoving: isDown
+    });
   };
 }
