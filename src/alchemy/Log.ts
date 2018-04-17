@@ -10,7 +10,10 @@ export const log = Mixer.log;
 /**
  * Intercept console.log/error/debug to send them to the Mixer logger too.
  */
-function interceptLogs(consoleMethod: keyof typeof console, logMethod: keyof typeof Mixer.log) {
+function interceptLogs(
+  consoleMethod: keyof typeof console,
+  logMethod: keyof typeof Mixer.log,
+) {
   const originalFn = console[consoleMethod];
   console[consoleMethod] = (...args: any[]) => {
     Mixer.log[logMethod](...args);
@@ -58,7 +61,9 @@ export function assert(value: any, message: string) {
 /**
  * Guard wraps the provided function and catches and logs assertionerrors.
  */
-export function guard<R, T = undefined>(fn: (arg: T) => R): (arg: T) => R | undefined {
+export function guard<R, T = undefined>(
+  fn: (arg: T) => R,
+): (arg: T) => R | undefined {
   return function() {
     try {
       // tslint:disable-next-line
