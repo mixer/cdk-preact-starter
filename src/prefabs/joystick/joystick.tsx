@@ -281,7 +281,7 @@ export class Joystick extends PreactControl {
       }
     }, 300);
 
-    this.sendInputToInteractive(0, 0);
+    this.throttledInputSender(0, 0);
   };
 
   /**
