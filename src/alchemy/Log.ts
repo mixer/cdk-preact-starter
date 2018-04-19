@@ -27,8 +27,6 @@ interceptLogs('info', 'info');
 interceptLogs('debug', 'debug');
 interceptLogs('warn', 'warn');
 
-console.error('wut');
-
 const compactWhitespace = (str: string) => str.replace(/[ \n\r\t]+/g, ' ');
 
 /**
