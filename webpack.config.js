@@ -8,6 +8,7 @@
 
 const webpack = require('webpack');
 const path = require('path');
+const fs = require('fs');
 
 const { CheckerPlugin } = require('awesome-typescript-loader');
 const { MixerPlugin } = require('@mixer/cdk-webpack-plugin');
@@ -19,6 +20,10 @@ const CleanPlugin = require('clean-webpack-plugin');
  * when you run `miix build.`
  */
 const isProduction = process.env.ENV === 'production';
+
+const unique = Math.random()
+  .toString(36)
+  .substring(2, 15);
 
 const plugins = [
   // The CopyPlugin copies your static assets into the build directory.
@@ -32,7 +37,11 @@ const plugins = [
   // TypeScript checking, needed for `miix serve`.
   new CheckerPlugin(),
   // Mixer dev server, handles standard library injection and locale building.
-  new MixerPlugin({ homepage: 'src/index.html', locales: 'locales/*.json' }),
+  new MixerPlugin({
+    homepage: 'src/index.html',
+    locales: 'locales/*.json',
+    unique,
+  }),
 ];
 
 if (isProduction) {
@@ -69,7 +78,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'build'),
     publicPath: '',
-    filename: 'index.js',
+    filename: `index.${unique}.js`,
   },
   // Tell webpack that these file extensions are source code that we can load:
   resolve: {
