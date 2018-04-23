@@ -7,15 +7,16 @@ import { blockRule, classes, css } from '../../alchemy/Style';
 
 import './button.scss';
 
-function sanitizeCSS (styles: string) {
-  if (!styles) {
+function sanitizeCSS(styles: string) {
+  let scrubbedStyle = styles;
+  if (!scrubbedStyle) {
     return;
   }
-  const index = styles.indexOf(';');
+  const index = scrubbedStyle.indexOf(';');
   if (index >= 0) {
-    styles = styles.substr(0, index);
+    scrubbedStyle = scrubbedStyle.substr(0, index);
   }
-  return styles;
+  return scrubbedStyle;
 }
 
 /**
@@ -328,7 +329,9 @@ export class Button extends PreactControl<{
       <style>
         {// Custom border color for the button.
         blockRule(controlID, '.mixer-button', {
-          border: this.borderColor ? `2px solid ${sanitizeCSS(this.borderColor)}` : null,
+          border: this.borderColor
+            ? `2px solid ${sanitizeCSS(this.borderColor)}`
+            : null,
           backgroundColor: sanitizeCSS(this.backgroundColor),
           backgroundImage: this.backgroundImage
             ? `url(${this.backgroundImage})`

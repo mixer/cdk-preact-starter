@@ -8,39 +8,42 @@ import { FixedGridLayout, FlexLayout } from './Layout';
 export type SceneProps<S> = { resource: MScene<S & Mixer.IScene> } & S &
   Mixer.IScene;
 
+interface ISceneState {
+  settings: Mixer.ISettings;
+  containers: Mixer.Layout.IContainer[];
+}
+
 /**
  * PreactScene is the base scene. You can extend and override this scene.
  */
 export abstract class PreactScene<T, S = {}> extends Component<
   SceneProps<S>,
-  T & { settings: Mixer.ISettings; containers: Mixer.Layout.IContainer[] }
+  T & ISceneState
 > {
   protected scene: MScene<S & Mixer.IScene>;
 
   constructor(props: SceneProps<S>) {
     super(props);
     this.scene = props.resource;
-    this.setState(
-      Object.assign({}, this.state, { containers: props.containers }),
-    );
+    this.setState({
+      ...(this.state as ISceneState),
+      containers: props.containers,
+    });
   }
 
-  /**
-   * @override
-   */
   public componentWillMount() {
     Mixer.display
       .settings()
       .pipe(untilUnmount(this))
       .subscribe((settings: Mixer.ISettings) => {
-        this.setState(Object.assign({}, this.state, { settings }));
+        this.setState({
+          ...(this.state as ISceneState),
+          settings,
+        });
       });
     this.updateStateContainers(this.props);
   }
 
-  /**
-   * @override
-   */
   public componentWillReceiveProps(nextProps: SceneProps<S>) {
     this.scene = nextProps.resource;
     this.updateStateContainers(nextProps);
@@ -71,14 +74,17 @@ export abstract class PreactScene<T, S = {}> extends Component<
       control => control.kind === 'screen',
     );
     if (screenControl) {
-      const newContainers = Object.assign([], this.state.containers, [
-        {
-          children: [{ controlID: screenControl.controlID }],
-        },
-      ]);
-      this.setState(
-        Object.assign({}, this.state, { containers: newContainers }),
-      );
+      let newContainers: Mixer.Layout.IContainer[] = [];
+      if (this.state.containers) {
+        newContainers = [...this.state.containers];
+      }
+      newContainers.push({
+        children: [{ controlID: screenControl.controlID }],
+      });
+      this.setState({
+        ...(this.state as ISceneState),
+        containers: newContainers,
+      });
     }
   }
 }

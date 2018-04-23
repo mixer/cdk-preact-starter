@@ -1,4 +1,5 @@
 import * as Mixer from '@mcph/miix-std';
+import * as stringify from 'json-stringify-safe';
 
 /**
  * `log` has methods to capture messages from your controls. These'll be
@@ -16,7 +17,9 @@ function interceptLogs(
 ) {
   const originalFn = console[consoleMethod];
   console[consoleMethod] = (...args: any[]) => {
-    Mixer.log[logMethod](...args);
+    const newArgs: string[] = [];
+    args.forEach(arg => newArgs.push(stringify(arg)));
+    Mixer.log[logMethod](...newArgs);
     return originalFn.apply(console, args);
   };
 }
