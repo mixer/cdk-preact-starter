@@ -1,4 +1,4 @@
-import * as Mixer from '@mcph/miix-std';
+import * as Mixer from '@mixer/cdk-std';
 import { h, render } from 'preact';
 import { HtmlStringControl } from './prefabs/html/html';
 

@@ -3,7 +3,7 @@
  * Preact components. See the documentation on each class for further details.
  */
 
-import { display, IControlDescriptor, ISettings, Layout } from '@mcph/miix-std';
+import { display, IControlDescriptor, ISettings, Layout } from '@mixer/cdk-std';
 import { Component, h } from 'preact';
 import { fromEvent } from 'rxjs/observable/fromEvent';
 import { debounceTime, startWith } from 'rxjs/operators';
