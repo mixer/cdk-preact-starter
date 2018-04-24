@@ -64,18 +64,20 @@ export abstract class PreactScene<T, S = {}> extends Component<SceneProps<S>, T 
 
   private updateStateContainers(props: SceneProps<S>) {
     const screenControl = props.controls.find(control => control.kind === 'screen');
-    if (screenControl) {
-      let newContainers: Mixer.Layout.IContainer[] = [];
-      if (this.state.containers) {
-        newContainers = [...this.state.containers];
-      }
-      newContainers.push({
-        children: [{ controlID: screenControl.controlID }],
-      });
-      this.setState({
-        ...(this.state as ISceneState),
-        containers: newContainers,
-      });
+    if (!screenControl) {
+      return;
     }
+
+    let newContainers: Mixer.Layout.IContainer[] = [];
+    if (this.state.containers) {
+      newContainers = [...this.state.containers];
+    }
+    newContainers.push({
+      children: [{ controlID: screenControl.controlID }],
+    });
+    this.setState({
+      ...(this.state as ISceneState),
+      containers: newContainers,
+    });
   }
 }
