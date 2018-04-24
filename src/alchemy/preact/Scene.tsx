@@ -5,8 +5,7 @@ import { MScene } from '../State';
 import { untilUnmount } from '../Toolbox';
 import { FixedGridLayout, FlexLayout } from './Layout';
 
-export type SceneProps<S> = { resource: MScene<S & Mixer.IScene> } & S &
-  Mixer.IScene;
+export type SceneProps<S> = { resource: MScene<S & Mixer.IScene> } & S & Mixer.IScene;
 
 interface ISceneState {
   settings: Mixer.ISettings;
@@ -16,10 +15,7 @@ interface ISceneState {
 /**
  * PreactScene is the base scene. You can extend and override this scene.
  */
-export abstract class PreactScene<T, S = {}> extends Component<
-  SceneProps<S>,
-  T & ISceneState
-> {
+export abstract class PreactScene<T, S = {}> extends Component<SceneProps<S>, T & ISceneState> {
   protected scene: MScene<S & Mixer.IScene>;
 
   constructor(props: SceneProps<S>) {
@@ -60,19 +56,14 @@ export abstract class PreactScene<T, S = {}> extends Component<
   }
 
   protected getFlexLayoutEngine() {
-    if (
-      this.state.containers ||
-      this.props.controls.find(control => control.kind === 'screen')
-    ) {
+    if (this.state.containers || this.props.controls.find(control => control.kind === 'screen')) {
       return FlexLayout;
     }
     return null;
   }
 
   private updateStateContainers(props: SceneProps<S>) {
-    const screenControl = props.controls.find(
-      control => control.kind === 'screen',
-    );
+    const screenControl = props.controls.find(control => control.kind === 'screen');
     if (screenControl) {
       let newContainers: Mixer.Layout.IContainer[] = [];
       if (this.state.containers) {

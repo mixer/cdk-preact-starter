@@ -56,12 +56,7 @@ export class ResourceHolder<S, T extends Resource<S>> extends Component<
   }
 
   public render() {
-    return (
-      <this.props.component
-        resource={this.props.resource}
-        {...this.state.props}
-      />
-    );
+    return <this.props.component resource={this.props.resource} {...this.state.props} />;
   }
 
   @bind

@@ -53,15 +53,9 @@ export class State extends EventEmitter {
   }
 
   public on(event: 'groupCreate', handler: (group: Group) => void): this;
-  public on(
-    event: 'groupDelete',
-    handler: (group: Group, ev: Mixer.IGroupDelete) => void,
-  ): this;
+  public on(event: 'groupDelete', handler: (group: Group, ev: Mixer.IGroupDelete) => void): this;
   public on(event: 'sceneCreate', handler: (scene: MScene) => void): this;
-  public on(
-    event: 'sceneDelete',
-    handler: (scene: MScene, ev: Mixer.ISceneDelete) => void,
-  ): this;
+  public on(event: 'sceneDelete', handler: (scene: MScene, ev: Mixer.ISceneDelete) => void): this;
   public on(event: 'ready', handler: (isReady: boolean) => void): this;
   public on(event: string, handler: (...args: any[]) => void): this {
     super.on(event, handler);
@@ -160,10 +154,7 @@ export class State extends EventEmitter {
             this.scenes[g.sceneID],
             `Tried to assign group to "${g.sceneID}", but it didn't exist`,
           );
-          const group = (this.groups[g.groupID] = new Group(
-            this.scenes[g.sceneID],
-            g,
-          ));
+          const group = (this.groups[g.groupID] = new Group(this.scenes[g.sceneID], g));
           this.emit('groupCreate', group);
         });
       }),
@@ -320,9 +311,7 @@ export class Group<T extends Mixer.IGroup = Mixer.IGroup> extends Resource<T> {
  * be empty; you'll want to wait on the first `update`, or the Scene's `ready`
  * event, before propogating anything.
  */
-export class Participant<
-  T extends Mixer.IParticipant = Mixer.IParticipant
-> extends Resource<T> {
+export class Participant<T extends Mixer.IParticipant = Mixer.IParticipant> extends Resource<T> {
   /**
    * The State this participant belongs to.
    */
@@ -348,9 +337,7 @@ export class Participant<
   protected update(props: T) {
     assert(
       this.state.groups[props.groupID],
-      `Tried to move participant to group "${
-        props.groupID
-      }", but it didn't exist`,
+      `Tried to move participant to group "${props.groupID}", but it didn't exist`,
     );
 
     (<any>this).group = this.state.groups[props.groupID];
@@ -392,9 +379,7 @@ export class MScene<T extends Mixer.IScene = Mixer.IScene> extends Resource<T> {
   public toObject(): T {
     return {
       ...(<any>this.props),
-      controls: Object.keys(this.controls).map(k =>
-        this.controls[k].toObject(),
-      ),
+      controls: Object.keys(this.controls).map(k => this.controls[k].toObject()),
     };
   }
 
@@ -436,11 +421,7 @@ export class MScene<T extends Mixer.IScene = Mixer.IScene> extends Resource<T> {
         `Tried to create control "${control.controlID}", but it already exists`,
       );
 
-      this.controls[control.controlID] = new MControl(
-        control.controlID,
-        this,
-        control,
-      );
+      this.controls[control.controlID] = new MControl(control.controlID, this, control);
       this.emit('update', this.toObject());
     });
   }
@@ -477,9 +458,7 @@ export class MScene<T extends Mixer.IScene = Mixer.IScene> extends Resource<T> {
 /**
  * Control is a control type in the scene.
  */
-export class MControl<
-  T extends Mixer.IControl = Mixer.IControl
-> extends Resource<T> {
+export class MControl<T extends Mixer.IControl = Mixer.IControl> extends Resource<T> {
   /**
    * The Scene this control belongs to.
    */

@@ -165,10 +165,7 @@ export class Button extends PreactControl<{
   }
 
   public componentWillUnmount() {
-    this.control.state.participant.removeListener(
-      'update',
-      this.updateAvailableSparks,
-    );
+    this.control.state.participant.removeListener('update', this.updateAvailableSparks);
     window.removeEventListener('keydown', this.keyDown);
     window.removeEventListener('keyup', this.keyUp);
   }
@@ -201,10 +198,7 @@ export class Button extends PreactControl<{
             })}
           >
             <div class="mixer-button-text">{this.text}</div>
-            <SparkPill
-              cost={this.cost}
-              available={this.state.availableSparks}
-            />
+            <SparkPill cost={this.cost} available={this.state.availableSparks} />
           </div>
           <CoolDown
             cooldown={this.cooldown}
@@ -222,10 +216,7 @@ export class Button extends PreactControl<{
     if (this.disabled) {
       this.gamepad.unregisterButtonListener(this.gamepadButtonPress);
     } else if (typeof this.gamepadButton === 'number') {
-      this.gamepad.registerButtonListener(
-        this.gamepadButton,
-        this.gamepadButtonPress,
-      );
+      this.gamepad.registerButtonListener(this.gamepadButton, this.gamepadButtonPress);
     }
   }
 
@@ -281,9 +272,7 @@ export class Button extends PreactControl<{
       ev.keyCode === this.keyCode &&
       this.state.keysPressed.indexOf(ev.keyCode) >= 0
     ) {
-      const newKeysPressed = this.state.keysPressed.filter(
-        i => i !== ev.keyCode,
-      );
+      const newKeysPressed = this.state.keysPressed.filter(i => i !== ev.keyCode);
       this.control.giveInput({ event: 'keyup' });
       this.setState({
         ...this.state,
@@ -309,17 +298,13 @@ export class Button extends PreactControl<{
 
   private isCompactHeight = (): boolean => {
     const grid = Mixer.Layout.gridLayouts[this.props.resource.grid].size;
-    const gridPlacement = this.props.position.find(
-      gplace => gplace.size === grid,
-    );
+    const gridPlacement = this.props.position.find(gplace => gplace.size === grid);
     return !(!gridPlacement || gridPlacement.height >= 6);
   };
 
   private isCompactWidth = (): boolean => {
     const grid = Mixer.Layout.gridLayouts[this.props.resource.grid].size;
-    const gridPlacement = this.props.position.find(
-      gplace => gplace.size === grid,
-    );
+    const gridPlacement = this.props.position.find(gplace => gplace.size === grid);
     return !(!gridPlacement || gridPlacement.width >= 8);
   };
 
@@ -329,13 +314,9 @@ export class Button extends PreactControl<{
       <style>
         {// Custom border color for the button.
         blockRule(controlID, '.mixer-button', {
-          border: this.borderColor
-            ? `2px solid ${sanitizeCSS(this.borderColor)}`
-            : null,
+          border: this.borderColor ? `2px solid ${sanitizeCSS(this.borderColor)}` : null,
           backgroundColor: sanitizeCSS(this.backgroundColor),
-          backgroundImage: this.backgroundImage
-            ? `url(${this.backgroundImage})`
-            : null,
+          backgroundImage: this.backgroundImage ? `url(${this.backgroundImage})` : null,
         })}
         {// Custom border color on hover for the button.
         blockRule(controlID, '.mixer-button:hover', {

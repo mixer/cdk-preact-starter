@@ -43,10 +43,6 @@ export class DefaultScene extends PreactScene<{}> {
         />,
       );
     }
-    return (
-      <div class={`mixer-default-scene scene-${this.scene.props.sceneID}`}>
-        {renders}
-      </div>
-    );
+    return <div class={`mixer-default-scene scene-${this.scene.props.sceneID}`}>{renders}</div>;
   }
 }
