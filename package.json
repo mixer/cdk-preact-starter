@@ -1,5 +1,5 @@
 {
-  "name": "interactive-launchpad-alpha",
+  "name": "interactive-launchpad",
   "version": "1.0.0",
   "description": "Standard kit for Mixer interactive",
   "scripts": {
@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@mcph/miix-std": "^0.2.13",
-    "@mcph/miix-webpack-plugin": "^0.1.2",
+    "@mcph/miix-webpack-plugin": "^0.1.4",
     "@types/node": "^8.0.24",
     "awesome-typescript-loader": "^5.0.0-1",
     "clean-webpack-plugin": "^0.1.16",
