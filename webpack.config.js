@@ -60,7 +60,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'build'),
     publicPath: '',
-    filename: `index.js`,
+    filename: 'index.js',
   },
   // Tell webpack that these file extensions are source code that we can load:
   resolve: {
