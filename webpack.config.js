@@ -21,10 +21,6 @@ const CleanPlugin = require('clean-webpack-plugin');
  */
 const isProduction = process.env.ENV === 'production';
 
-const unique = Math.random()
-  .toString(36)
-  .substring(2, 15);
-
 const plugins = [
   // The CopyPlugin copies your static assets into the build directory.
   new CopyPlugin([
@@ -40,7 +36,6 @@ const plugins = [
   new MixerPlugin({
     homepage: 'src/index.html',
     locales: 'locales/*.json',
-    unique,
   }),
 ];
 
@@ -78,7 +73,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'build'),
     publicPath: '',
-    filename: `index.${unique}.js`,
+    filename: `index.js`,
   },
   // Tell webpack that these file extensions are source code that we can load:
   resolve: {
