@@ -1,4 +1,4 @@
-import * as Mixer from '@mcph/miix-std';
+import * as Mixer from '@mixer/cdk-std';
 import { h, render } from 'preact';
 import { HtmlStringControl } from './prefabs/html/html';
 
@@ -7,7 +7,6 @@ import { Button as ButtonControl } from './prefabs/button/button';
 import { DefaultScene } from './prefabs/default-scene/scene';
 import { Joystick as JoystickControl } from './prefabs/joystick/joystick';
 import { Label as LabelControl } from './prefabs/label/label';
-
 import { TextBox as TextboxControl } from './prefabs/textbox/textbox';
 // Import our custom CSS.
 require('./style.scss');
@@ -20,7 +19,7 @@ const registry = new Mixer.Registry().register(
   JoystickControl,
   DefaultScene,
   LabelControl,
-  TextboxControl
+  TextboxControl,
 );
 
 // Do the thing!

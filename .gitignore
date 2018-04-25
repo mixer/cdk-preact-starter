@@ -61,3 +61,5 @@ build
 dist
 *.tar.gz
 .vscode
+
+/.miix

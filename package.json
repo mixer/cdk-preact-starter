@@ -10,8 +10,7 @@
     "fmt:style": "prettier --single-quote --trailing-comma all --parser typescript --print-width 100 --write \"src/**/*.{ts,tsx}\"",
     "publish:azure": "node bin/upload-to-azure.js"
   },
-  "interactive": {
-  },
+  "interactive": {},
   "author": "Connor Peet <connor@peet.io>",
   "license": "MIT",
   "dependencies": {
@@ -23,14 +22,15 @@
     "tippy.js": "^2.2.3"
   },
   "devDependencies": {
-    "@mcph/miix-cli": "^0.2.3",
-    "@mcph/miix-std": "^0.2.11",
+    "@mixer/cdk-std": "^0.2.14",
+    "@mixer/cdk-webpack-plugin": "^0.1.4",
     "@types/node": "^8.0.24",
-    "awesome-typescript-loader": "^3.2.2",
+    "awesome-typescript-loader": "^5.0.0-1",
     "clean-webpack-plugin": "^0.1.16",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.5",
     "file-loader": "^0.11.2",
+    "json-stringify-safe": "^5.0.1",
     "node-sass": "^4.5.3",
     "npm-run-all": "^4.1.1",
     "prettier": "^1.6.1",
@@ -39,7 +39,8 @@
     "tslint": "^5.7.0",
     "tslint-microsoft-contrib": "^5.0.1",
     "typescript": "^2.7.2",
-    "webpack": "^3.5.3",
-    "webpack-dev-server": "^2.7.1"
+    "webpack": "^4.4.1",
+    "webpack-cli": "^2.0.13",
+    "webpack-dev-server": "^3.1.1"
   }
 }

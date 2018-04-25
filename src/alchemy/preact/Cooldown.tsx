@@ -1,4 +1,4 @@
-import * as Mixer from '@mcph/miix-std';
+import * as Mixer from '@mixer/cdk-std';
 import { Component, h } from 'preact';
 import { classes } from '../../alchemy/Style';
 
@@ -55,12 +55,12 @@ export class CoolDown extends Component<
           progress: !!this.props.progress,
         })}
       >
-        <div class={classes({
-            hidden: this.props.hideTime
-          })}>
-          <div class="time">
-            {prettyTime(this.state.ttl + 1)}
-          </div>
+        <div
+          class={classes({
+            hidden: this.props.hideTime,
+          })}
+        >
+          <div class="time">{prettyTime(this.state.ttl + 1)}</div>
         </div>
       </div>
     );

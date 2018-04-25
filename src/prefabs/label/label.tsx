@@ -1,7 +1,7 @@
 /*******************
  * Label
  * *****************/
-import * as Mixer from '@mcph/miix-std';
+import * as Mixer from '@mixer/cdk-std';
 import { h } from 'preact';
 import { PreactControl } from '../../alchemy/preact';
 import { blockRule } from '../../alchemy/Style';

@@ -1,7 +1,7 @@
 /*******************
  * TextBox
  * *****************/
-import * as Mixer from '@mcph/miix-std';
+import * as Mixer from '@mixer/cdk-std';
 import { Component, h } from 'preact';
 
 import { CoolDown, PreactControl, SparkPill } from '../../alchemy/preact';
@@ -12,7 +12,7 @@ import './textbox.scss';
 
 @Mixer.Control({
   kind: 'textbox',
-  dimensions: [{ property: 'height', minimum: 4 }, { property: 'width', minimum: 10}],
+  dimensions: [{ property: 'height', minimum: 4 }, { property: 'width', minimum: 10 }],
 })
 export class TextBox extends PreactControl<{
   availableSparks: number;
@@ -75,10 +75,7 @@ export class TextBox extends PreactControl<{
   }
 
   public componentWillUnmount() {
-    this.control.state.participant.removeListener(
-      'update',
-      this.updateAvailableSparks,
-    );
+    this.control.state.participant.removeListener('update', this.updateAvailableSparks);
   }
   public render() {
     const { controlID } = this.props;
@@ -111,12 +108,7 @@ export class TextBox extends PreactControl<{
           tabIndex={0}
         />
         {!this.hasSubmit && !this.cost
-          ? [
-              <CoolDown
-                cooldown={this.cooldown}
-                onCooldownEnd={this.endCooldown}
-              />,
-            ]
+          ? [<CoolDown cooldown={this.cooldown} onCooldownEnd={this.endCooldown} />]
           : null}
         <Button
           submitText={this.submitText}
@@ -160,7 +152,7 @@ export class TextBox extends PreactControl<{
     if ((evt.keyCode === 13 && !this.multiline) || evt.keyCode === 10) {
       this.sendText();
     }
-  }
+  };
 
   protected sendText = (evt?: MouseEvent) => {
     if (evt && !this.hasSubmit && !this.cost) {
@@ -186,17 +178,13 @@ export class TextBox extends PreactControl<{
 
   private isCompactHeight = (): boolean => {
     const grid = Mixer.Layout.gridLayouts[this.props.resource.grid].size;
-    const gridPlacement = this.props.position.find(
-      gplace => gplace.size === grid,
-    );
+    const gridPlacement = this.props.position.find(gplace => gplace.size === grid);
     return !(!gridPlacement || gridPlacement.height >= 7);
   };
 
   private isCompactWidth = (): boolean => {
     const grid = Mixer.Layout.gridLayouts[this.props.resource.grid].size;
-    const gridPlacement = this.props.position.find(
-      gplace => gplace.size === grid,
-    );
+    const gridPlacement = this.props.position.find(gplace => gplace.size === grid);
     return !(!gridPlacement || gridPlacement.width >= 8);
   };
 }
@@ -230,13 +218,8 @@ class Button extends Component<any, any> {
               cooldown: this.props.cooldown,
             })}
           >
-            <div class="mixer-button-text">
-              {this.props.submitText || 'Submit'}
-            </div>
-            <SparkPill
-              cost={this.props.cost}
-              available={this.props.availableSparks}
-            />
+            <div class="mixer-button-text">{this.props.submitText || 'Submit'}</div>
+            <SparkPill cost={this.props.cost} available={this.props.availableSparks} />
           </div>
           <CoolDown
             cooldown={this.props.cooldown}
@@ -254,5 +237,5 @@ class Button extends Component<any, any> {
     if (evt.keyCode === 13) {
       this.props.onClick();
     }
-  }
+  };
 }
