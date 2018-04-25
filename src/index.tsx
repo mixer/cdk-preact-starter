@@ -5,6 +5,7 @@ import { HtmlStringControl } from './prefabs/html/html';
 import { PreactStage } from './alchemy/preact/index';
 import { Button as ButtonControl } from './prefabs/button/button';
 import { DefaultScene } from './prefabs/default-scene/scene';
+import { Dropdown as DropdownControl } from './prefabs/dropdown/dropdown';
 import { Joystick as JoystickControl } from './prefabs/joystick/joystick';
 import { Label as LabelControl } from './prefabs/label/label';
 
@@ -19,6 +20,7 @@ const registry = new Mixer.Registry().register(
   ButtonControl,
   JoystickControl,
   DefaultScene,
+  DropdownControl,
   LabelControl,
   TextboxControl
 );
