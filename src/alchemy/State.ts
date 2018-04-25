@@ -1,4 +1,4 @@
-import * as Mixer from '@mcph/miix-std';
+import * as Mixer from '@mixer/cdk-std';
 import { EventEmitter } from 'eventemitter3';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
@@ -375,12 +375,12 @@ export class MScene<T extends Mixer.IScene = Mixer.IScene> extends Resource<T> {
 
   /**
    * Returns the resource's plain properties.
-   * @override
    */
   public toObject(): T {
-    return Object.assign({}, this.props, {
+    return {
+      ...(<any>this.props),
       controls: Object.keys(this.controls).map(k => this.controls[k].toObject()),
-    });
+    };
   }
 
   /**
@@ -405,9 +405,6 @@ export class MScene<T extends Mixer.IScene = Mixer.IScene> extends Resource<T> {
     return this;
   }
 
-  /**
-   * @override
-   */
   protected update(value: T) {
     remap(() => this.state.registry.getScene(value.sceneID));
     super.update(value);
@@ -515,9 +512,6 @@ export class MControl<T extends Mixer.IControl = Mixer.IControl> extends Resourc
     return this;
   }
 
-  /**
-   * @override
-   */
   protected update(value: T) {
     remap(() => this.state.registry.getControl(value.kind));
     super.update(value);

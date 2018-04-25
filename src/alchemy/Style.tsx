@@ -1,4 +1,4 @@
-import { display, Layout } from '@mcph/miix-std';
+import { display, Layout } from '@mixer/cdk-std';
 
 /**
  * Returns the name translated from camelCase to kebab-case.

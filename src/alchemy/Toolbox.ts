@@ -39,7 +39,7 @@ export function throttle<T extends Function>(duration: number, fn: T): T {
 export function untilUnmount<T>(component: Component<any, any>) {
   const inner = component.componentWillUnmount;
   const notifier = new ReplaySubject<void>(1);
-  component.componentWillMount = function() {
+  component.componentWillUnmount = function() {
     notifier.next(undefined);
     if (inner) {
       // tslint:disable-next-line

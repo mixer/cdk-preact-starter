@@ -23,10 +23,10 @@
     "tippy.js": "^2.2.3"
   },
   "devDependencies": {
-    "@mcph/miix-cli": "^0.2.3",
-    "@mcph/miix-std": "^0.2.11",
+    "@mixer/cdk-std": "^0.2.11",
+    "@mixer/cdk-webpack-plugin": "^0.1.2",
     "@types/node": "^8.0.24",
-    "awesome-typescript-loader": "^3.2.2",
+    "awesome-typescript-loader": "^5.0.0-1",
     "clean-webpack-plugin": "^0.1.16",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.5",
@@ -39,7 +39,8 @@
     "tslint": "^5.7.0",
     "tslint-microsoft-contrib": "^5.0.1",
     "typescript": "^2.7.2",
-    "webpack": "^3.5.3",
-    "webpack-dev-server": "^2.7.1"
+    "webpack": "^4.4.1",
+    "webpack-cli": "^2.0.13",
+    "webpack-dev-server": "^3.1.1"
   }
 }
