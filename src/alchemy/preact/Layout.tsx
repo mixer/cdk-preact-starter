@@ -157,16 +157,14 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState>
         })}
       >
         {this.props.scene.listControls().map(control => {
-          if (control.props.kind !== 'screen') {
-            control.grid = this.state.activeGrid;
-            return (
-              <ResourceHolder
-                resource={control}
-                component={FixedGridControl as typeof Component}
-                nest={{ grid: this.state.activeGrid, multiplier }}
-              />
-            );
-          }
+          control.grid = this.state.activeGrid;
+          return (
+            <ResourceHolder
+              resource={control}
+              component={FixedGridControl as typeof Component}
+              nest={{ grid: this.state.activeGrid, multiplier }}
+            />
+          );
         })}
       </div>
     );
@@ -255,16 +253,9 @@ function verifyControlSizes(
   descriptor: IControlDescriptor,
   grids: Layout.IGridPlacement[],
 ): Layout.IGridPlacement[] {
-  if (
-    descriptor.dimensions &&
-    descriptor.dimensions.length &&
-    grids &&
-    grids.length
-  ) {
+  if (descriptor.dimensions && descriptor.dimensions.length && grids && grids.length) {
     descriptor.dimensions.forEach(dimension => {
-      grids.forEach((grid: Layout.IGridPlacement) =>
-        verifyDimension(dimension, grid),
-      );
+      grids.forEach((grid: Layout.IGridPlacement) => verifyDimension(dimension, grid));
     });
   }
 
