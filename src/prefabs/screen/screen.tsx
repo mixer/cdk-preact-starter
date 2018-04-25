@@ -1,4 +1,4 @@
-import * as Mixer from '@mcph/miix-std';
+import * as Mixer from '@mixer/cdk-std';
 import { h } from 'preact';
 
 import { gamepad } from '../../alchemy/Gamepad';
@@ -64,6 +64,7 @@ export class Screen extends PreactControl<any, IScreenState> {
   public render() {
     const { controlID } = this.props;
     const { player: { top, left, width, height } } = this.state;
+    // We're handling touch and mouse events, but we need to look into pointer events.
     return (
       <div
         ref={this.setReference}
@@ -104,6 +105,9 @@ export class Screen extends PreactControl<any, IScreenState> {
   }
 
   protected registerGamepadButton() {
+    // This is using our alchemy gamepad. We need to make sure this scrubs
+    // out any touch screen devices.
+    // The following registers both joysticks to move the cursor on Xbox.
     for (let i = 0; i <= 1; i++) {
       this.gamepad.registerJoystickListener(i, (x: number, y: number) => {
         console.log('x', x, 'y', y);
@@ -217,6 +221,9 @@ export class Screen extends PreactControl<any, IScreenState> {
   };
 
   private setCursorPosition = (evt: MouseEvent) => {
+    // There is something going on here where our fake cursor does not always go under where
+    // the real mouse clicked. Could be a bad calculation of offset or resizing of the window
+    // that we need to make sure we handle.
     this.setState(
       {
         ...this.state,
