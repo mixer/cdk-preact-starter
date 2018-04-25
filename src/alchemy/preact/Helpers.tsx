@@ -25,6 +25,12 @@ export class ResourceHolder<S, T extends Resource<S>> extends Component<
    */
   public componentWillMount() {
     this.setResource(this.props.resource);
+    this.setState({
+      props: {
+        ...this.state.props,
+        ...this.props.nest,
+      },
+    });
   }
 
   /**
@@ -32,6 +38,12 @@ export class ResourceHolder<S, T extends Resource<S>> extends Component<
    */
   public componentWillReceiveProps(nextProps: IResourceHolderProps<S, T>) {
     this.setResource(nextProps.resource);
+    this.setState({
+      props: {
+        ...this.state.props,
+        ...nextProps.nest,
+      },
+    });
   }
 
   /**

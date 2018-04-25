@@ -3,7 +3,7 @@
  * Preact components. See the documentation on each class for further details.
  */
 
-import { display, IControlDescriptor, ISettings, Layout } from '@mcph/miix-std';
+import { display, IControlDescriptor, ISettings, Layout } from '@mixer/cdk-std';
 import { Component, h } from 'preact';
 import { fromEvent } from 'rxjs/observable/fromEvent';
 import { debounceTime, startWith } from 'rxjs/operators';
@@ -146,17 +146,16 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
           marginBottom: this.props.settings.placesVideo ? 0 : height / -2,
         })}
       >
-        {this.props.scene
-          .listControls()
-          .map(control => {
-            control.grid = this.state.activeGrid;
-            return (
-              <ResourceHolder
-                resource={control}
-                component={FixedGridControl as typeof Component}
-                nest={{ grid: this.state.activeGrid, multiplier }}
-              />)
-          })}
+        {this.props.scene.listControls().map(control => {
+          control.grid = this.state.activeGrid;
+          return (
+            <ResourceHolder
+              resource={control}
+              component={FixedGridControl as typeof Component}
+              nest={{ grid: this.state.activeGrid, multiplier }}
+            />
+          );
+        })}
       </div>
     );
   }
@@ -203,8 +202,7 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
   }
 
   private renderTippy = (): void => {
-    tippy(`[name^="control"] > div`,
-    {
+    tippy(`[name^="control"] > div`, {
       appendTo: document.querySelector('.alchemy-grid-layout'),
       placement: 'bottom',
       hideOnClick: false,
@@ -216,12 +214,12 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
             boundariesElement: document.querySelector('.alchemy-grid-layout'),
           },
           hide: {
-            enabled: false
-          }
-        }
-      }
+            enabled: false,
+          },
+        },
+      },
     });
-  }
+  };
 }
 
 /**
@@ -230,11 +228,15 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
  * the minimum value as well as throw an error to notify that the minimum values
  * have not been met.
  */
-function verifyControlSizes(mControl: MControl, descriptor: IControlDescriptor, grids: Layout.IGridPlacement[]): Layout.IGridPlacement[] {
+function verifyControlSizes(
+  mControl: MControl,
+  descriptor: IControlDescriptor,
+  grids: Layout.IGridPlacement[],
+): Layout.IGridPlacement[] {
   if (descriptor.dimensions && descriptor.dimensions.length && grids && grids.length) {
     descriptor.dimensions.forEach(dimension => {
-      grids.forEach((grid: Layout.IGridPlacement) => verifyDimension(dimension, grid))
-    })
+      grids.forEach((grid: Layout.IGridPlacement) => verifyDimension(dimension, grid));
+    });
   }
 
   return grids;
@@ -243,7 +245,7 @@ function verifyControlSizes(mControl: MControl, descriptor: IControlDescriptor, 
 /**
  * verifyDimension sets the property to the minimum or maximum value respectively.
  */
-function verifyDimension (dimension: any, grid: any) {
+function verifyDimension(dimension: any, grid: any) {
   if (grid[dimension.property] > dimension.maximum) {
     grid[dimension.property] = dimension.maximum;
   } else if (grid[dimension.property] < dimension.minimum) {
@@ -255,7 +257,10 @@ function verifyDimension (dimension: any, grid: any) {
  * FixedGridControl is the container for individual controls in the fixed grid.
  * It renders a nested <Control /> component and passes in the correct styles.
  */
-class FixedGridControl extends Component<{ resource: MControl; grid: number, multiplier: number }, {}> {
+class FixedGridControl extends Component<
+  { resource: MControl; grid: number; multiplier: number },
+  {}
+> {
   public render() {
     // tslint:disable-next-line
     const Control = this.props.resource.descriptor().ctor as typeof PreactControl;
@@ -355,10 +360,10 @@ export class FlexLayout extends Component<ILayoutOptions, {}> implements ILayout
     this.previousVideoRect = rect;
 
     display.moveVideo({
-      top: rect.top + FlexLayout.videoPadding,
-      left: rect.left + FlexLayout.videoPadding,
-      width: rect.width - 2 * FlexLayout.videoPadding,
-      height: rect.height - 2 * FlexLayout.videoPadding,
+      top: rect.top,
+      left: rect.left,
+      width: rect.width,
+      height: rect.height,
     });
   }
 

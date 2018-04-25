@@ -1,4 +1,5 @@
-import * as Mixer from '@mcph/miix-std';
+import * as Mixer from '@mixer/cdk-std';
+import * as stringify from 'json-stringify-safe';
 
 /**
  * `log` has methods to capture messages from your controls. These'll be
@@ -13,7 +14,9 @@ export const log = Mixer.log;
 function interceptLogs(consoleMethod: keyof typeof console, logMethod: keyof typeof Mixer.log) {
   const originalFn = console[consoleMethod];
   console[consoleMethod] = (...args: any[]) => {
-    Mixer.log[logMethod](...args);
+    const newArgs: string[] = [];
+    args.forEach(arg => newArgs.push(stringify(arg)));
+    Mixer.log[logMethod](...newArgs);
     return originalFn.apply(console, args);
   };
 }
@@ -23,8 +26,6 @@ interceptLogs('log', 'info');
 interceptLogs('info', 'info');
 interceptLogs('debug', 'debug');
 interceptLogs('warn', 'warn');
-
-console.error('wut');
 
 const compactWhitespace = (str: string) => str.replace(/[ \n\r\t]+/g, ' ');
 

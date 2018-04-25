@@ -1,7 +1,7 @@
 /*******************
  * TextBox
  * *****************/
-import * as Mixer from '@mcph/miix-std';
+import * as Mixer from '@mixer/cdk-std';
 import { Component, h } from 'preact';
 
 import { CoolDown, PreactControl, SparkPill } from '../../alchemy/preact';

@@ -10,7 +10,7 @@ const webpack = require('webpack');
 const path = require('path');
 
 const { CheckerPlugin } = require('awesome-typescript-loader');
-const { MixerPlugin } = require('@mcph/miix-webpack-plugin');
+const { MixerPlugin } = require('@mixer/cdk-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const CleanPlugin = require('clean-webpack-plugin');
 
@@ -92,9 +92,7 @@ module.exports = {
       // See the docs and examples in the HtmlControl for more info!
       {
         test: /\.(html|svg)$/,
-        use: [
-          'file-loader',
-        ],
+        use: ['file-loader'],
       },
     ],
   },
@@ -102,7 +100,7 @@ module.exports = {
     // Indicate to webpack that the Mixer standard library is "external" and
     // will be injected later, so Webpack shouldn't try to throw it into the
     // bundle with everything else.
-    '@mcph/miix-std': 'mixer',
+    '@mixer/cdk-std': 'mixer',
   },
   // Plugins we defined above.
   plugins,
