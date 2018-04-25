@@ -10,6 +10,7 @@ export type SceneProps<S> = { resource: MScene<S & Mixer.IScene> } & S & Mixer.I
 interface ISceneState {
   settings: Mixer.ISettings;
   containers: Mixer.Layout.IContainer[];
+  screenControlId?: string | null;
 }
 
 /**
@@ -49,7 +50,9 @@ export abstract class PreactScene<T, S = {}> extends Component<SceneProps<S>, T 
    * Returns the layout engines that these controls are using.
    */
   protected getFixedGridLayoutEngine() {
-    if (this.props.controls.find(control => control.kind !== 'screen')) {
+    if (!this.props.controls) {
+      return null;
+    } else if (this.props.controls.find(control => control.kind !== 'screen')) {
       return FixedGridLayout;
     }
     return null;
@@ -63,21 +66,32 @@ export abstract class PreactScene<T, S = {}> extends Component<SceneProps<S>, T 
   }
 
   private updateStateContainers(props: SceneProps<S>) {
-    const screenControl = props.controls.find(control => control.kind === 'screen');
-    if (!screenControl) {
+    if (!props.containers || !props.controls) {
       return;
     }
 
-    let newContainers: Mixer.Layout.IContainer[] = [];
-    if (this.state.containers) {
-      newContainers = [...this.state.containers];
+    const newContainers: Mixer.Layout.IContainer[] = [...props.containers];
+
+    const screenControl = props.controls.find(control => control.kind === 'screen');
+    if (screenControl) {
+      newContainers.push({
+        children: [{ controlID: screenControl.controlID }],
+      });
+    } else if (this.state.screenControlId) {
+      newContainers.splice(
+        newContainers.findIndex(
+          c =>
+            c.children.findIndex(
+              (ch: { controlID: string }) => ch.controlID === this.state.screenControlId,
+            ) > -1,
+        ),
+      );
     }
-    newContainers.push({
-      children: [{ controlID: screenControl.controlID }],
-    });
+
     this.setState({
       ...(this.state as ISceneState),
       containers: newContainers,
+      screenControlId: screenControl ? screenControl.controlID : null,
     });
   }
 }

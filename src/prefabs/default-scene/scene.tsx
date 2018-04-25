@@ -25,7 +25,7 @@ export class DefaultScene extends PreactScene<{}> {
     if (FlexLayout) {
       renders.push(
         <FlexLayout
-          key={`mixer-default-scene scene-${this.scene.props.sceneID}`}
+          key={`mixer-default-scene scene-${this.scene.props.sceneID}-flex-${Date.now()}`}
           scene={scene}
           settings={this.state.settings}
           containers={this.state.containers}
@@ -37,12 +37,14 @@ export class DefaultScene extends PreactScene<{}> {
     if (FixedGridLayout) {
       renders.push(
         <FixedGridLayout
-          key={`mixer-default-scene scene-${this.scene.props.sceneID}`}
+          key={`mixer-default-scene scene-${this.scene.props.sceneID}-fixed-${Date.now()}`}
           scene={scene}
           settings={this.state.settings}
         />,
       );
     }
-    return <div class={`mixer-default-scene scene-${this.scene.props.sceneID}`}>{renders}</div>;
+
+    const className = `mixer-default-scene scene-${this.scene.props.sceneID}`;
+    return <div class={className}>{renders}</div>;
   }
 }
