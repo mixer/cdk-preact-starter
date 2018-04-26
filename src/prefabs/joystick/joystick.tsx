@@ -249,6 +249,7 @@ export class Joystick extends PreactControl {
     window.addEventListener('mousemove', this.windowMouseMove);
     window.addEventListener('mouseup', this.windowMouseUp);
     window.addEventListener('mouseout', this.windowMouseOut);
+    window.addEventListener('blur', this.windowMouseUp);
   };
 
   /**
@@ -277,6 +278,7 @@ export class Joystick extends PreactControl {
     window.removeEventListener('mousemove', this.windowMouseMove);
     window.removeEventListener('mouseup', this.windowMouseUp);
     window.removeEventListener('mouseout', this.windowMouseOut);
+    window.removeEventListener('blur', this.windowMouseUp);
     setTimeout(() => {
       if (this.handle) {
         this.handle.style.transition = 'none';
