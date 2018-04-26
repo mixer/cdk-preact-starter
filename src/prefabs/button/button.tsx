@@ -221,7 +221,7 @@ export class Button extends PreactControl<{
 
   protected mousedown = () => {
     if (!this.disabled && !this.state.cooldown) {
-      window.addEventListener('blur', this.windowBlur);
+      window.addEventListener('blur', this.mouseup);
       this.control.giveInput({ event: 'mousedown' });
       this.setState({ ...this.state, active: true });
     }
@@ -229,6 +229,7 @@ export class Button extends PreactControl<{
 
   protected mouseup = () => {
     if (!this.disabled && !this.state.cooldown) {
+      window.removeEventListener('blur', this.mouseup);
       this.control.giveInput({ event: 'mouseup' });
       this.setState({ ...this.state, active: false });
     }
@@ -280,11 +281,6 @@ export class Button extends PreactControl<{
         keysPressed: newKeysPressed,
       });
     }
-  };
-
-  protected windowBlur = () => {
-    this.mouseup();
-    window.removeEventListener('blur', this.windowBlur);
   };
 
   private endCooldown = () => {
