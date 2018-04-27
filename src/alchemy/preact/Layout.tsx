@@ -90,7 +90,6 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
     Layout.gridLayouts.forEach((layout, i) => {
       const match = window.matchMedia(`(min-width: ${layout.minWidth}px)`);
       const fn = (mql: MediaQueryList) => {
-        console.log(i, mql.media, mql.matches);
         return this.setGridActive(i, mql.matches);
       };
 
