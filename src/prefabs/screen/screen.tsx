@@ -1,8 +1,9 @@
 import * as Mixer from '@mixer/cdk-std';
 import { h } from 'preact';
 
-import { gamepad } from '../../alchemy/Gamepad';
 import { PreactControl } from '../../alchemy/preact';
+
+import './screen.scss';
 
 interface IPlayer {
   x: number;
@@ -14,30 +15,69 @@ interface IPlayer {
 interface IScreenState {
   player: IPlayer;
   isMoving: boolean;
-  cursor: {
-    x: number;
-    y: number;
-  };
 }
 
 @Mixer.Control({ kind: 'screen' })
 export class Screen extends PreactControl<any, IScreenState> {
+  private static MIN_JOYSTICK_X_CLAMP: number = 0.2;
+  private static MIN_JOYSTICK_Y_CLAMP: number = 0.2;
+  private static buttonNames: string[] = [
+    "gamepadA",
+    "gamepadB",
+    "gamepadX",
+    "gamepadY",
+    "gamepadShoulderLeft",
+    "gamepadShoulderRight",
+    "gamepadTriggerLeft",
+    "gamepadTriggerRight",
+    "gamepadView",
+    "gamepadMenu",
+    "gamepadThumbstickLeft",
+    "gamepadThumbstickRight",
+    "gamepadDPadUp",
+    "gamepadDPadDown",
+    "gamepadDPadLeft",
+    "gamepadDPadRight"
+  ];
+
   @Mixer.Input() public sendOnMove: boolean = false;
 
   @Mixer.Input() public sendMoveOnMouseDown: boolean = true;
 
   @Mixer.Input() public moveDebounce: number = 50;
 
-  /**
-   * Gamepad button index to bind to.
-   */
-  @Mixer.Input() public gamepadButton: number;
+  private isXbox: boolean;
 
   private screenElement: HTMLDivElement;
-  private cursorElement: HTMLDivElement;
   private debounceMove: any;
-  private gamepad = gamepad;
-  private isXbox: boolean = true;
+  private xboxMinDebounce: number = 50;
+
+  private cursorSpeed = 8;
+  private cursorOffset = { y: 75, x: 5};
+  private lastPosition = { x: 0, y: 0 };
+
+  private lastGamepadState: any = [];
+
+  // Button values are typically 0 or 1, except in the case of the trigger buttons
+  // which can be fractions depending on how far the user has pressed the button.
+  private lastButtonState: number[] = [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ];
 
   constructor(props: any) {
     super(props);
@@ -52,20 +92,23 @@ export class Screen extends PreactControl<any, IScreenState> {
   }
 
   public componentWillMount() {
-    this.registerGamepadButton();
     Mixer.display.position().subscribe(this.handleVideoResize);
-  }
+    this.isXbox = (window as any).mixer.display.settingsSubj.value.platform === 'xbox';
 
-  public componentWillReceiveProps() {
-    this.registerGamepadButton();
-    Mixer.display.position().subscribe(this.handleVideoResize);
+    if (this.isXbox) {
+      this.runGamepadInputLoop();
+    }
   }
 
   public render() {
     const { controlID } = this.props;
     const { player: { top, left, width, height } } = this.state;
-    // We're handling touch and mouse events, but we need to look into pointer events.
     return (
+      <div>
+      {
+        this.isXbox &&
+        <div id="xbox-cursor" style={this.state.cursorPosition}/>
+      }
       <div
         ref={this.setReference}
         role="button"
@@ -74,7 +117,7 @@ export class Screen extends PreactControl<any, IScreenState> {
         name={`control-${controlID}`}
         onMouseMove={this.mousemove}
         onMouseEnter={this.mousemove}
-        onMouseLeave={this.mouseleave}
+        onMouseLeave={this.mouseup}
         onMouseDown={this.mousedown}
         onMouseUp={this.mouseup}
         onTouchStart={this.touchstart}
@@ -88,31 +131,9 @@ export class Screen extends PreactControl<any, IScreenState> {
           width,
           height,
         }}
-      >
-        <div
-          name="screen-cursor"
-          ref={this.setCursorReference}
-          style={{
-            position: 'absolute',
-            width: '10px',
-            height: '10px',
-            backgroundColor: 'red',
-            borderBottomRightRadius: '100px',
-          }}
-        />
+      />
       </div>
     );
-  }
-
-  protected registerGamepadButton() {
-    // This is using our alchemy gamepad. We need to make sure this scrubs
-    // out any touch screen devices.
-    // The following registers both joysticks to move the cursor on Xbox.
-    for (let i = 0; i <= 1; i++) {
-      this.gamepad.registerJoystickListener(i, (x: number, y: number) => {
-        console.log('x', x, 'y', y);
-      });
-    }
   }
 
   protected handleVideoResize = (position: any) => {
@@ -127,9 +148,92 @@ export class Screen extends PreactControl<any, IScreenState> {
     this.screenElement = div;
   };
 
-  protected setCursorReference = (div: HTMLDivElement) => {
-    this.cursorElement = div;
+  private runGamepadInputLoop = () => {
+    const gamepads = navigator.getGamepads();
+    for (let gi = 0; gi < gamepads.length; gi++) {
+        const gamepad = gamepads[gi];
+
+        if (gamepad) {
+            if (!this.lastGamepadState.find((gp: any) => gp.gamepad === gamepad.id)) {
+              this.lastGamepadState.push({ gamepad: gamepad.id, rightX: 0, rightY: 0, leftX: 0, leftY: 0 });
+            }
+
+            const lastState = this.lastGamepadState.find((gp: any) => gp.gamepad === gamepad.id);
+            // // Send update message for each button only if it has changed.
+            const gamepadButtons = gamepad.buttons;
+            // tslint:disable-next-line:one-variable-per-declaration
+            for (let i = 0, len = gamepadButtons.length; i < len; i++) {
+                 if (this.lastButtonState[i] !== gamepadButtons[i].value) {
+                    const eventName = gamepadButtons[i].pressed ? "mousedown" : "mouseup";
+
+                    if (Screen.buttonNames[i] === "gamepadA") {
+                      this.sendGamepadA(eventName);
+                    }
+
+                    this.lastButtonState[i] = gamepadButtons[i].value;
+                 }
+            }
+
+            const joystickLeftX = Math.abs(gamepad.axes[0]) <= Screen.MIN_JOYSTICK_X_CLAMP ? 0 : gamepad.axes[0];
+            const joystickLeftY = Math.abs(gamepad.axes[1]) <= Screen.MIN_JOYSTICK_Y_CLAMP ? 0 : gamepad.axes[1];
+
+            this.sendJoystickCoords(joystickLeftX, joystickLeftY);
+            lastState.leftX = joystickLeftX;
+            lastState.leftY = joystickLeftY;
+        }
+    }
+
+    // Schedule the next one
+    requestAnimationFrame(this.runGamepadInputLoop.bind(this));
   };
+
+  private sendGamepadA(state: string) {
+    state === "mousedown" ? this.setMouseDown(true) : this.setMouseDown(false);
+    const { relX, relY } = this.getXboxCursorCoordinates();
+    this.sendCoords(state, relX, relY);
+  }
+
+  private sendJoystickCoords(x: number, y: number) {
+    if (x === 0 && y === 0) {
+      return;
+    }
+
+    this.setClampedPosition(x, y);
+
+    this.setState({
+      ...this.state,
+      cursorPosition: `top: ${this.lastPosition.y}px; left: ${this.lastPosition.x}px;`
+    });
+
+    const { relX, relY } = this.getXboxCursorCoordinates();
+
+    clearTimeout(this.debounceMove);
+    this.debounceMove = setTimeout(() => {
+      this.sendCoords('mousemove', relX, relY);
+    }, this.xboxMinDebounce);
+  }
+
+  private setClampedPosition(x: number, y: number) {
+    // First, recalc with speed modifier
+    this.lastPosition.y += y + y * this.cursorSpeed;
+    this.lastPosition.x += x + x * this.cursorSpeed;
+
+    // Clamp positions to min/max
+    // tslint:disable:max-line-length
+    this.lastPosition.x = Math.abs(this.lastPosition.x) > this.screenElement.clientWidth - this.cursorOffset.x ? this.screenElement.clientWidth - this.cursorOffset.x : this.lastPosition.x;
+    this.lastPosition.x = this.lastPosition.x < 0 ? 0 : this.lastPosition.x;
+    this.lastPosition.y = Math.abs(this.lastPosition.y) > this.screenElement.clientHeight - this.cursorOffset.y ? this.screenElement.clientHeight - this.cursorOffset.y : this.lastPosition.y;
+    this.lastPosition.y = this.lastPosition.y < 0 ? 0 : this.lastPosition.y;
+  }
+
+  private getXboxCursorCoordinates() {
+    const height = this.screenElement.clientHeight;
+    const width = this.screenElement.clientWidth;
+    const relX = this.lastPosition.x / width;
+    const relY = (height - this.lastPosition.y) / height;
+
+    return { relX, relY };
+  }
 
   private touchstart = (evt: TouchEvent) => {
     this.setMouseDown(true);
@@ -147,7 +251,6 @@ export class Screen extends PreactControl<any, IScreenState> {
 
   private mousemove = (evt: MouseEvent) => {
     if (!this.sendMoveOnMouseDown || this.state.isMoving) {
-      this.setCursorPosition(evt);
       clearTimeout(this.debounceMove);
       this.debounceMove = setTimeout(() => {
         this.sendMouseCoords('move', evt);
@@ -158,20 +261,11 @@ export class Screen extends PreactControl<any, IScreenState> {
   private mousedown = (evt: MouseEvent) => {
     this.setMouseDown(true);
     this.sendMouseCoords('mousedown', evt);
-    this.setCursorPosition(evt);
-    this.showCursor(true);
   };
 
   private mouseup = (evt: MouseEvent) => {
     this.setMouseDown(false);
     this.sendMouseCoords('mouseup', evt);
-    this.showCursor(false);
-  };
-
-  private mouseleave = (evt: MouseEvent) => {
-    if (this.state.isMoving) {
-      this.mouseup(evt);
-    }
   };
 
   private sendTouchCoords = (event: string, evt: TouchEvent) => {
@@ -192,20 +286,8 @@ export class Screen extends PreactControl<any, IScreenState> {
   private sendMouseCoords = (event: string, evt: MouseEvent) => {
     const height = this.screenElement.clientHeight;
     const width = this.screenElement.clientWidth;
-    const el = evt.target as HTMLDivElement;
-    let offsetX;
-    let offsetY;
-    if (el.getAttribute('name') !== this.screenElement.getAttribute('name')) {
-      offsetX = el.offsetLeft + evt.offsetX;
-      offsetY = el.offsetTop + evt.offsetY;
-    } else {
-      offsetX = evt.offsetX;
-      offsetY = evt.offsetY;
-    }
-    let relX = offsetX / width;
-    let relY = (height - offsetY) / height;
-    relX = this.forceRange(relX);
-    relY = this.forceRange(relY);
+    const relX = evt.offsetX / width;
+    const relY = (height - evt.offsetY) / height;
     this.sendCoords(event, relX, relY);
   };
 
@@ -216,41 +298,7 @@ export class Screen extends PreactControl<any, IScreenState> {
   private setMouseDown = (isDown: boolean) => {
     this.setState({
       ...this.state,
-      isMoving: isDown,
+      isMoving: isDown
     });
-  };
-
-  private setCursorPosition = (evt: MouseEvent) => {
-    // There is something going on here where our fake cursor does not always go under where
-    // the real mouse clicked. Could be a bad calculation of offset or resizing of the window
-    // that we need to make sure we handle.
-    this.setState(
-      {
-        ...this.state,
-        cursor: {
-          x: evt.pageX,
-          y: evt.pageY,
-        },
-      },
-      () => {
-        const { cursor: { x, y } } = this.state;
-        this.cursorElement.style.left = `${x - 10}px`;
-        this.cursorElement.style.top = `${y}px`;
-      },
-    );
-  };
-
-  private showCursor = (flag: boolean) => {
-    this.cursorElement.style.display = flag || this.isXbox ? 'block' : 'none';
-  };
-
-  private forceRange = (value: number) => {
-    if (value < 0) {
-      return 0;
-    } else if (value > 1) {
-      return 1;
-    } else {
-      return value;
-    }
   };
 }
