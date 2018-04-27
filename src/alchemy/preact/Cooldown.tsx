@@ -55,12 +55,12 @@ export class CoolDown extends Component<
           progress: !!this.props.progress,
         })}
       >
-        <div class={classes({
-            hidden: this.props.hideTime
-          })}>
-          <div class="time">
-            {prettyTime(this.state.ttl + 1)}
-          </div>
+        <div
+          class={classes({
+            hidden: this.props.hideTime,
+          })}
+        >
+          <div class="time">{prettyTime(this.state.ttl + 1)}</div>
         </div>
       </div>
     );

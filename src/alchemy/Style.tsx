@@ -311,7 +311,12 @@ export function classes(map: { [cls: string]: boolean }): string {
     .join(' ');
 }
 
-export function blockRule(controlID: string, selector: string, styles: any, platform?: string): string {
+export function blockRule(
+  controlID: string,
+  selector: string,
+  styles: any,
+  platform?: string,
+): string {
   let s = `\n\t[name="control-${controlID}"] ${selector} {\n`;
 
   if (platform) {

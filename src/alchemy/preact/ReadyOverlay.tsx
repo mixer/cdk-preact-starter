@@ -35,7 +35,7 @@ export class ReadyOverlayComponent extends Component<
     Mixer.display
       .settings()
       .pipe(untilUnmount(this))
-      .subscribe(({ placesVideo }: {placesVideo: boolean}) => {
+      .subscribe(({ placesVideo }: { placesVideo: boolean }) => {
         this.setState({ ...this.state, placesVideo });
         this.readjustVideo(this.props.config);
       });

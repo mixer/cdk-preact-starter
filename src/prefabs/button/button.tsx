@@ -315,9 +315,7 @@ export class Button extends PreactControl<{
       <style>
         {// Custom border color for the button.
         blockRule(controlID, '.mixer-button', {
-          border: this.borderColor
-            ? `2px solid ${sanitizeCSS(this.borderColor)}`
-            : null,
+          border: this.borderColor ? `2px solid ${sanitizeCSS(this.borderColor)}` : null,
           backgroundColor: sanitizeCSS(this.backgroundColor),
           backgroundImage: this.backgroundImage ? `url(${this.backgroundImage})` : null,
         })}

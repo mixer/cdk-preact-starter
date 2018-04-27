@@ -63,7 +63,7 @@ export class ResourceHolder<S, T extends Resource<S>> extends Component<
   private updateListener(ev: S) {
     this.setState({
       ...this.state,
-      props: Object.assign({}, ev, this.props.nest),
+      props: {...ev, ...this.props.nest},
     });
   }
 

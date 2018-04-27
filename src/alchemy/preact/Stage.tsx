@@ -20,9 +20,7 @@ export class PreactStage extends Component<
   public componentWillMount() {
     const i = (this.interactive = new State(this.props.registry));
 
-    i.participant.on('update', ev =>
-      this.updateScene(i.participant.group.sceneID),
-    );
+    i.participant.on('update', ev => this.updateScene(i.participant.group.sceneID));
     i.participant.on('groupUpdate', ev => this.updateScene(ev.sceneID));
     i.world.subscribe(world => this.setState({ ...this.state, world }));
     i.isReady.subscribe(isReady => this.setState({ ...this.state, isReady }));
@@ -39,9 +37,7 @@ export class PreactStage extends Component<
     const platform = Mixer.display.getSettings().platform;
 
     return (
-      <div class={`stage platform-${platform}`}>
-        {this.getSceneComponent(this.state.scene)}
-      </div>
+      <div class={`stage platform-${platform}`}>{this.getSceneComponent(this.state.scene)}</div>
     );
   }
 

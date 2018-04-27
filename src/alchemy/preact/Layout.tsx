@@ -32,12 +32,7 @@ function rectsEqual(a: ClientRect, b: ClientRect): boolean {
     return false;
   }
 
-  return (
-    a.width === b.width &&
-    a.height === b.height &&
-    a.left === b.left &&
-    a.top === b.top
-  );
+  return a.width === b.width && a.height === b.height && a.left === b.left && a.top === b.top;
 }
 
 /**
@@ -60,8 +55,7 @@ export interface ILayout extends Component<ILayoutOptions, any> {
  * of a certain number of vertical and horizontal cells, which measure a
  * constant 12px by 12px;
  */
-export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState>
-  implements ILayout {
+export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> implements ILayout {
   /**
    * Default width/height in pixels of each grid cell. This can be tweaked
    * on mobile devices to fit the controls more exactly.
@@ -124,10 +118,7 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState>
    */
   public refresh() {
     const { height } = this.getGridPixelSize();
-    if (
-      !this.props.settings.placesVideo ||
-      height === this.previousVideoHeight
-    ) {
+    if (!this.props.settings.placesVideo || height === this.previousVideoHeight) {
       return;
     }
 
@@ -186,14 +177,8 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState>
 
     // On mobile, fill the available window.
     let multiplier = 1;
-    if (
-      this.props.settings.platform === 'xbox' ||
-      !this.props.settings.placesVideo
-    ) {
-      multiplier = Math.min(
-        window.innerWidth / width,
-        window.innerHeight / height,
-      );
+    if (this.props.settings.platform === 'xbox' || !this.props.settings.placesVideo) {
+      multiplier = Math.min(window.innerWidth / width, window.innerHeight / height);
     }
 
     // Something went wrong on Xbox. Abort multiplier.
@@ -288,8 +273,7 @@ class FixedGridControl extends Component<
 > {
   public render() {
     // tslint:disable-next-line
-    const Control = this.props.resource.descriptor()
-      .ctor as typeof PreactControl;
+    const Control = this.props.resource.descriptor().ctor as typeof PreactControl;
     const grid = this.getRelevantGrid();
     if (!grid) {
       return;
@@ -308,10 +292,7 @@ class FixedGridControl extends Component<
           height: grid.height * FixedGridLayout.gridScale * multiplier,
         }).compile()}
       >
-        <Control
-          resource={this.props.resource}
-          {...this.props.resource.toObject()}
-        />
+        <Control resource={this.props.resource} {...this.props.resource.toObject()} />
       </div>
     );
   }
@@ -322,7 +303,7 @@ class FixedGridControl extends Component<
   private getRelevantGrid(): Layout.IGridPlacement | undefined {
     const descriptor = this.props.resource.descriptor();
     const activeGrid = Layout.gridLayouts[this.props.grid].size;
-    const mControl = this.props.resource as MControl;
+    const mControl = this.props.resource;
     let configuredGrids = mControl.get('position', []);
     if (configuredGrids.length === 0) {
       log.error(
@@ -347,8 +328,7 @@ class FixedGridControl extends Component<
  * we track where the video container is and every time a CSS breakpoint
  * changes we'll trigger a resize of the video.
  */
-export class FlexLayout extends Component<ILayoutOptions, {}>
-  implements ILayout {
+export class FlexLayout extends Component<ILayoutOptions, {}> implements ILayout {
   /**
    * Padding around the video, in pixels.
    */
@@ -380,9 +360,7 @@ export class FlexLayout extends Component<ILayoutOptions, {}>
     const rect = video && video.getBoundingClientRect();
     if (!video || (rect.width === 0 && display.getSettings().placesVideo)) {
       // width=0 indicates it's hidden
-      log.warn(
-        'No video element was found in the containers, skipping reposition',
-      );
+      log.warn('No video element was found in the containers, skipping reposition');
       return;
     }
     if (rectsEqual(this.previousVideoRect, rect)) {
@@ -445,19 +423,14 @@ export interface IFlexContainerState {
   children: JSX.Element[];
 }
 
-function isControlChild(
-  e: Layout.IContainer | Layout.IControlChild,
-): e is Layout.IControlChild {
+function isControlChild(e: Layout.IContainer | Layout.IControlChild): e is Layout.IControlChild {
   return (e as any).controlID !== undefined;
 }
 
 /**
  * FlexContainer correspondings to an IContainer, nested in the FlexLayout.
  */
-export class FlexContainer extends Component<
-  IFlexContainerOptions,
-  IFlexContainerState
-> {
+export class FlexContainer extends Component<IFlexContainerOptions, IFlexContainerState> {
   public containerElement: Element;
   private rules: RuleSet;
   private videoContainer: Element;
@@ -483,11 +456,7 @@ export class FlexContainer extends Component<
     }
 
     return (
-      <div
-        style={this.state.style}
-        class={this.state.classes}
-        ref={this.onContainer}
-      >
+      <div style={this.state.style} class={this.state.classes} ref={this.onContainer}>
         {this.state.children}
       </div>
     );
@@ -545,13 +514,7 @@ export class FlexContainer extends Component<
           return;
         }
         if (!isControlChild(child)) {
-          return (
-            <FlexContainer
-              parent={this}
-              scene={this.props.scene}
-              container={child}
-            />
-          );
+          return <FlexContainer parent={this} scene={this.props.scene} container={child} />;
         }
 
         const control = this.props.scene.controls[child.controlID];
