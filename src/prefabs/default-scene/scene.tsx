@@ -13,16 +13,36 @@ import './scene.scss';
 @Mixer.Scene({ default: true })
 export class DefaultScene extends PreactScene<{}> {
   public render() {
-    // tslint:disable-next-line
-    const Layout = this.getLayoutEngine();
-    return (
-      <div class={`mixer-default-scene scene-${this.scene.props.sceneID}`}>
-        <Layout
+    //tslint:disable-next-line
+    const FixedGridLayout = this.getFixedGridLayoutEngine();
+    //tslint:disable-next-line
+    const FlexLayout = this.getFlexLayoutEngine();
+    const scene = this.scene;
+    const renders = [];
+
+    // If a flex-based control exist or a container exists that
+    // requires a FlexLayout, we'll render it.
+    if (FlexLayout) {
+      renders.push(
+        <FlexLayout
           key={`mixer-default-scene scene-${this.scene.props.sceneID}`}
-          scene={this.scene}
+          scene={scene}
           settings={this.state.settings}
-        />
-      </div>
-    );
+          containers={this.state.containers}
+        />,
+      );
+    }
+
+    // If controls exist that require the FixedGridLayout, we will render it.
+    if (FixedGridLayout) {
+      renders.push(
+        <FixedGridLayout
+          key={`mixer-default-scene scene-${this.scene.props.sceneID}`}
+          scene={scene}
+          settings={this.state.settings}
+        />,
+      );
+    }
+    return <div class={`mixer-default-scene scene-${this.scene.props.sceneID}`}>{renders}</div>;
   }
 }

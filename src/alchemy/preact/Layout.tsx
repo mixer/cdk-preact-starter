@@ -23,6 +23,7 @@ export interface IFixedGridState {
 export interface ILayoutOptions {
   scene: MScene;
   settings: ISettings;
+  containers?: Layout.IContainer[];
 }
 
 function rectsEqual(a: ClientRect, b: ClientRect): boolean {
@@ -88,7 +89,9 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
   public componentWillMount() {
     Layout.gridLayouts.forEach((layout, i) => {
       const match = window.matchMedia(`(min-width: ${layout.minWidth}px)`);
-      const fn = (mql: MediaQueryList) => this.setGridActive(i, mql.matches);
+      const fn = (mql: MediaQueryList) => {
+        return this.setGridActive(i, mql.matches);
+      };
 
       this.setGridActive(i, match.matches);
       match.addListener(fn);
@@ -147,14 +150,16 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
         })}
       >
         {this.props.scene.listControls().map(control => {
-          control.grid = this.state.activeGrid;
-          return (
-            <ResourceHolder
-              resource={control}
-              component={FixedGridControl as typeof Component}
-              nest={{ grid: this.state.activeGrid, multiplier }}
-            />
-          );
+          if (control.props.kind !== 'screen') {
+            control.grid = this.state.activeGrid;
+            return (
+              <ResourceHolder
+                resource={control}
+                component={FixedGridControl as typeof Component}
+                nest={{ grid: this.state.activeGrid, multiplier }}
+              />
+            );
+          }
         })}
       </div>
     );
@@ -180,7 +185,11 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
       multiplier = 1;
     }
 
-    return { width: width * multiplier, height: height * multiplier, multiplier };
+    return {
+      width: width * multiplier,
+      height: height * multiplier,
+      multiplier,
+    };
   }
 
   /**
@@ -293,7 +302,7 @@ class FixedGridControl extends Component<
   private getRelevantGrid(): Layout.IGridPlacement | undefined {
     const descriptor = this.props.resource.descriptor();
     const activeGrid = Layout.gridLayouts[this.props.grid].size;
-    const mControl = this.props.resource as MControl;
+    const mControl = this.props.resource;
     let configuredGrids = mControl.get('position', []);
     if (configuredGrids.length === 0) {
       log.error(
@@ -374,7 +383,7 @@ export class FlexLayout extends Component<ILayoutOptions, {}> implements ILayout
         scene={this.props.scene}
         container={{
           class: ['alchemy-flex-layout'],
-          children: this.props.scene.get('containers', []),
+          children: this.props.containers || [],
           styles: {
             display: 'flex',
             flexDirection: 'column',
@@ -497,7 +506,6 @@ export class FlexContainer extends Component<IFlexContainerOptions, IFlexContain
         if (child === 'video') {
           return;
         }
-
         if (!isControlChild(child)) {
           return <FlexContainer parent={this} scene={this.props.scene} container={child} />;
         }

@@ -30,14 +30,15 @@ export class PreactStage extends Component<
     if (!this.interactive || !this.state.isReady) {
       return <ReadyOverlayComponent config={this.state.world.readyOverlay} />;
     }
-
     if (!this.state.scene) {
       return;
     }
 
     const platform = Mixer.display.getSettings().platform;
 
-    return <div class={`stage platform-${platform}`}>{this.getSceneComponent(this.state.scene)}</div>;
+    return (
+      <div class={`stage platform-${platform}`}>{this.getSceneComponent(this.state.scene)}</div>
+    );
   }
 
   /**

@@ -8,6 +8,7 @@
 
 const webpack = require('webpack');
 const path = require('path');
+const fs = require('fs');
 
 const { CheckerPlugin } = require('awesome-typescript-loader');
 const { MixerPlugin } = require('@mixer/cdk-webpack-plugin');
@@ -32,7 +33,10 @@ const plugins = [
   // TypeScript checking, needed for `miix serve`.
   new CheckerPlugin(),
   // Mixer dev server, handles standard library injection and locale building.
-  new MixerPlugin({ homepage: 'src/index.html', locales: 'locales/*.json' }),
+  new MixerPlugin({
+    homepage: 'src/index.html',
+    locales: 'locales/*.json',
+  }),
 ];
 
 if (isProduction) {
@@ -40,6 +44,19 @@ if (isProduction) {
     // CleanPlugin wipes the "build" directory before bundling to make sure
     // there aren't unnecessary files lying around and using up your quota.
     new CleanPlugin('build'),
+    // Uglify compresses JavaScript code to make download sizes smaller.
+    new webpack.optimize.UglifyJsPlugin({
+      warningsFilter: () => false,
+      sourceMap: false,
+      comments: false,
+      mangle: {
+        screw_ie8: true,
+        keep_fnames: true,
+      },
+      compress: {
+        screw_ie8: true,
+      },
+    }),
   );
 }
 
@@ -56,7 +73,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'build'),
     publicPath: '',
-    filename: 'index.js',
+    filename: `index.js`,
   },
   // Tell webpack that these file extensions are source code that we can load:
   resolve: {
