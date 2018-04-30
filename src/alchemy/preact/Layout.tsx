@@ -368,12 +368,6 @@ export class FlexLayout extends Component<ILayoutOptions, {}> implements ILayout
 
     this.previousVideoRect = rect;
 
-    // display.moveVideo({
-    //   top: rect.top + FlexLayout.videoPadding,
-    //   left: rect.left + FlexLayout.videoPadding,
-    //   width: rect.width - 2 * FlexLayout.videoPadding,
-    //   height: rect.height - 2 * FlexLayout.videoPadding,
-    // });
     display.moveVideo({
       top: rect.top,
       left: rect.left,
