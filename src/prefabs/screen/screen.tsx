@@ -199,7 +199,7 @@ export class Screen extends PreactControl<any, IScreenState> {
 
     clearTimeout(this.debounceMove);
     this.debounceMove = setTimeout(() => {
-      this.sendCoords('mousemove', relX, relY);
+      this.sendCoords('move', relX, relY);
     }, this.xboxMinDebounce);
   }
 
