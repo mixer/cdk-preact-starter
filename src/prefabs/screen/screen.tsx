@@ -44,13 +44,13 @@ export class Screen extends PreactControl<any, IScreenState> {
 
   @Mixer.Input() public sendMoveOnMouseDown: boolean = true;
 
-  @Mixer.Input() public moveDebounce: number = 50;
+  @Mixer.Input() public moveThrottle: number = 50;
 
   private isXbox: boolean;
 
   private screenElement: HTMLDivElement;
   private debounceMove: any;
-  private xboxMinDebounce: number = 50;
+  private xboxMinThrottle: number = 50;
 
   private cursorSpeed = 8;
   private cursorOffset = { y: 75, x: 5 };
@@ -200,7 +200,7 @@ export class Screen extends PreactControl<any, IScreenState> {
     clearTimeout(this.debounceMove);
     this.debounceMove = setTimeout(() => {
       this.sendCoords('move', relX, relY);
-    }, this.xboxMinDebounce);
+    }, this.xboxMinThrottle);
   }
 
   private setClampedPosition(x: number, y: number) {
@@ -250,7 +250,7 @@ export class Screen extends PreactControl<any, IScreenState> {
       clearTimeout(this.debounceMove);
       this.debounceMove = setTimeout(() => {
         this.sendMouseCoords('move', evt);
-      }, this.moveDebounce);
+      }, this.moveThrottle);
     }
   };
 
