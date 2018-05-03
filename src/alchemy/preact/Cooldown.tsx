@@ -93,6 +93,7 @@ export class CoolDown extends Component<
     Mixer.clock.remoteToLocal(cooldown).then(date => {
       const delta = date - Date.now();
       if (delta < 0) {
+        this.updateTtl(-1);
         return;
       }
 
