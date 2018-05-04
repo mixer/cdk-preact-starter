@@ -14,6 +14,7 @@ const { CheckerPlugin } = require('awesome-typescript-loader');
 const { MixerPlugin } = require('@mixer/cdk-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const CleanPlugin = require('clean-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 /**
  * isProduction is from an environment variable. It's automatically set
@@ -45,16 +46,14 @@ if (isProduction) {
     // there aren't unnecessary files lying around and using up your quota.
     new CleanPlugin('build'),
     // Uglify compresses JavaScript code to make download sizes smaller.
-    new webpack.optimize.UglifyJsPlugin({
+    new UglifyJsPlugin({
       warningsFilter: () => false,
       sourceMap: false,
-      comments: false,
-      mangle: {
-        screw_ie8: true,
-        keep_fnames: true,
-      },
-      compress: {
-        screw_ie8: true,
+      uglifyOptions: {
+        comments: false,
+        mangle: {
+          keep_fnames: true,
+        },
       },
     }),
   );
