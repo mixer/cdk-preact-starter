@@ -37,7 +37,7 @@ export abstract class PreactScene<T, S = {}> extends Component<SceneProps<S>, T 
           settings,
         });
       });
-    this.updateStateContainers(this.props);
+    this.updateStateContainers(this.props as SceneProps<any>);
   }
 
   public componentWillReceiveProps(nextProps: SceneProps<S>) {
