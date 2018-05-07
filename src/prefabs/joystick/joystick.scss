@@ -15,6 +15,7 @@ $joystick-arrow-size: 6px !default;
     bottom: 0;
     border-radius: 50%;
     background: $joystick-color-background;
+    touch-action: none;
 
     &[disabled] {
         opacity: 0.7;
