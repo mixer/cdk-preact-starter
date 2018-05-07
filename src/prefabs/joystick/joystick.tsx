@@ -171,6 +171,7 @@ export class Joystick extends PreactControl {
   public componentDidMount() {
     this.registerGamepadJoysticks();
     this.throttledInputSender = throttle(this.sampleRate, this.sendInputToInteractive);
+    this.joystick.onpointerdown = ev => this.mousedown(ev);
   }
 
   public componentWillReceiveProps() {
@@ -192,7 +193,6 @@ export class Joystick extends PreactControl {
         role="button"
         class="mixer-joystick"
         disabled={this.props.disabled}
-        onMouseDown={this.mousedown}
         ref={this.setJoystick}
       >
         <div class="arrows top" />
@@ -237,7 +237,7 @@ export class Joystick extends PreactControl {
    * relative to the handle and saves that, and attaches listeners to see
    * when the mouse moves and is released.
    */
-  protected mousedown = (ev: MouseEvent) => {
+  protected mousedown = (ev: PointerEvent) => {
     ev.preventDefault();
     if (this.disabled) {
       return;
@@ -246,10 +246,10 @@ export class Joystick extends PreactControl {
     this.calculateSizes();
     this.windowMouseMove(ev);
     this.handle.style.transition = 'none';
-    window.addEventListener('mousemove', this.windowMouseMove);
-    window.addEventListener('mouseup', this.windowMouseUp);
-    window.addEventListener('mouseout', this.windowMouseOut);
-    window.addEventListener('blur', this.windowMouseUp);
+    window.addEventListener('pointermove', this.windowMouseMove, false);
+    window.addEventListener('pointerup', this.windowMouseUp);
+    window.addEventListener('pointerout', this.windowMouseOut);
+    // window.addEventListener('blur', this.windowMouseUp);
   };
 
   /**
@@ -257,7 +257,8 @@ export class Joystick extends PreactControl {
    * dragged. Does some math to get the (x, y) position to send to
    * Interactive, and calls moveXY to update the visual styling.
    */
-  protected windowMouseMove = (ev: MouseEvent) => {
+  protected windowMouseMove = (ev: PointerEvent) => {
+    ev.preventDefault();
     const radius = this.size.joystick.width / 2;
     const [x, y] = capMagnitude(
       (ev.pageX - (this.size.joystick.left + radius) - this.size.dragOffset[0]) / radius,
@@ -275,10 +276,10 @@ export class Joystick extends PreactControl {
     this.handle.style.transition = 'transform 300ms';
     this.handle.style.transform = 'translate(0px, 0px)';
 
-    window.removeEventListener('mousemove', this.windowMouseMove);
-    window.removeEventListener('mouseup', this.windowMouseUp);
-    window.removeEventListener('mouseout', this.windowMouseOut);
-    window.removeEventListener('blur', this.windowMouseUp);
+    window.removeEventListener('pointermove', this.windowMouseMove);
+    window.removeEventListener('pointerup', this.windowMouseUp);
+    window.removeEventListener('pointerout', this.windowMouseOut);
+    // window.removeEventListener('blur', this.windowMouseUp);
     setTimeout(() => {
       if (this.handle) {
         this.handle.style.transition = 'none';
@@ -288,7 +289,7 @@ export class Joystick extends PreactControl {
     this.throttledInputSender(0, 0);
   };
 
-  protected windowMouseOut = (ev: MouseEvent) => {
+  protected windowMouseOut = (ev: PointerEvent) => {
     const name = (ev.target as HTMLElement).localName;
     if (name === 'body' || name === 'html') {
       this.windowMouseUp();
@@ -322,7 +323,7 @@ export class Joystick extends PreactControl {
    * joystick on the screen. This is used in calculations in windowMouseMove
    * to correctly position the joystick.
    */
-  protected calculateSizes(ev?: MouseEvent) {
+  protected calculateSizes(ev?: PointerEvent) {
     const offset: [number, number] = [0, 0];
     const handle = this.handle.getBoundingClientRect();
     if (ev) {
