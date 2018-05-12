@@ -13,3 +13,4 @@ export * from './Control';
 export * from './Scene';
 export * from './SparkPill';
 export * from './Stage';
+export * from './Translate';
