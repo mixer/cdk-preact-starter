@@ -40,9 +40,9 @@ export class Screen extends PreactControl<any, IScreenState> {
     'gamepadDPadRight',
   ];
 
-  @Mixer.Input() public sendOnMove: boolean = false;
+  @Mixer.Input() public sendOnMove: boolean = true;
 
-  @Mixer.Input() public sendMoveOnMouseDown: boolean = true;
+  @Mixer.Input() public sendMoveOnMouseDown: boolean = false;
 
   @Mixer.Input() public moveThrottle: number = 50;
 
@@ -246,7 +246,7 @@ export class Screen extends PreactControl<any, IScreenState> {
   };
 
   private mousemove = (evt: MouseEvent) => {
-    if (!this.sendMoveOnMouseDown || this.state.isMoving) {
+    if (this.sendOnMove || (this.sendMoveOnMouseDown && this.state.isMoving)) {
       clearTimeout(this.debounceMove);
       this.debounceMove = setTimeout(() => {
         this.sendMouseCoords('move', evt);
