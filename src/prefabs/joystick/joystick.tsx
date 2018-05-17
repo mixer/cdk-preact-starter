@@ -166,7 +166,6 @@ export class Joystick extends PreactControl {
   private gamepad = gamepad;
 
   private lastSampleRate: number;
-
   private throttledInputSender: (x: number, y: number) => void;
 
   public componentDidMount() {
@@ -283,11 +282,12 @@ export class Joystick extends PreactControl {
     this.handle.style.transition = 'transform 300ms';
     this.handle.style.transform = 'translate(0px, 0px)';
 
-    window.removeEventListener('pointermove', this.windowMouseMove);
-    window.removeEventListener('pointerup', this.windowMouseUp);
-    window.removeEventListener('pointerout', this.windowMouseOut);
+    window.removeEventListener('mousemove', this.windowMouseMove);
+    window.removeEventListener('mouseup', this.windowMouseUp);
+    window.removeEventListener('mouseout', this.windowMouseOut);
     window.removeEventListener('touchmove', this.windowMouseMove);
     window.removeEventListener('touchend', this.windowMouseUp);
+    window.removeEventListener('touchleave', this.windowMouseOut);
     window.removeEventListener('blur', this.windowMouseUp);
     setTimeout(() => {
       if (this.handle) {
