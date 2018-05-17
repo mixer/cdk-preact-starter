@@ -171,7 +171,6 @@ export class Joystick extends PreactControl {
   public componentDidMount() {
     this.registerGamepadJoysticks();
     this.throttledInputSender = throttle(this.sampleRate, this.sendInputToInteractive);
-    this.joystick.onpointerdown = ev => this.mousedown(ev);
   }
 
   public componentWillReceiveProps() {
@@ -194,6 +193,8 @@ export class Joystick extends PreactControl {
         class="mixer-joystick"
         disabled={this.props.disabled}
         ref={this.setJoystick}
+        onMouseDown={(ev: PointerEvent) => this.mousedown(ev)}
+        onTouchStart={(ev: Event) => this.mousedown(ev as PointerEvent) }
       >
         <div class="arrows top" />
         <div class="arrows left" />
@@ -246,9 +247,14 @@ export class Joystick extends PreactControl {
     this.calculateSizes();
     this.windowMouseMove(ev);
     this.handle.style.transition = 'none';
-    window.addEventListener('pointermove', this.windowMouseMove, false);
-    window.addEventListener('pointerup', this.windowMouseUp);
-    window.addEventListener('pointerout', this.windowMouseOut);
+    window.addEventListener('mousemove', this.windowMouseMove, false);
+    window.addEventListener('mouseup', this.windowMouseUp);
+    window.addEventListener('mouseout', this.windowMouseOut);
+
+    window.addEventListener('touchmove', this.windowMouseMove, false);
+    window.addEventListener('touchend', this.windowMouseUp);
+    window.addEventListener('touchleave', this.windowMouseOut);
+
     window.addEventListener('blur', this.windowMouseUp);
   };
 
@@ -276,9 +282,12 @@ export class Joystick extends PreactControl {
     this.handle.style.transition = 'transform 300ms';
     this.handle.style.transform = 'translate(0px, 0px)';
 
-    window.removeEventListener('pointermove', this.windowMouseMove);
-    window.removeEventListener('pointerup', this.windowMouseUp);
-    window.removeEventListener('pointerout', this.windowMouseOut);
+    window.removeEventListener('mousemove', this.windowMouseMove);
+    window.removeEventListener('mouseup', this.windowMouseUp);
+    window.removeEventListener('mouseout', this.windowMouseOut);
+    window.removeEventListener('touchmove', this.windowMouseMove);
+    window.removeEventListener('touchend', this.windowMouseUp);
+    window.removeEventListener('touchleave', this.windowMouseOut);
     window.removeEventListener('blur', this.windowMouseUp);
     setTimeout(() => {
       if (this.handle) {
