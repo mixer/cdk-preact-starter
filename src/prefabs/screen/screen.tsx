@@ -14,7 +14,7 @@ interface IPlayer {
 
 interface IScreenState {
   player: IPlayer;
-  isMoving: boolean;
+  isDown: boolean;
 }
 
 @Mixer.Control({ kind: 'screen' })
@@ -40,9 +40,7 @@ export class Screen extends PreactControl<any, IScreenState> {
     'gamepadDPadRight',
   ];
 
-  @Mixer.Input() public sendOnMove: boolean = true;
-
-  @Mixer.Input() public sendMoveOnMouseDown: boolean = false;
+  @Mixer.Input() public sendMoveEvents: string = 'mousedown';
 
   @Mixer.Input() public moveThrottle: number = 50;
 
@@ -246,7 +244,7 @@ export class Screen extends PreactControl<any, IScreenState> {
   };
 
   private mousemove = (evt: MouseEvent) => {
-    if (this.sendOnMove || (this.sendMoveOnMouseDown && this.state.isMoving)) {
+    if (this.sendMoveEvents === 'always' || (this.sendMoveEvents === 'mousedown' && this.state.isDown)) {
       clearTimeout(this.debounceMove);
       this.debounceMove = setTimeout(() => {
         this.sendMouseCoords('move', evt);
@@ -260,8 +258,10 @@ export class Screen extends PreactControl<any, IScreenState> {
   };
 
   private mouseup = (evt: MouseEvent) => {
-    this.setMouseDown(false);
-    this.sendMouseCoords('mouseup', evt);
+    if (this.state.isDown) {
+      this.setMouseDown(false);
+      this.sendMouseCoords('mouseup', evt);
+    }
   };
 
   private sendTouchCoords = (event: string, evt: TouchEvent) => {
@@ -294,7 +294,7 @@ export class Screen extends PreactControl<any, IScreenState> {
   private setMouseDown = (isDown: boolean) => {
     this.setState({
       ...this.state,
-      isMoving: isDown,
+      isDown: isDown,
     });
   };
 }
