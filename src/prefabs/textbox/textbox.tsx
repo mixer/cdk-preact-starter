@@ -18,6 +18,7 @@ export class TextBox extends PreactControl<{
   availableSparks: number;
   active: boolean;
   cooldown: boolean;
+  inputValue: string;
 }> {
   /**
    * Whether the input and/or submit button is disabled on the textbox.
@@ -106,6 +107,14 @@ export class TextBox extends PreactControl<{
           disabled={this.disabled || this.state.cooldown}
           onKeyPress={this.keypress}
           tabIndex={0}
+          value={this.state.inputValue}
+        />
+        <div
+           class={classes({
+             clear: true,
+             disabled: !this.state.inputValue,
+           })}
+           onClick={this.reset}
         />
         {!this.hasSubmit && !this.cost
           ? [<CoolDown cooldown={this.cooldown} onCooldownEnd={this.endCooldown} />]
@@ -160,7 +169,15 @@ export class TextBox extends PreactControl<{
     }
     const target = this.refInput.base as HTMLInputElement;
     this.control.giveInput({ event: 'submit', value: target.value });
+    this.reset();
   };
+
+  protected reset = () => {
+    this.setState({
+      ...this.state,
+      inputValue: '',
+    })
+  }
 
   private updateAvailableSparks = () => {
     this.setState({
