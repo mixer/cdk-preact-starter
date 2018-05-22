@@ -321,6 +321,6 @@ export class Screen extends PreactControl<any, IScreenState> {
     this.rippleElement.style.left = `${evt.clientX - 24}px`;
     this.rippleElement.style.top = `${evt.clientY - 24}px`;
 
-    setTimeout(() => this.setState({ ...this.state, clicked: false }), 100);
+    setTimeout(() => this.setState({ ...this.state, clicked: false }), 300);
   }
 }

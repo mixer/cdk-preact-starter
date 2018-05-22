@@ -97,6 +97,7 @@ export class TextBox extends PreactControl<{
         tabIndex={-1}
       >
         <Input
+          type="search"
           class={textboxClasses}
           ref={this.setReference}
           placeholder={this.placeholder}
@@ -111,11 +112,10 @@ export class TextBox extends PreactControl<{
         />
         <div
            class={classes({
-             clear: true,
+             clearText: true,
              disabled: !this.state.inputValue,
            })}
-           onClick={this.reset}
-        />
+           onClick={this.reset}>x</div>
         {!this.hasSubmit && !this.cost
           ? [<CoolDown cooldown={this.cooldown} onCooldownEnd={this.endCooldown} />]
           : null}
@@ -150,10 +150,13 @@ export class TextBox extends PreactControl<{
   };
 
   protected handleChange = (evt: any) => {
-    const target = evt.target as HTMLInputElement;
+    this.setState({
+      ...this.state,
+      inputValue: evt.target.value,
+    });
+
     if (!this.multiline && !this.hasSubmit && !this.cost) {
-      const value = target.value;
-      this.control.giveInput({ event: 'change', value });
+      this.control.giveInput({ event: 'change', value: this.state.inputValue });
     }
   };
 
@@ -167,8 +170,12 @@ export class TextBox extends PreactControl<{
     if (evt && !this.hasSubmit && !this.cost) {
       return;
     }
-    const target = this.refInput.base as HTMLInputElement;
-    this.control.giveInput({ event: 'submit', value: target.value });
+
+    if (!this.state.inputValue) {
+      return;
+    }
+
+    this.control.giveInput({ event: 'submit', value: this.state.inputValue });
     this.reset();
   };
 
