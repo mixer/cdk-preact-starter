@@ -2,6 +2,7 @@ import * as Mixer from '@mixer/cdk-std';
 import { h } from 'preact';
 
 import { PreactControl } from '../../alchemy/preact';
+import { classes } from '../../alchemy/Style';
 
 import './screen.scss';
 
@@ -47,6 +48,7 @@ export class Screen extends PreactControl<any, IScreenState> {
   private isXbox: boolean;
 
   private screenElement: HTMLDivElement;
+  private rippleElement: HTMLDivElement;
   private debounceMove: any;
   private xboxMinThrottle: number = 50;
 
@@ -89,8 +91,15 @@ export class Screen extends PreactControl<any, IScreenState> {
     return (
       <div>
         {this.isXbox && <div id="xbox-cursor" style={this.state.cursorPosition} />}
+        <div ref={this.setRippleRef}
+            class={classes({
+              mixerClickVisual: true,
+              mixerClickVisualEffectSubtle: true,
+              mixerClickVisualClick: this.state.clicked,
+          })}
+        />
         <div
-          ref={this.setReference}
+          ref={this.setScreenRef}
           role="button"
           key={`control-${controlID}`}
           class="mixer-screen-container"
@@ -124,8 +133,12 @@ export class Screen extends PreactControl<any, IScreenState> {
     });
   };
 
-  protected setReference = (div: HTMLDivElement) => {
+  protected setScreenRef = (div: HTMLDivElement) => {
     this.screenElement = div;
+  };
+
+  protected setRippleRef = (div: HTMLDivElement) => {
+    this.rippleElement = div;
   };
 
   private runGamepadInputLoop = () => {
@@ -255,6 +268,7 @@ export class Screen extends PreactControl<any, IScreenState> {
   private mousedown = (evt: MouseEvent) => {
     this.setMouseDown(true);
     this.sendMouseCoords('mousedown', evt);
+    this.applyRipple(evt);
   };
 
   private mouseup = (evt: MouseEvent) => {
@@ -297,4 +311,16 @@ export class Screen extends PreactControl<any, IScreenState> {
       isDown: isDown,
     });
   };
+
+  private applyRipple = (evt: MouseEvent) => {
+    this.setState({
+      ...this.state,
+      clicked: true,
+    });
+
+    this.rippleElement.style.left = `${evt.clientX - 24}px`;
+    this.rippleElement.style.top = `${evt.clientY - 24}px`;
+
+    setTimeout(() => this.setState({ ...this.state, clicked: false }), 100);
+  }
 }
