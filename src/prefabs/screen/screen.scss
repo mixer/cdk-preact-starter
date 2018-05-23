@@ -1,8 +1,68 @@
 #xbox-cursor {
-  position: absolute;
-  bottom: 20%;
-  left: 5%;
-  height: 50px;
-  width: 50px;
-  background: url(./static/cursor.png) no-repeat 0 0 /contain;
+	position: absolute;
+	bottom: 20%;
+	left: 5%;
+	height: 50px;
+	width: 50px;
+	background: url(./static/cursor.png) no-repeat 0 0 /contain;
+}
+  
+.mixer-click-visual {
+	position: relative;
+	display: inline-block;
+	margin: 1em;
+	padding: 0;
+	border: none;
+	background: none;
+	overflow: visible;
+
+	&::after {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		margin: -35px 0 0 -35px;
+		width: 70px;
+		height: 70px;
+		border-radius: 50%;
+		content: '';
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	&:focus,
+	&.mixer-click-visual-click {
+		outline: none;
+	}
+}
+
+.mixer-click-visual-effect-subtle {
+	&::after {
+		border: 2px solid rgba(111,148,182,0.5);
+	}
+
+	&.mixer-click-visual-click::after {
+		animation: anim-effect-subtle 0.3s ease-out forwards;		
+	}
+}
+  
+@-webkit-keyframes anim-effect-subtle {
+	0% {
+		opacity: 1;
+		transform: scale3d(0.5, 0.5, 1);
+	}
+	to {
+		opacity: 0;
+		transform: scale3d(1.2, 1.2, 1);
+	}
+}
+
+@keyframes anim-effect-subtle {
+	0% {
+		opacity: 1;
+		transform: scale3d(0.5, 0.5, 1);
+	}
+	to {
+		opacity: 0;
+		transform: scale3d(1.2, 1.2, 1);
+	}
 }

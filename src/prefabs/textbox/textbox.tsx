@@ -18,6 +18,7 @@ export class TextBox extends PreactControl<{
   availableSparks: number;
   active: boolean;
   cooldown: boolean;
+  inputValue: string;
 }> {
   /**
    * Whether the input and/or submit button is disabled on the textbox.
@@ -96,6 +97,7 @@ export class TextBox extends PreactControl<{
         tabIndex={-1}
       >
         <Input
+          type="search"
           class={textboxClasses}
           ref={this.setReference}
           placeholder={this.placeholder}
@@ -106,7 +108,17 @@ export class TextBox extends PreactControl<{
           disabled={this.disabled || this.state.cooldown}
           onKeyPress={this.keypress}
           tabIndex={0}
+          value={this.state.inputValue}
         />
+        <div
+          class={classes({
+            clearText: true,
+            disabled: !this.state.inputValue,
+          })}
+          onClick={this.reset}
+        >
+          x
+        </div>
         {!this.hasSubmit && !this.cost
           ? [<CoolDown cooldown={this.cooldown} onCooldownEnd={this.endCooldown} />]
           : null}
@@ -141,11 +153,14 @@ export class TextBox extends PreactControl<{
   };
 
   protected handleChange = (evt: any) => {
-    const target = evt.target as HTMLInputElement;
-    if (!this.multiline && !this.hasSubmit && !this.cost) {
-      const value = target.value;
-      this.control.giveInput({ event: 'change', value });
-    }
+    this.setState({
+      ...this.state,
+      inputValue: evt.target.value,
+    }, () => {
+      if (!this.multiline && !this.hasSubmit && !this.cost) {
+        this.control.giveInput({ event: 'change', value: this.state.inputValue });
+      }
+    });
   };
 
   protected keypress = (evt: KeyboardEvent) => {
@@ -158,8 +173,20 @@ export class TextBox extends PreactControl<{
     if (evt && !this.hasSubmit && !this.cost) {
       return;
     }
-    const target = this.refInput.base as HTMLInputElement;
-    this.control.giveInput({ event: 'submit', value: target.value });
+
+    if (!this.state.inputValue) {
+      return;
+    }
+
+    this.control.giveInput({ event: 'submit', value: this.state.inputValue });
+    this.reset();
+  };
+
+  protected reset = () => {
+    this.setState({
+      ...this.state,
+      inputValue: '',
+    });
   };
 
   private updateAvailableSparks = () => {
