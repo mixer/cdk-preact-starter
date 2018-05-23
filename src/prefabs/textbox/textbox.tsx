@@ -108,16 +108,6 @@ export class TextBox extends PreactControl<{
           tabIndex={0}
           value={this.state.inputValue}
         />
-        <div
-          role="button"
-          class={classes({
-            clearText: true,
-            disabled: !this.state.inputValue,
-          })}
-          onClick={this.reset}
-        >
-          x
-        </div>
         {!this.hasSubmit && !this.cost
           ? [<CoolDown cooldown={this.cooldown} onCooldownEnd={this.endCooldown} />]
           : null}
@@ -148,14 +138,17 @@ export class TextBox extends PreactControl<{
   };
 
   protected handleChange = (evt: any) => {
-    this.setState({
-      ...this.state,
-      inputValue: evt.target.value,
-    }, () => {
-      if (!this.multiline && !this.hasSubmit && !this.cost) {
-        this.control.giveInput({ event: 'change', value: this.state.inputValue });
-      }
-    });
+    this.setState(
+      {
+        ...this.state,
+        inputValue: evt.target.value,
+      },
+      () => {
+        if (!this.multiline && !this.hasSubmit && !this.cost) {
+          this.control.giveInput({ event: 'change', value: this.state.inputValue });
+        }
+      },
+    );
   };
 
   protected keypress = (evt: KeyboardEvent) => {
