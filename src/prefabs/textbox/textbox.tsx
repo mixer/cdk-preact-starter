@@ -57,7 +57,6 @@ export class TextBox extends PreactControl<{
   @Mixer.Input() public cooldown: number;
 
   private hasFocus: boolean;
-  private refInput: Input;
 
   public componentWillMount() {
     this.updateAvailableSparks();
@@ -99,7 +98,6 @@ export class TextBox extends PreactControl<{
         <Input
           type="search"
           class={textboxClasses}
-          ref={this.setReference}
           placeholder={this.placeholder}
           multiline={this.multiline}
           onClick={this.handleClick}
@@ -111,6 +109,7 @@ export class TextBox extends PreactControl<{
           value={this.state.inputValue}
         />
         <div
+          role="button"
           class={classes({
             clearText: true,
             disabled: !this.state.inputValue,
@@ -137,10 +136,6 @@ export class TextBox extends PreactControl<{
       </div>
     );
   }
-
-  protected setReference = (input: Input) => {
-    this.refInput = input;
-  };
 
   protected handleClick = (evt: PointerEvent) => {
     this.hasFocus = true;
