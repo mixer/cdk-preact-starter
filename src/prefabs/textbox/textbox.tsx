@@ -156,11 +156,11 @@ export class TextBox extends PreactControl<{
     this.setState({
       ...this.state,
       inputValue: evt.target.value,
+    }, () => {
+      if (!this.multiline && !this.hasSubmit && !this.cost) {
+        this.control.giveInput({ event: 'change', value: this.state.inputValue });
+      }
     });
-
-    if (!this.multiline && !this.hasSubmit && !this.cost) {
-      this.control.giveInput({ event: 'change', value: this.state.inputValue });
-    }
   };
 
   protected keypress = (evt: KeyboardEvent) => {
