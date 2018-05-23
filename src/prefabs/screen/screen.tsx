@@ -91,11 +91,12 @@ export class Screen extends PreactControl<any, IScreenState> {
     return (
       <div>
         {this.isXbox && <div id="xbox-cursor" style={this.state.cursorPosition} />}
-        <div ref={this.setRippleRef}
-            class={classes({
-              mixerClickVisual: true,
-              mixerClickVisualEffectSubtle: true,
-              mixerClickVisualClick: this.state.clicked,
+        <div
+          ref={this.setRippleRef}
+          class={classes({
+            mixerClickVisual: true,
+            mixerClickVisualEffectSubtle: true,
+            mixerClickVisualClick: this.state.clicked,
           })}
         />
         <div
@@ -257,7 +258,10 @@ export class Screen extends PreactControl<any, IScreenState> {
   };
 
   private mousemove = (evt: MouseEvent) => {
-    if (this.sendMoveEvents === 'always' || (this.sendMoveEvents === 'mousedown' && this.state.isDown)) {
+    if (
+      this.sendMoveEvents === 'always' ||
+      (this.sendMoveEvents === 'mousedown' && this.state.isDown)
+    ) {
       clearTimeout(this.debounceMove);
       this.debounceMove = setTimeout(() => {
         this.sendMouseCoords('move', evt);
@@ -322,5 +326,5 @@ export class Screen extends PreactControl<any, IScreenState> {
     this.rippleElement.style.top = `${evt.clientY - 24}px`;
 
     setTimeout(() => this.setState({ ...this.state, clicked: false }), 300);
-  }
+  };
 }
