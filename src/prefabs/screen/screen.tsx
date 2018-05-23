@@ -262,10 +262,14 @@ export class Screen extends PreactControl<any, IScreenState> {
       this.sendMoveEvents === 'always' ||
       (this.sendMoveEvents === 'mousedown' && this.state.isDown)
     ) {
-      clearTimeout(this.debounceMove);
-      this.debounceMove = setTimeout(() => {
+      if (this.moveThrottle > 0) {
+        clearTimeout(this.debounceMove);
+        this.debounceMove = setTimeout(() => {
+          this.sendMouseCoords('move', evt);
+        }, this.moveThrottle);
+      } else {
         this.sendMouseCoords('move', evt);
-      }, this.moveThrottle);
+      }
     }
   };
 
