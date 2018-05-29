@@ -76,6 +76,12 @@ export abstract class PreactScene<T, S = {}> extends Component<SceneProps<S>, T 
         ...(this.state as ISceneState),
         containers: newContainers,
       });
+    } else {
+      // we need to tear this down
+      this.setState({
+        ...(this.state as ISceneState),
+        containers: null,
+      });
     }
   }
 }
