@@ -317,7 +317,7 @@ export class Button extends PreactControl<{
         blockRule(controlID, '.mixer-button', {
           border: this.borderColor ? `2px solid ${sanitizeCSS(this.borderColor)}` : null,
           backgroundColor: sanitizeCSS(this.backgroundColor),
-          backgroundImage: this.backgroundImage ? `url(${this.backgroundImage})` : null,
+          backgroundImage: this.backgroundImage ? `url(https://images.mixerusercontent.com/x/${this.backgroundImage})` : null,
         })}
         {// Custom border color on hover for the button.
         blockRule(controlID, '.mixer-button:hover', {
