@@ -216,6 +216,7 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
       placement: 'bottom',
       hideOnClick: false,
       dynamicTitle: true,
+      allowTitleHTML: false,
       popperOptions: {
         modifiers: {
           preventOverflow: {
