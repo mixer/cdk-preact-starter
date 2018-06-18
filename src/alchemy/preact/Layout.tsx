@@ -65,7 +65,7 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
   /**
    * Padding around the video, in pixels.
    */
-  public static videoPadding = 8;
+  public static videoPadding = 0;
 
   /**
    * "unlisteners" for media queries.
@@ -332,7 +332,7 @@ export class FlexLayout extends Component<ILayoutOptions, {}> implements ILayout
   /**
    * Padding around the video, in pixels.
    */
-  public static videoPadding = 8;
+  public static videoPadding = 0;
 
   /**
    * Previous position of the video, so we don't need to update
