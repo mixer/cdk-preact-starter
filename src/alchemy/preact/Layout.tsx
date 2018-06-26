@@ -18,6 +18,7 @@ import { ResourceHolder } from './Helpers';
 
 export interface IFixedGridState {
   activeGrid: number;
+  tip: any;
 }
 
 export interface ILayoutOptions {
@@ -211,7 +212,8 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
   }
 
   private renderTippy = (): void => {
-    tippy(`[name^="control"] > div`, {
+    this.destroyTippy();
+    const tip = tippy(`[name^="control"] > div`, {
       appendTo: document.querySelector('.alchemy-grid-layout'),
       placement: 'bottom',
       hideOnClick: false,
@@ -229,6 +231,16 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
         },
       },
     });
+    this.setState({
+      ...this.state,
+      tip,
+    });
+  };
+
+  private destroyTippy = (): void => {
+    if (this.state.tip) {
+      this.state.tip.destroyAll();
+    }
   };
 }
 
