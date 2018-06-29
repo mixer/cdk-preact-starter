@@ -1,3 +1,4 @@
+//tslint:disable-next-line
 import * as Mixer from '@mixer/cdk-std';
 import { Component } from 'preact';
 
@@ -37,12 +38,10 @@ export abstract class PreactScene<T, S = {}> extends Component<SceneProps<S>, T 
           settings,
         });
       });
-    this.updateStateContainers(this.props as SceneProps<any>);
   }
 
   public componentWillReceiveProps(nextProps: SceneProps<S>) {
     this.scene = nextProps.resource;
-    this.updateStateContainers(nextProps);
   }
 
   /**
@@ -56,32 +55,9 @@ export abstract class PreactScene<T, S = {}> extends Component<SceneProps<S>, T 
   }
 
   protected getFlexLayoutEngine() {
-    if (this.state.containers || this.props.controls.find(control => control.kind === 'screen')) {
+    if (this.props.containers) {
       return FlexLayout;
     }
     return null;
-  }
-
-  private updateStateContainers(props: SceneProps<S>) {
-    const screenControl = props.controls.find(control => control.kind === 'screen');
-    if (screenControl) {
-      let newContainers: Mixer.Layout.IContainer[] = [];
-      if (this.state.containers) {
-        newContainers = [...this.state.containers];
-      }
-      newContainers.push({
-        children: [{ controlID: screenControl.controlID }],
-      });
-      this.setState({
-        ...(this.state as ISceneState),
-        containers: newContainers,
-      });
-    } else {
-      // we need to tear this down
-      this.setState({
-        ...(this.state as ISceneState),
-        containers: null,
-      });
-    }
   }
 }

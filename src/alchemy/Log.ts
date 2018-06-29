@@ -1,3 +1,4 @@
+//tslint:disable-next-line
 import * as Mixer from '@mixer/cdk-std';
 import * as stringify from 'json-stringify-safe';
 

@@ -1,6 +1,4 @@
-/*******************
- * Label
- * *****************/
+//tslint:disable-next-line
 import * as Mixer from '@mixer/cdk-std';
 import { h } from 'preact';
 import { PreactControl } from '../../alchemy/preact';
@@ -8,6 +6,10 @@ import { blockRule } from '../../alchemy/Style';
 
 import './label.scss';
 
+/**
+ * Label is the default Interactive label control! It allows you
+ * visually group sets of controls together, or give directions.
+ */
 @Mixer.Control({ kind: 'label' })
 export class Label extends PreactControl {
   /**

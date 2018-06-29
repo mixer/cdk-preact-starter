@@ -1,3 +1,4 @@
+//tslint:disable-next-line
 import * as Mixer from '@mixer/cdk-std';
 import { EventEmitter } from 'eventemitter3';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';

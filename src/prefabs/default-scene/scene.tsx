@@ -1,7 +1,10 @@
+//tslint:disable-next-line
 import * as Mixer from '@mixer/cdk-std';
-import { h } from 'preact';
+import { Component, h } from 'preact';
 
 import { PreactScene } from '../../alchemy/preact';
+import { ResourceHolder } from '../../alchemy/preact/Helpers';
+import { Screen } from '../screen/screen';
 
 import './scene.scss';
 
@@ -31,15 +34,23 @@ export class DefaultScene extends PreactScene<{}> {
           containers={this.state.containers}
         />,
       );
-    }
-
-    // If controls exist that require the FixedGridLayout, we will render it.
-    if (FixedGridLayout) {
+    } else if (FixedGridLayout) {
       renders.push(
         <FixedGridLayout
           key={`mixer-default-scene scene-${this.scene.props.sceneID}`}
           scene={scene}
           settings={this.state.settings}
+        />,
+      );
+    }
+
+    const screenControl = this.props.controls.find(control => control.kind === 'screen');
+    if (screenControl) {
+      renders.push(
+        <ResourceHolder
+          key={`resource-${screenControl.controlID}`}
+          resource={this.scene.controls[screenControl.controlID]}
+          component={Screen as typeof Component}
         />,
       );
     }

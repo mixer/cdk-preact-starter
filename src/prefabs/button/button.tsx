@@ -1,3 +1,4 @@
+//tslint:disable-next-line
 import * as Mixer from '@mixer/cdk-std';
 import { Component, h } from 'preact';
 
@@ -8,14 +9,15 @@ import { blockRule, classes, css } from '../../alchemy/Style';
 import './button.scss';
 
 function sanitizeCSS(styles: string) {
-  if (!styles) {
+  let newStyles = styles;
+  if (!newStyles) {
     return;
   }
-  const index = styles.indexOf(';');
+  const index = newStyles.indexOf(';');
   if (index >= 0) {
-    styles = styles.substr(0, index);
+    newStyles = newStyles.substr(0, index);
   }
-  return styles;
+  return newStyles;
 }
 
 /**
@@ -317,7 +319,9 @@ export class Button extends PreactControl<{
         blockRule(controlID, '.mixer-button', {
           border: this.borderColor ? `2px solid ${sanitizeCSS(this.borderColor)}` : null,
           backgroundColor: sanitizeCSS(this.backgroundColor),
-          backgroundImage: this.backgroundImage ? `url('https://images.mixerusercontent.com/x/${this.backgroundImage}')` : null,
+          backgroundImage: this.backgroundImage
+            ? `url('https://images.mixerusercontent.com/x/${this.backgroundImage}')`
+            : null,
         })}
         {// Custom border color on hover for the button.
         blockRule(controlID, '.mixer-button:hover', {

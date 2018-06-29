@@ -1,3 +1,4 @@
+//tslint:disable-next-line
 import * as Mixer from '@mixer/cdk-std';
 
 import { HtmlControl } from '../../alchemy/preact/HtmlControl';
@@ -29,16 +30,10 @@ export class HtmlStringControl extends HtmlControl {
   @Mixer.Input({ kind: Mixer.InputKind.Url })
   public htmlUrl: string = '';
 
-  /**
-   * @override
-   */
   public componentDidMount() {
     this.renderHtml();
   }
 
-  /**
-   * @override
-   */
   public componentDidUpdate() {
     this.renderHtml();
   }

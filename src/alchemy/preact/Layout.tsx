@@ -2,7 +2,7 @@
  * This module defines the layout engines used for custom controls. They create
  * Preact components. See the documentation on each class for further details.
  */
-
+//tslint:disable-next-line
 import { display, IControlDescriptor, ISettings, Layout } from '@mixer/cdk-std';
 import { Component, h } from 'preact';
 import { fromEvent } from 'rxjs/observable/fromEvent';
@@ -106,6 +106,7 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
   }
 
   public componentWillUnmount() {
+    this.destroyTippy();
     this.unregisterListeners.forEach(l => l());
   }
 

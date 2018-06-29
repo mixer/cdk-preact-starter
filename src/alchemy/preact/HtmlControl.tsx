@@ -70,16 +70,10 @@ export abstract class HtmlControl<T = {}> extends PreactControl<T> {
    */
   private boundElements: Element[] = [];
 
-  /**
-   * @override on Preact's render method.
-   */
   public render() {
     return <div id={this.id} />;
   }
 
-  /**
-   * @override on Preact's component teardown.
-   */
   public componentWillUnmount() {
     this.unmount();
   }
