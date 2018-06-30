@@ -1,4 +1,3 @@
-//tslint:disable-next-line
 import { display, Layout } from '@mixer/cdk-std';
 
 /**

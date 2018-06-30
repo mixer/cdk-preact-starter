@@ -1,4 +1,3 @@
-//tslint:disable-next-line
 import * as Mixer from '@mixer/cdk-std';
 import { Component, h } from 'preact';
 import { classes } from '../../alchemy/Style';

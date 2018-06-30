@@ -1,4 +1,3 @@
-//tslint:disable-next-line
 import * as Mixer from '@mixer/cdk-std';
 import { EventEmitter } from 'eventemitter3';
 import IntlMessageFormat from 'intl-messageformat';

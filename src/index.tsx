@@ -1,4 +1,3 @@
-//tslint:disable-next-line
 import * as Mixer from '@mixer/cdk-std';
 import { h, render } from 'preact';
 import { HtmlStringControl } from './prefabs/html/html';
