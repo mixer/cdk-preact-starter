@@ -22,27 +22,6 @@ export class DefaultScene extends PreactScene<{}> {
     const scene = this.scene;
     const renders = [];
 
-    // If a flex-based control exist or a container exists that
-    // requires a FlexLayout, we'll render it.
-    if (FlexLayout) {
-      renders.push(
-        <FlexLayout
-          key={`mixer-default-scene scene-${this.scene.props.sceneID}`}
-          scene={scene}
-          settings={this.state.settings}
-          containers={this.state.containers}
-        />,
-      );
-    } else if (FixedGridLayout) {
-      renders.push(
-        <FixedGridLayout
-          key={`mixer-default-scene scene-${this.scene.props.sceneID}`}
-          scene={scene}
-          settings={this.state.settings}
-        />,
-      );
-    }
-
     const screenControl = this.props.controls.find(control => control.kind === 'screen');
     if (screenControl) {
       renders.push(
@@ -52,7 +31,36 @@ export class DefaultScene extends PreactScene<{}> {
           component={Screen as typeof Component}
         />,
       );
+
+      if (FixedGridLayout) {
+        console.warn(
+          'A screen control must exist alone in a scene.' +
+            ' Other controls have been detected, but have been ignored in the render process.',
+        );
+      }
+    } else {
+      // If a flex-based control exist or a container exists that
+      // requires a FlexLayout, we'll render it.
+      if (FlexLayout) {
+        renders.push(
+          <FlexLayout
+            key={`mixer-default-scene scene-${this.scene.props.sceneID}`}
+            scene={scene}
+            settings={this.state.settings}
+            containers={this.state.containers}
+          />,
+        );
+      } else if (FixedGridLayout) {
+        renders.push(
+          <FixedGridLayout
+            key={`mixer-default-scene scene-${this.scene.props.sceneID}`}
+            scene={scene}
+            settings={this.state.settings}
+          />,
+        );
+      }
     }
+
     return <div class={`mixer-default-scene scene-${this.scene.props.sceneID}`}>{renders}</div>;
   }
 }
