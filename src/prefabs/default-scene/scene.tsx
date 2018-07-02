@@ -33,7 +33,7 @@ export class DefaultScene extends PreactScene<{}> {
       );
 
       if (FixedGridLayout) {
-        console.warn(
+        console.error(
           'A screen control must exist alone in a scene.' +
             ' Other controls have been detected, but have been ignored in the render process.',
         );
