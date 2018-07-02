@@ -1,7 +1,9 @@
 import * as Mixer from '@mixer/cdk-std';
-import { h } from 'preact';
+import { Component, h } from 'preact';
 
 import { PreactScene } from '../../alchemy/preact';
+import { ResourceHolder } from '../../alchemy/preact/Helpers';
+import { Screen } from '../screen/screen';
 
 import './scene.scss';
 
@@ -20,29 +22,45 @@ export class DefaultScene extends PreactScene<{}> {
     const scene = this.scene;
     const renders = [];
 
-    // If a flex-based control exist or a container exists that
-    // requires a FlexLayout, we'll render it.
-    if (FlexLayout) {
+    const screenControl = this.props.controls.find(control => control.kind === 'screen');
+    if (screenControl) {
       renders.push(
-        <FlexLayout
-          key={`mixer-default-scene scene-${this.scene.props.sceneID}`}
-          scene={scene}
-          settings={this.state.settings}
-          containers={this.state.containers}
+        <ResourceHolder
+          key={`resource-${screenControl.controlID}`}
+          resource={this.scene.controls[screenControl.controlID]}
+          component={Screen as typeof Component}
         />,
       );
+
+      if (FixedGridLayout) {
+        console.error(
+          'A screen control must exist alone in a scene.' +
+            ' Other controls have been detected, but have been ignored in the render process.',
+        );
+      }
+    } else {
+      // If a flex-based control exist or a container exists that
+      // requires a FlexLayout, we'll render it.
+      if (FlexLayout) {
+        renders.push(
+          <FlexLayout
+            key={`mixer-default-scene scene-${this.scene.props.sceneID}`}
+            scene={scene}
+            settings={this.state.settings}
+            containers={this.state.containers}
+          />,
+        );
+      } else if (FixedGridLayout) {
+        renders.push(
+          <FixedGridLayout
+            key={`mixer-default-scene scene-${this.scene.props.sceneID}`}
+            scene={scene}
+            settings={this.state.settings}
+          />,
+        );
+      }
     }
 
-    // If controls exist that require the FixedGridLayout, we will render it.
-    if (FixedGridLayout) {
-      renders.push(
-        <FixedGridLayout
-          key={`mixer-default-scene scene-${this.scene.props.sceneID}`}
-          scene={scene}
-          settings={this.state.settings}
-        />,
-      );
-    }
     return <div class={`mixer-default-scene scene-${this.scene.props.sceneID}`}>{renders}</div>;
   }
 }

@@ -29,16 +29,10 @@ export class HtmlStringControl extends HtmlControl {
   @Mixer.Input({ kind: Mixer.InputKind.Url })
   public htmlUrl: string = '';
 
-  /**
-   * @override
-   */
   public componentDidMount() {
     this.renderHtml();
   }
 
-  /**
-   * @override
-   */
   public componentDidUpdate() {
     this.renderHtml();
   }

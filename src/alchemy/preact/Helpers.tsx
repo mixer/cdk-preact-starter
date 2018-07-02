@@ -20,9 +20,6 @@ export class ResourceHolder<S, T extends Resource<S>> extends Component<
 > {
   private previousResource: T;
 
-  /**
-   * @override
-   */
   public componentWillMount() {
     this.setResource(this.props.resource);
     this.setState({
@@ -33,9 +30,6 @@ export class ResourceHolder<S, T extends Resource<S>> extends Component<
     });
   }
 
-  /**
-   * @override
-   */
   public componentWillReceiveProps(nextProps: IResourceHolderProps<S, T>) {
     this.setResource(nextProps.resource);
     this.setState({
@@ -46,9 +40,6 @@ export class ResourceHolder<S, T extends Resource<S>> extends Component<
     });
   }
 
-  /**
-   * @override
-   */
   public componentWillUnmount() {
     if (this.previousResource) {
       this.previousResource.removeListener('update', this.updateListener);

@@ -18,6 +18,10 @@ interface IScreenState {
   isDown: boolean;
 }
 
+/**
+ * Screen is the default Interactive screen control! It allows
+ * you to obtain mouse input on the video from your users.
+ */
 @Mixer.Control({ kind: 'screen' })
 export class Screen extends PreactControl<any, IScreenState> {
   private static MIN_JOYSTICK_X_CLAMP: number = 0.2;
@@ -85,14 +89,13 @@ export class Screen extends PreactControl<any, IScreenState> {
 
   public render() {
     const { controlID } = this.props;
-    const {
-      player: { top, left, width, height },
-    } = this.state;
+    const { player: { top, left, width, height } } = this.state;
     return (
-      <div>
+      <div class="screen-container">
         {this.isXbox && <div id="xbox-cursor" style={this.state.cursorPosition} />}
         <div
           ref={this.setRippleRef}
+          key={`screen-${controlID}`}
           class={classes({
             mixerClickVisual: true,
             mixerClickVisualEffectSubtle: true,
@@ -287,6 +290,10 @@ export class Screen extends PreactControl<any, IScreenState> {
   };
 
   private sendTouchCoords = (event: string, evt: TouchEvent) => {
+    // We lose reference in tear-down.
+    if (!this.screenElement) {
+      return;
+    }
     const height = this.screenElement.clientHeight;
     const width = this.screenElement.clientWidth;
     let x;
@@ -302,6 +309,10 @@ export class Screen extends PreactControl<any, IScreenState> {
   };
 
   private sendMouseCoords = (event: string, evt: MouseEvent) => {
+    // We lose reference in tear-down.
+    if (!this.screenElement) {
+      return;
+    }
     const height = this.screenElement.clientHeight;
     const width = this.screenElement.clientWidth;
     const relX = evt.offsetX / width;

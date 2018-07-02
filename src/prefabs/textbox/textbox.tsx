@@ -1,6 +1,3 @@
-/*******************
- * TextBox
- * *****************/
 import * as Mixer from '@mixer/cdk-std';
 import { Component, h } from 'preact';
 
@@ -10,6 +7,10 @@ import { classes } from '../../alchemy/Style';
 import '../button/button.scss';
 import './textbox.scss';
 
+/**
+ * Textbox is the default Interactive textbox control! It allows you
+ * to obtain text input from your users.
+ */
 @Mixer.Control({
   kind: 'textbox',
   dimensions: [{ property: 'height', minimum: 4 }, { property: 'width', minimum: 10 }],
@@ -204,6 +205,9 @@ export class TextBox extends PreactControl<{
   };
 }
 
+/**
+ * Input is the text input for the Textbox control.
+ */
 class Input extends Component<any, any> {
   public render() {
     if (this.props.multiline) {
@@ -214,6 +218,10 @@ class Input extends Component<any, any> {
   }
 }
 
+/**
+ * Button is the submit button for the text input on the
+ * Textbox control.
+ */
 class Button extends Component<any, any> {
   public render() {
     if (this.props.hasSubmit || this.props.cost) {

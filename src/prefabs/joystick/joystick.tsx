@@ -193,8 +193,8 @@ export class Joystick extends PreactControl {
         class="mixer-joystick"
         disabled={this.props.disabled}
         ref={this.setJoystick}
-        onMouseDown={(ev: PointerEvent) => this.mousedown(ev)}
-        onTouchStart={(ev: Event) => this.mousedown(ev as PointerEvent) }
+        onMouseDown={this.mousedown}
+        onTouchStart={this.touchdown}
       >
         <div class="arrows top" />
         <div class="arrows left" />
@@ -232,6 +232,11 @@ export class Joystick extends PreactControl {
   protected setHandle = (element: HTMLElement) => {
     this.handle = element;
   };
+
+  /**
+   * Passes the touch event as a pointer event.
+   */
+  protected touchdown = (ev: Event) => this.mousedown(ev as PointerEvent);
 
   /**
    * Starts a drag on the joystick. Grabs the mouse's current position

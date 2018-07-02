@@ -118,9 +118,6 @@ class PlacesVideoMatcher implements IQueryMatcher {
     return this.pattern.test(pattern);
   }
 
-  /**
-   * @override
-   */
   public matches(): boolean {
     const settings = display.getSettings();
     const places = settings && settings.placesVideo;
@@ -129,9 +126,6 @@ class PlacesVideoMatcher implements IQueryMatcher {
     return expected === places;
   }
 
-  /**
-   * @override
-   */
   public watch(fn: (matches: boolean) => void): () => void {
     const subscription = display.settings().subscribe(() => fn(this.matches()));
     return () => subscription.unsubscribe();
@@ -151,16 +145,10 @@ class MediaQueryMatcher implements IQueryMatcher {
     return true;
   }
 
-  /**
-   * @override
-   */
   public matches(): boolean {
     return matchMedia(this.query).matches;
   }
 
-  /**
-   * @override
-   */
   public watch(fn: (matches: boolean) => void): () => void {
     const query = matchMedia(this.query);
     const handler = (result: MediaQueryList) => fn(result.matches);
