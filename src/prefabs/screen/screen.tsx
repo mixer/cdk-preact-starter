@@ -49,6 +49,10 @@ export class Screen extends PreactControl<any, IScreenState> {
 
   @Mixer.Input() public moveThrottle: number = 50;
 
+  @Mixer.Input() public sendMouseUpEvent: boolean = true;
+
+  @Mixer.Input() public sendMouseDownEvent: boolean = true;
+
   private isXbox: boolean;
 
   private screenElement: HTMLDivElement;
@@ -321,6 +325,10 @@ export class Screen extends PreactControl<any, IScreenState> {
   };
 
   private sendCoords = (event: string, x: number, y: number) => {
+    if ((event === 'mousedown' && !this.sendMouseDownEvent)
+      || event === 'mouseup' && !this.sendMouseUpEvent) {
+      return;
+    }
     this.control.giveInput({ event, x, y });
   };
 
