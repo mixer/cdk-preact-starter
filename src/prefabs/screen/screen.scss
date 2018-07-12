@@ -4,9 +4,10 @@
 	left: 5%;
 	height: 50px;
 	width: 50px;
-	background: url(./static/cursor.png) no-repeat 0 0 /contain;
+  background: url(./static/cursor.png) no-repeat 0 0 /contain;
+  outline: none;
 }
-  
+
 .mixer-click-visual {
 	position: relative;
 	display: inline-block;
@@ -41,10 +42,10 @@
 	}
 
 	&.mixer-click-visual-click::after {
-		animation: anim-effect-subtle 0.3s ease-out forwards;		
+		animation: anim-effect-subtle 0.3s ease-out forwards;
 	}
 }
-  
+
 @-webkit-keyframes anim-effect-subtle {
 	0% {
 		opacity: 1;
