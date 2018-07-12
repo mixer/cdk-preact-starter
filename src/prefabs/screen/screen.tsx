@@ -92,7 +92,7 @@ export class Screen extends PreactControl<any, IScreenState> {
     const { player: { top, left, width, height } } = this.state;
     return (
       <div class="screen-container">
-        {this.isXbox && <div id="xbox-cursor" style={this.state.cursorPosition} />}
+        {this.isXbox && <div id="xbox-cursor" tabIndex={0} style={this.state.cursorPosition} />}
         <div
           ref={this.setRippleRef}
           key={`screen-${controlID}`}
