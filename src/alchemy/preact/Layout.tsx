@@ -173,22 +173,21 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
     const grid = Layout.gridLayouts[this.state.activeGrid];
     const width = grid.width * FixedGridLayout.gridScale;
     const maxHeight = grid.height * FixedGridLayout.gridScale;
-    let height = maxHeight;
 
-    const lowestPos = this.props.scene
+    const calcedHeight = this.props.scene
       .listControls()
       .map(
         control => control.props.position && control.props.position.find(p => p.size === grid.size),
       )
       .filter(Boolean)
-      .reduce((pos, max) => (max.y + max.height > pos.y + pos.height ? max : pos));
+      .reduce<number>(
+        (max: number, pos: Layout.IGridPlacement) =>
+          Math.max(max, pos.y + pos.height) * FixedGridLayout.gridScale,
+        0,
+      );
 
-    if (lowestPos) {
-      const calcedWithScale = (lowestPos.height + lowestPos.y) * FixedGridLayout.gridScale;
-      if (calcedWithScale < maxHeight) {
-        height = calcedWithScale;
-      }
-    }
+    const height = calcedHeight && calcedHeight < maxHeight ? calcedHeight : maxHeight;
+
     // On mobile, fill the available window.
     let multiplier = 1;
     if (this.props.settings.platform === 'xbox' || !this.props.settings.placesVideo) {
