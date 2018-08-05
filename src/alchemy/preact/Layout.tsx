@@ -171,22 +171,24 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
    */
   private getGridPixelSize() {
     const grid = Layout.gridLayouts[this.state.activeGrid];
-    let calcedHeight = 0;
-    this.props.scene.listControls().forEach(control => {
-      control.props.position.forEach(pos => {
-        if (pos.size === grid.size) {
-          const posHeight = pos.y + pos.height;
-          if (posHeight > calcedHeight) {
-            calcedHeight = posHeight;
-          }
-        }
-      });
-    });
     const width = grid.width * FixedGridLayout.gridScale;
-    calcedHeight = calcedHeight * FixedGridLayout.gridScale;
     const maxHeight = grid.height * FixedGridLayout.gridScale;
-    const height = !calcedHeight || calcedHeight > maxHeight ? maxHeight : calcedHeight;
+    let height = maxHeight;
 
+    const lowestPos = this.props.scene
+      .listControls()
+      .map(
+        control => control.props.position && control.props.position.find(p => p.size === grid.size),
+      )
+      .filter(Boolean)
+      .reduce((pos, max) => (max.y + max.height > pos.y + pos.height ? max : pos));
+
+    if (lowestPos) {
+      const calcedWithScale = (lowestPos.height + lowestPos.y) * FixedGridLayout.gridScale;
+      if (calcedWithScale < maxHeight) {
+        height = calcedWithScale;
+      }
+    }
     // On mobile, fill the available window.
     let multiplier = 1;
     if (this.props.settings.platform === 'xbox' || !this.props.settings.placesVideo) {
@@ -368,7 +370,11 @@ export class FlexLayout extends Component<ILayoutOptions, {}> implements ILayout
 
   public componentDidMount() {
     fromEvent(window, 'resize')
-      .pipe(debounceTime(5), untilUnmount(this), startWith(null))
+      .pipe(
+        debounceTime(5),
+        untilUnmount(this),
+        startWith(null),
+      )
       .subscribe(() => this.refresh());
   }
 
