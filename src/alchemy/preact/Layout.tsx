@@ -171,9 +171,22 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
    */
   private getGridPixelSize() {
     const grid = Layout.gridLayouts[this.state.activeGrid];
-
     const width = grid.width * FixedGridLayout.gridScale;
-    const height = grid.height * FixedGridLayout.gridScale;
+    const maxHeight = grid.height * FixedGridLayout.gridScale;
+
+    const calcedHeight = this.props.scene
+      .listControls()
+      .map(
+        control => control.props.position && control.props.position.find(p => p.size === grid.size),
+      )
+      .filter(Boolean)
+      .reduce<number>(
+        (max: number, pos: Layout.IGridPlacement) =>
+          Math.max(max, pos.y + pos.height) * FixedGridLayout.gridScale,
+        0,
+      );
+
+    const height = calcedHeight && calcedHeight < maxHeight ? calcedHeight : maxHeight;
 
     // On mobile, fill the available window.
     let multiplier = 1;
@@ -356,7 +369,11 @@ export class FlexLayout extends Component<ILayoutOptions, {}> implements ILayout
 
   public componentDidMount() {
     fromEvent(window, 'resize')
-      .pipe(debounceTime(5), untilUnmount(this), startWith(null))
+      .pipe(
+        debounceTime(5),
+        untilUnmount(this),
+        startWith(null),
+      )
       .subscribe(() => this.refresh());
   }
 
