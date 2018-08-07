@@ -182,7 +182,7 @@ export class FixedGridLayout extends Component<ILayoutOptions, IFixedGridState> 
       .filter(Boolean)
       .reduce<number>(
         (max: number, pos: Layout.IGridPlacement) =>
-          Math.max(max, pos.y + pos.height) * FixedGridLayout.gridScale,
+          Math.max(max, FixedGridLayout.gridScale * (pos.y + pos.height)),
         0,
       );
 
@@ -369,11 +369,7 @@ export class FlexLayout extends Component<ILayoutOptions, {}> implements ILayout
 
   public componentDidMount() {
     fromEvent(window, 'resize')
-      .pipe(
-        debounceTime(5),
-        untilUnmount(this),
-        startWith(null),
-      )
+      .pipe(debounceTime(5), untilUnmount(this), startWith(null))
       .subscribe(() => this.refresh());
   }
 
