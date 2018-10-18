@@ -232,7 +232,7 @@ class Gamepad {
       this.joystickStates[i].setXY(pad.axes[i * 2 + 0], pad.axes[i * 2 + 1]);
     }
 
-    for (let i = 0; i < Gamepad.maxButtonIndex; i++) {
+    for (let i = 0; i <= Gamepad.maxButtonIndex; i++) {
       this.buttonStates[i].press(pad.buttons[i].value);
     }
 
