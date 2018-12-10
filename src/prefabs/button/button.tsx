@@ -202,16 +202,12 @@ export class Button extends PreactControl<{
                 mixerButtonText: true,
                 hasBg: !!this.backgroundImage,
               })}
-              style={{
-                backgroundColor: this.backgroundColor || '',
-              }}
             >
               {this.text}
             </div>
             <div class="mixer-spark-wrapper">
               <SparkPill
                 backgroundImage={this.backgroundImage}
-                backgroundColor={this.backgroundColor}
                 cost={this.cost}
                 available={this.state.availableSparks}
               />

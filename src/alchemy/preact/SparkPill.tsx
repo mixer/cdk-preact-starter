@@ -5,7 +5,7 @@ import { classes } from '../../alchemy/Style';
  * SparkPill is the component that shows the spark cost above a button.
  */
 export class SparkPill extends Component<
-  { cost: number; available: number; backgroundImage: string; backgroundColor: string },
+  { cost: number; available: number; backgroundImage: string },
   {}
 > {
   public render() {
@@ -17,7 +17,10 @@ export class SparkPill extends Component<
     };
 
     if (this.props.backgroundImage) {
-      styles.backgroundColor = this.props.backgroundColor || 'rgb(41, 47, 72)';
+      styles.color = 'white';
+      styles.textShadow =
+        '2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 1px 1px black,' +
+        ' -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black';
     }
     return (
       <div
