@@ -1,5 +1,4 @@
 @import '../../variables';
-
 // Button styling variables
 $button-margin: 4px;
 $button-bolt-color: $base-color-accent !default;
@@ -28,19 +27,18 @@ $Button-cooldown-height: 22px !default;
 $button-hover-gradient: linear-gradient(to right, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.1));
 $button-active-gradient: linear-gradient(to left, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.1));
 $button-focus-gradient: linear-gradient(to right, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.15));
-
 $button-z-base: 0 !default;
-$button-z-progress: $button-z-base + 1;
-$button-z-cooldown: $button-z-base + 1;
-$button-z-cost: $button-z-cooldown + 1;
-$button-z-tooltip: $button-z-cost + 1;
+$button-z-progress: $button-z-base+1;
+$button-z-cooldown: $button-z-base+1;
+$button-z-cost: $button-z-cooldown+1;
+$button-z-tooltip: $button-z-cost+1;
 
 // Mixin (used by the spark pill and the button itself) to define base
 // background and border colors/styles.
 @mixin button-like() {
   border-radius: $button-border-radius;
   background: $button-background-color;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   transition: border-color $easing-default-duration $easing-default-curve;
 }
 
@@ -77,15 +75,19 @@ $button-z-tooltip: $button-z-cost + 1;
 }
 
 @keyframes loader-spin {
-  0%   { transform: translate(-50%, -50%) rotate(0deg) }
-  100% { transform: translate(-50%, -50%) rotate(360deg) }
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg)
+  }
+
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg)
+  }
 }
 
 // Styling for the default button control.
 .mixer-button {
   @include layout-center-contents();
   @include button-like();
-
   position: absolute;
   top: $button-margin;
   left: $button-margin;
@@ -113,7 +115,6 @@ $button-z-tooltip: $button-z-cost + 1;
     @include default-active();
   }
 
-
   // The disabled class is applied when the input gets disabled.
   &[disabled] {
     opacity: 0.7;
@@ -139,6 +140,13 @@ $button-z-tooltip: $button-z-cost + 1;
     &.cooldown {
       margin-top: 18px;
       transition: margin-top $easing-default-duration;
+    }
+
+    .mixer-button-text {
+      &.has-bg {
+        border-radius: 4px;
+        padding: 2px 5px;
+      }
     }
   }
 
@@ -169,6 +177,7 @@ $button-z-tooltip: $button-z-cost + 1;
 }
 
 $positions: top bottom;
+
 @each $pos in $positions {
   .tippy-popper[x-placement^=#{$pos}] .tippy-arrow {
     border-#{$pos}: 7px solid $button-tooltip-background;
@@ -179,7 +188,6 @@ $positions: top bottom;
 .mixer-cooldown {
   @include layout-center-contents();
   @include absolute-cover();
-
   bottom: auto;
   min-height: $button-cooldown-spinner-size;
   height: $Button-cooldown-height;
@@ -191,7 +199,7 @@ $positions: top bottom;
   z-index: $button-z-cooldown;
   user-select: none;
 
-  > div {
+  >div {
     text-align: center;
     min-height: $button-cooldown-spinner-size;
     height: $Button-cooldown-height;
@@ -234,7 +242,7 @@ $positions: top bottom;
     }
   }
 
-  &:hover > div.hidden {
+  &:hover>div.hidden {
     padding-left: 0;
 
     &::before,
@@ -262,14 +270,24 @@ $positions: top bottom;
   }
 }
 
+.mixer-spark-wrapper {
+  margin: 4px;
+  @include layout-center-contents();
+}
+
 // Styling for the button's cost that pops up.
 .mixer-spark-pill {
-  @include layout-center-contents();
   font-weight: $button-font-weight;
   color: $button-cost-default-color;
   font-size: 0.9em;
   z-index: $button-z-cost;
   line-height: 1.1;
+  padding: 0 2px;
+
+  &.has-bg {
+    border-radius: 4px;
+    padding: 3px;
+  }
 
   &:before {
     content: '';
@@ -298,7 +316,7 @@ $positions: top bottom;
   border-top-right-radius: $button-border-radius - 1;
 
   &::before,
-  > div {
+  >div {
     @include absolute-cover();
   }
 
@@ -313,7 +331,7 @@ $positions: top bottom;
     transform: translateY(0%);
   }
 
-  > div {
+  >div {
     background: $button-progress-foreground;
     transition: transform $easing-default-duration;
   }

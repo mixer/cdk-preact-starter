@@ -242,7 +242,11 @@ class Button extends Component<any, any> {
             })}
           >
             <div class="mixer-button-text">{this.props.submitText || 'Submit'}</div>
-            <SparkPill cost={this.props.cost} available={this.props.availableSparks} />
+            <SparkPill
+              cost={this.props.cost}
+              available={this.props.availableSparks}
+              backgroundImage={this.props.backgroundImage}
+            />
           </div>
           <CoolDown
             cooldown={this.props.cooldown}

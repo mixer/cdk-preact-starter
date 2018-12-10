@@ -197,8 +197,21 @@ export class Button extends PreactControl<{
               cooldown: this.state.cooldown,
             })}
           >
-            <div class="mixer-button-text">{this.text}</div>
-            <SparkPill cost={this.cost} available={this.state.availableSparks} />
+            <div
+              class={classes({
+                mixerButtonText: true,
+                hasBg: !!this.backgroundImage,
+              })}
+            >
+              {this.text}
+            </div>
+            <div class="mixer-spark-wrapper">
+              <SparkPill
+                backgroundImage={this.backgroundImage}
+                cost={this.cost}
+                available={this.state.availableSparks}
+              />
+            </div>
           </div>
           <CoolDown
             cooldown={this.cooldown}
