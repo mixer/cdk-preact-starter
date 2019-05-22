@@ -54,6 +54,7 @@ export class CoolDown extends Component<
           cActive: this.state.ttl >= 0,
           progress: !!this.props.progress,
         })}
+        role="status"
       >
         <div
           class={classes({

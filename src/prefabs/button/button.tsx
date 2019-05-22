@@ -37,7 +37,10 @@ export class ProgressBar extends Component<{ value: number }, {}> {
           style={css({
             transform: `translateX(${width * 100}%)`,
           })}
-        />
+          role="status"
+        >
+          Progress: {width * 100 + 100}%
+        </div>
       </div>
     );
   }
@@ -61,45 +64,53 @@ export class Button extends PreactControl<{
   /**
    * Content to display on the button.
    */
-  @Mixer.Input() public text: string;
+  @Mixer.Input()
+  public text: string;
 
   /**
    * The button's spark code.
    */
-  @Mixer.Input() public cost: number;
+  @Mixer.Input()
+  public cost: number;
 
   /**
    * A progress bar to display below the video, from 0 to 1. Setting the
    * progress to 0 will hide the progress bar.
    */
-  @Mixer.Input() public progress: number;
+  @Mixer.Input()
+  public progress: number;
 
   /**
    * A unix milliseconds timestamp until which this button should be
    * in a "cooldown" state.
    */
-  @Mixer.Input() public cooldown: number;
+  @Mixer.Input()
+  public cooldown: number;
 
   /**
    * Whether input is disabled on the button.
    */
-  @Mixer.Input() public disabled: boolean;
+  @Mixer.Input()
+  public disabled: boolean;
 
   /**
    * JavaScript keycode to bind to. When that key is pressed, this button will
    * be automatically triggered.
    */
-  @Mixer.Input() public keyCode: number;
+  @Mixer.Input()
+  public keyCode: number;
 
   /**
    * Optional tooltip to display on the button.
    */
-  @Mixer.Input() public tooltip: string;
+  @Mixer.Input()
+  public tooltip: string;
 
   /**
    * Gamepad button index to bind to.
    */
-  @Mixer.Input() public gamepadButton: number;
+  @Mixer.Input()
+  public gamepadButton: number;
 
   /**
    * Background color of the button.
@@ -122,7 +133,8 @@ export class Button extends PreactControl<{
   /**
    * Text size for the button.
    */
-  @Mixer.Input() public textSize: string;
+  @Mixer.Input()
+  public textSize: string;
   /**
    * Border color of the button.
    */
