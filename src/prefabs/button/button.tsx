@@ -38,9 +38,8 @@ export class ProgressBar extends Component<{ value: number }, {}> {
             transform: `translateX(${width * 100}%)`,
           })}
           role="status"
-        >
-          Progress: {width * 100 + 100}%
-        </div>
+          aria-label={this.props.value ? `Progress: ${width * 100 + 100}%` : ''}
+        />
       </div>
     );
   }
@@ -59,6 +58,7 @@ export class Button extends PreactControl<{
   availableSparks: number;
   active: boolean;
   cooldown: boolean;
+  pressed: boolean;
   keysPressed: number[];
 }> {
   /**
@@ -233,6 +233,7 @@ export class Button extends PreactControl<{
           />
           <ProgressBar value={this.progress} />
         </div>
+        <div role="status" aria-label={this.state.pressed ? 'Activated' : ''} />
       </div>
     );
   }
@@ -257,7 +258,11 @@ export class Button extends PreactControl<{
     if (!this.disabled && !this.state.cooldown) {
       window.removeEventListener('blur', this.mouseup);
       this.control.giveInput({ event: 'mouseup' });
-      this.setState({ ...this.state, active: false });
+      this.setState({ ...this.state, active: false, pressed: true }, () => {
+        setTimeout(() => {
+          this.setState({ ...this.state, pressed: false });
+        }, 2000);
+      });
     }
   };
 
