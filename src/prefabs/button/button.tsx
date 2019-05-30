@@ -37,7 +37,10 @@ export class ProgressBar extends Component<{ value: number }, {}> {
           style={css({
             transform: `translateX(${width * 100}%)`,
           })}
-          role="status"
+          role="progressbar"
+          aria-valuemin="0"
+          aria-valuenow={`${width * 100 + 100}`}
+          aria-valuemax="100"
           aria-label={this.props.value ? `Progress: ${width * 100 + 100}%` : ''}
         />
       </div>

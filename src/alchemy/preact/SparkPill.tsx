@@ -30,11 +30,11 @@ export class SparkPill extends Component<
           unaffordable: this.props.cost > this.props.available,
         })}
         style={styles}
-        role="presentation"
+        role="status"
         aria-label={`${this.props.cost} Sparks`}
       >
         {this.props.cost}{' '}
-        <div role="presentation" style={{ 'text-indent': '-10000px' }}>
+        <div role="status" style={{ 'text-indent': '-10000px' }}>
           Sparks
         </div>
       </div>
