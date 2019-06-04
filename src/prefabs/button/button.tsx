@@ -37,6 +37,11 @@ export class ProgressBar extends Component<{ value: number }, {}> {
           style={css({
             transform: `translateX(${width * 100}%)`,
           })}
+          role="progressbar"
+          aria-valuemin="0"
+          aria-valuenow={`${width * 100 + 100}`}
+          aria-valuemax="100"
+          aria-label={this.props.value ? `Progress: ${width * 100 + 100}%` : ''}
         />
       </div>
     );
@@ -56,50 +61,59 @@ export class Button extends PreactControl<{
   availableSparks: number;
   active: boolean;
   cooldown: boolean;
+  pressed: boolean;
   keysPressed: number[];
 }> {
   /**
    * Content to display on the button.
    */
-  @Mixer.Input() public text: string;
+  @Mixer.Input()
+  public text: string;
 
   /**
    * The button's spark code.
    */
-  @Mixer.Input() public cost: number;
+  @Mixer.Input()
+  public cost: number;
 
   /**
    * A progress bar to display below the video, from 0 to 1. Setting the
    * progress to 0 will hide the progress bar.
    */
-  @Mixer.Input() public progress: number;
+  @Mixer.Input()
+  public progress: number;
 
   /**
    * A unix milliseconds timestamp until which this button should be
    * in a "cooldown" state.
    */
-  @Mixer.Input() public cooldown: number;
+  @Mixer.Input()
+  public cooldown: number;
 
   /**
    * Whether input is disabled on the button.
    */
-  @Mixer.Input() public disabled: boolean;
+  @Mixer.Input()
+  public disabled: boolean;
 
   /**
    * JavaScript keycode to bind to. When that key is pressed, this button will
    * be automatically triggered.
    */
-  @Mixer.Input() public keyCode: number;
+  @Mixer.Input()
+  public keyCode: number;
 
   /**
    * Optional tooltip to display on the button.
    */
-  @Mixer.Input() public tooltip: string;
+  @Mixer.Input()
+  public tooltip: string;
 
   /**
    * Gamepad button index to bind to.
    */
-  @Mixer.Input() public gamepadButton: number;
+  @Mixer.Input()
+  public gamepadButton: number;
 
   /**
    * Background color of the button.
@@ -122,7 +136,8 @@ export class Button extends PreactControl<{
   /**
    * Text size for the button.
    */
-  @Mixer.Input() public textSize: string;
+  @Mixer.Input()
+  public textSize: string;
   /**
    * Border color of the button.
    */
@@ -221,6 +236,7 @@ export class Button extends PreactControl<{
           />
           <ProgressBar value={this.progress} />
         </div>
+        <div role="status" aria-label={this.state.pressed ? 'Activated' : ''} />
       </div>
     );
   }
@@ -245,7 +261,11 @@ export class Button extends PreactControl<{
     if (!this.disabled && !this.state.cooldown) {
       window.removeEventListener('blur', this.mouseup);
       this.control.giveInput({ event: 'mouseup' });
-      this.setState({ ...this.state, active: false });
+      this.setState({ ...this.state, active: false, pressed: true }, () => {
+        setTimeout(() => {
+          this.setState({ ...this.state, pressed: false });
+        }, 2000);
+      });
     }
   };
 

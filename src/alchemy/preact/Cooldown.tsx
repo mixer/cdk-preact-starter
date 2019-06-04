@@ -54,13 +54,17 @@ export class CoolDown extends Component<
           cActive: this.state.ttl >= 0,
           progress: !!this.props.progress,
         })}
+        role="status"
+        aria-label={this.state.ttl > 0 ? 'Cooling Down' : ''}
       >
         <div
           class={classes({
             hidden: this.props.hideTime,
           })}
         >
-          <div class="time">{prettyTime(this.state.ttl + 1)}</div>
+          <div class="time" aria-hidden="true">
+            {prettyTime(this.state.ttl + 1)}
+          </div>
         </div>
       </div>
     );
