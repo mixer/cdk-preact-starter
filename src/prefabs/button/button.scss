@@ -101,6 +101,7 @@ $button-z-tooltip: $button-z-cost+1;
   transition: border-color 1s, background-color 0.5s;
   user-select: none;
   background-size: 100% 100%;
+  user-select: none;
 
   &:hover {
     @include default-hover();
